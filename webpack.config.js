@@ -48,8 +48,9 @@ module.exports = {
 		},{
 			test: /\.(png|svg|jpg|gif)$/,
 			use: [{
-				loader: "file-loader",
+				loader: "url-loader",
 				options: {
+					limit: 8000,
 					name: "[name].[ext]",
 					outputPath: "assets/"
 				}
