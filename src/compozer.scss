@@ -1,0 +1,161 @@
+// Copyright 2018 Myabuy LLC. All rights reserved.
+// Use of this source code is governed by a MIT-style license that can be found
+// in the LICENSE file.
+
+$button-size: 18;
+$button-send-size: 32;
+$active-color: #ff721d;
+$list-file-size: 120;
+
+[contenteditable]:focus {
+    outline: none;
+}
+
+.compozer {
+	padding: 8px;
+	border: 1px solid silver;
+
+	.hidden {
+		display: none;
+	}
+
+	.input {
+		min-height: 2em;
+		padding: 8px 4px;
+		border-bottom: 1px solid silver;
+
+		.hint {
+			color: grey;
+		}
+	}
+
+	.file-list {
+		width: 100%;
+		max-height: #{$list-file-size}px;
+		overflow-x: auto;
+		overflow-y: hidden;
+		display: flex;
+		padding: 8px 0px;
+	}
+
+	.input-link {
+		height: 2em;
+		margin: 8px 0px;
+		width: 100%;
+
+		.label {
+			width: 60px;
+			display: inline-block;
+			text-align: right;
+		}
+		input {
+			display: inline-block;
+			width: calc(100% - 180px);
+			vertical-align: middle;
+			border: 1px solid silver;
+			border-radius: 4px;
+			padding: 4px;
+		}
+		button {
+			display: inline-block;
+			width: 100px;
+		}
+	}
+
+	.styles {
+		height: 2em;
+		margin: 8px 0px;
+
+		a {
+			margin: 0px;
+			padding: 8px;
+			text-decoration: none;
+			color: black;
+		}
+
+		.bold {
+			font-weight: 800;
+		}
+		.italic {
+			font-style: italic;
+		}
+		.underline {
+			text-decoration: underline;
+		}
+	}
+
+	.menu {
+		margin-top: 4px;
+
+		a {
+			text-decoration: none;
+			color: black;
+			padding: 4px 8px;
+			border-radius: 8px;
+
+			&.active {
+				background-color: $active-color;
+			}
+		}
+
+		.button {
+			display: inline-block;
+			vertical-align: middle;
+
+			img {
+				width: #{$button-size}px;
+				height: #{$button-size}px;
+			}
+
+			&.send {
+				float: right;
+				margin: -6px 0px;
+
+				img {
+					width: #{$button-send-size}px;
+					height: #{$button-send-size}px;
+				}
+			}
+		}
+	}
+}
+
+.compozer-file {
+	position: relative;
+	display: inline-block;
+	font-size: 11px;
+	width: #{$list-file-size - 50}px;
+	height: #{$list-file-size - 50}px;
+	margin: 2px;
+	padding: 4px;
+	vertical-align: middle;
+	word-wrap: break-word;
+	border: 1px solid silver;
+	border-radius: 8px 0px 0px 0px;
+
+	div {
+		width: #{$list-file-size - 50}px;
+	}
+
+	.icon {
+		position: absolute;
+		width: 30px;
+		height: 30px;
+		padding: 4px;
+		left: 0px;
+		bottom: 0px;
+	}
+
+	.delete {
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+		cursor: pointer;
+		padding: 4px;
+		border-top: 1px solid silver;
+		border-left: 1px solid silver;
+		border-top-left-radius: 4px;
+	}
+}
+
+// vim: set ts=4 sw=4 noexpandtab:
