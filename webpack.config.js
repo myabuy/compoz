@@ -11,8 +11,8 @@ const extractSass = new ExtractTextPlugin({
 
 module.exports = {
 	entry: {
-		compozer: "./src/compozer.ts",
-		test: "./src/compozer.test.ts"
+		compoz: "./src/compoz.ts",
+		test: "./src/compoz.test.ts"
 	},
 	devtool: "inline-source-map",
 	devServer: {
@@ -23,7 +23,7 @@ module.exports = {
 				["dist"]
 		),
 		new HtmlWebpackPlugin({
-			title: "Compozer Test"
+			title: "Compoz Test"
 		}),
 		new UglifyJSPlugin(),
         extractSass
@@ -63,7 +63,7 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, "dist"),
 		filename: "[name].js",
-		library: "compozer"
+		library: "compoz"
 	}
 };
 

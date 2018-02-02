@@ -10,10 +10,10 @@ import iconPpt from "./assets/file-ppt.png"
 import iconTxt from "./assets/file-txt.png"
 import iconXls from "./assets/file-xls.png"
 
-const classCompozerFile = "compozer-file"
+const classCompozFile = "compoz-file"
 const classDelete = "delete"
 
-export class CompozerFile {
+export class CompozFile {
 
 	public file: File
 	public el: HTMLElement
@@ -23,7 +23,7 @@ export class CompozerFile {
 		this.file = file
 		this.onDelete = onDelete
 		this.el = document.createElement("div")
-		this.el.classList.add(classCompozerFile)
+		this.el.classList.add(classCompozFile)
 
 		var elDummy = document.createElement("div")
 		this.el.appendChild(elDummy)

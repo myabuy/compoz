@@ -2,9 +2,9 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import { CompozerFile } from "./compozerfile.ts"
+import { CompozFile } from "./compozfile.ts"
 
-import "./compozer.scss"
+import "./compoz.scss"
 
 import svgAttachment from "./assets/attachment.svg"
 import svgStyle from "./assets/style.svg"
@@ -13,7 +13,7 @@ import svgUl from "./assets/ul.svg"
 import svgOl from "./assets/ol.svg"
 
 const inputHint = "Write something..."
-const classRoot = "compozer"
+const classRoot = "compoz"
 const classInput = "input"
 const classInputLink = "input-link"
 const classInputFile = "input-file"
@@ -29,7 +29,7 @@ const classActive = "active"
 const keyEnter = 13;
 
 const inputHintTmpl = `<span class="hint">${inputHint}</span>`
-const compozerTmpl = `
+const compozTmpl = `
 	<div class="${classRoot}">
 		<div class="${classInput}">
 		</div>
@@ -80,7 +80,7 @@ export interface Config {
 	fileMaxSize: number
 }
 
-export class Compozer {
+export class Compoz {
 	private id: string
 	private link: string
 	private cfg: Config
@@ -102,7 +102,7 @@ export class Compozer {
 	private elBUnderline: HTMLAnchorElement
 	private elBUL: HTMLAnchorElement
 	private elBOL: HTMLAnchorElement
-	private fileList: CompozerFile[] = new Array()
+	private fileList: CompozFile[] = new Array()
 
 	constructor(id: string, opts: Config) {
 		this.id = id
@@ -110,7 +110,7 @@ export class Compozer {
 
 		this.elRoot = document.getElementById(id)
 
-		this.elRoot.innerHTML = compozerTmpl
+		this.elRoot.innerHTML = compozTmpl
 
 		let sel = "#"+ this.id
 		this.initInput(sel)
@@ -198,7 +198,7 @@ export class Compozer {
 				let f = this.elInputFile.files[x]
 
 				if (f.size <= this.cfg.fileMaxSize) {
-				let cf = new CompozerFile(f, () => {
+				let cf = new CompozFile(f, () => {
 						this.onFileDeleted(f)
 					})
 					this.fileList.push(cf)

@@ -1,6 +1,6 @@
-# Compozer
+# Compoz
 
-Native javascript rich text editor to compose a message.
+Simple javascript WYSIWYG text editor.
 
 ## Goal
 

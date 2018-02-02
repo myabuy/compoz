@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import { Config, Compozer } from "./compozer"
+import { Config, Compoz } from "./compoz"
 
 const elID = "compose"
 let config = {
@@ -19,6 +19,6 @@ elCompose1.id = "compose-1"
 
 document.body.appendChild(elCompose1)
 
-let c1 = new Compozer("compose-1", config)
+let c1 = new Compoz("compose-1", config)
 
 // vim: set ts=4 sw=4 noexpandtab:
