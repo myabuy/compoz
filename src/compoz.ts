@@ -88,7 +88,7 @@ export class Compoz {
 	private elMenuLink: HTMLElement
 	private elInputLink: HTMLInputElement
 	private elInputFile: HTMLInputElement
-	private elFileList: HTMLElement
+	private elFiles: HTMLElement
 	private elBInsertLink: HTMLElement
 	private elMenu: HTMLElement
 	private elStyles: HTMLElement
@@ -101,7 +101,7 @@ export class Compoz {
 	private elBUnderline: HTMLAnchorElement
 	private elBUL: HTMLAnchorElement
 	private elBOL: HTMLAnchorElement
-	private fileList: CompozFile[] = new Array()
+	private files: CompozFile[] = new Array()
 
 	constructor(id: string, opts: Config) {
 		this.id = id
@@ -148,7 +148,7 @@ export class Compoz {
 	private initFileList(sel: string) {
 		sel += " div."+ classFileList
 
-		this.elFileList = document.querySelector(sel)
+		this.elFiles = document.querySelector(sel)
 	}
 
 	private initInputLink(sel: string) {
@@ -197,11 +197,11 @@ export class Compoz {
 				let f = this.elInputFile.files[x]
 
 				if (f.size <= this.cfg.fileMaxSize) {
-				let cf = new CompozFile(f, () => {
-						this.onFileDeleted(f)
-					})
-					this.fileList.push(cf)
-					this.elFileList.appendChild(cf.el)
+					let cf = new CompozFile(f, () => {
+							this.onFileDeleted(f)
+						})
+					this.files.push(cf)
+					this.elFiles.appendChild(cf.el)
 				}
 			}
 		}
@@ -329,15 +329,15 @@ export class Compoz {
 	}
 
 	private onFileDeleted(f: File) {
-		for (let x = 0; x < this.fileList.length; x++) {
-			if (this.fileList[x].file.name === f.name) {
-				this.fileList.splice(x, 1)
+		for (let x = 0; x < this.files.length; x++) {
+			if (this.files[x].file.name === f.name) {
+				this.files.splice(x, 1)
 				return
 			}
 		}
 	}
 
-	public getContent() {
+	public getContent(): string {
 		if (this.isEmpty()) {
 			return ""
 		}
@@ -345,14 +345,14 @@ export class Compoz {
 		return this.elInput.innerHTML
 	}
 
-	public getFiles() {
-		let files: File[] = new Array()
+	public getFiles(): CompozFile[] {
+		return this.files;
+	}
 
-		for (let x = 0; x < this.fileList.length; x++) {
-			files.push(this.fileList[x].file)
-		}
-
-		return files
+	public reset() {
+		this.elInput.innerHTML = ""
+		this.elFiles.innerHTML = ""
+		this.files = new Array()
 	}
 }
 

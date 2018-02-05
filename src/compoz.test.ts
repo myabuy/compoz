@@ -20,6 +20,7 @@ function createCompose() {
 		onSend: () => {
 			console.log("content:", c.getContent())
 			console.log("files:", c.getFiles())
+			c.reset()
 		}
 	,	fileMaxSize: 4194304 // 4MB
 	}
