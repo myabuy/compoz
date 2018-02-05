@@ -10,6 +10,8 @@ import iconPpt from "./assets/file-ppt.png"
 import iconTxt from "./assets/file-txt.png"
 import iconXls from "./assets/file-xls.png"
 
+import { FileState } from "./filestate.ts"
+
 const classCompozFile = "compoz-file"
 const classDelete = "delete"
 
@@ -17,6 +19,7 @@ export class CompozFile {
 
 	public file: File
 	public el: HTMLElement
+	public state: FileState
 	private onDelete: Function
 
 	constructor(file: File, onDelete: Function) {
