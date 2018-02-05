@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+<title><%= htmlWebpackPlugin.options.title %></title>
+<style>
+	.panel {
+		position: relative;
+		height: calc(100vh - 20px);
+		width: 100%;
+		max-width: calc(100% - 20px);
+		overflow: hidden;
+	}
+
+	.panel .content {
+		overflow: auto;
+		height: calc(100vh - 160px);
+		padding: 8px;
+	}
+
+	.panel #compose {
+		background: white;
+		position: absolute;
+		bottom: 0;
+		width: 100%;
+	}
+</style>
+</head>
+<body>
+	<div class="panel">
+		<div class="content">
+		</div>
+		<div id="compose">
+		</div>
+	</div>
+</body>
+</html>

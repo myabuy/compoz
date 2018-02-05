@@ -4,21 +4,30 @@
 
 import { Config, Compoz } from "./compoz"
 
-const elID = "compose"
-let config = {
-	onSend: () => {
-		console.log("content:", c1.getContent())
-		console.log("files:", c1.getFiles())
+function generateContent() {
+	var elContent = document.querySelector("div.panel div.content")
+
+	for (let x = 0; x < 100; x++) {
+		let d = document.createElement("div")
+		d.innerText = "Test "+ x
+
+		elContent.appendChild(d)
 	}
-,	fileMaxSize: 4194304 // 4MB
 }
 
-let elCompose1 = document.createElement("div")
+function createCompose() {
+	let config = {
+		onSend: () => {
+			console.log("content:", c.getContent())
+			console.log("files:", c.getFiles())
+		}
+	,	fileMaxSize: 4194304 // 4MB
+	}
 
-elCompose1.id = "compose-1"
+	let c = new Compoz("compose", config)
+}
 
-document.body.appendChild(elCompose1)
-
-let c1 = new Compoz("compose-1", config)
+generateContent()
+createCompose()
 
 // vim: set ts=4 sw=4 noexpandtab:

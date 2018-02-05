@@ -18,7 +18,8 @@ module.exports = {
 				["dist"]
 		),
 		new HtmlWebpackPlugin({
-			title: "Compoz Test"
+			title: "Compoz Test",
+			template: "src/test.tmpl"
 		}),
         extractSass
 	],
