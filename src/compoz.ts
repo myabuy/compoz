@@ -14,17 +14,17 @@ import svgOl from "./assets/ol.svg"
 
 const inputHint = "Write something..."
 const classRoot = "compoz"
-const classInput = "input"
-const classInputLink = "input-link"
-const classInputFile = "input-file"
-const classFileList = "file-list"
-const classMenu = "menu"
-const classStyles = "styles"
-const classBAttachment = "attachment"
-const classButtonStyle = "style"
-const classBLink = "link"
-const classBSend = "send"
-const classActive = "active"
+const classInput = "compoz-input"
+const classInputLink = "compoz-input-link"
+const classInputFile = "compoz-input-file"
+const classFileList = "compoz-file-list"
+const classMenu = "compoz-menu"
+const classStyles = "compoz-styles"
+const classBAttachment = "compoz-b-attachment"
+const classBStyle = "compoz-b-style"
+const classBLink = "compoz-b-link"
+const classBSend = "compoz-b-send"
+const classActive = "compoz-b-active"
 
 const keyEnter = 13;
 
@@ -36,7 +36,6 @@ const compozTmpl = `
 		<div class="${classFileList}">
 		</div>
 		<div class="${classInputLink}">
-			<span class="label">Link</span>
 			<input></input>
 			<button>
 				Insert
@@ -57,7 +56,7 @@ const compozTmpl = `
 			<a href="#" class="button ${classBAttachment}">
 				<img src="${svgAttachment}" />
 			</a>
-			<a href="#" class="button ${classButtonStyle}">
+			<a href="#" class="button ${classBStyle}">
 				<img src="${svgStyle}" />
 			</a>
 			<a href="#" class="button ${classBLink}">Link</a>
@@ -272,7 +271,7 @@ export class Compoz {
 	}
 
 	private initBStyle(sel: string) {
-		sel += " a."+ classButtonStyle
+		sel += " a."+ classBStyle
 
 		this.elBStyle = document.querySelector(sel)
 		this.elBStyle.onclick = (e) => {

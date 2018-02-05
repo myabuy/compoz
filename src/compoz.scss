@@ -14,22 +14,26 @@ $list-file-size: 120;
 .compoz {
 	padding: 8px;
 	border: 1px solid silver;
+	background-color: #efefef;
 
 	.hidden {
 		display: none;
 	}
 
-	.input {
-		min-height: 2em;
+	.compoz-input {
+		min-height: 40px;
+		max-height: 400px;
+		overflow-y: auto;
 		padding: 8px 4px;
-		border-bottom: 1px solid silver;
+		border: 1px solid silver;
+		background-color: white;
 
 		.hint {
 			color: grey;
 		}
 	}
 
-	.file-list {
+	.compoz-file-list {
 		width: 100%;
 		max-height: #{$list-file-size}px;
 		overflow-x: auto;
@@ -38,19 +42,14 @@ $list-file-size: 120;
 		padding: 8px 0px;
 	}
 
-	.input-link {
+	.compoz-input-link {
 		height: 2em;
 		margin: 8px 0px;
 		width: 100%;
 
-		.label {
-			width: 60px;
-			display: inline-block;
-			text-align: right;
-		}
 		input {
 			display: inline-block;
-			width: calc(100% - 180px);
+			width: calc(100% - 120px);
 			vertical-align: middle;
 			border: 1px solid silver;
 			border-radius: 4px;
@@ -62,7 +61,7 @@ $list-file-size: 120;
 		}
 	}
 
-	.styles {
+	.compoz-styles {
 		height: 2em;
 		margin: 8px 0px;
 
@@ -84,7 +83,7 @@ $list-file-size: 120;
 		}
 	}
 
-	.menu {
+	.compoz-menu {
 		margin-top: 4px;
 
 		a {
@@ -93,7 +92,7 @@ $list-file-size: 120;
 			padding: 4px 8px;
 			border-radius: 8px;
 
-			&.active {
+			&.compoz-b-active {
 				background-color: $active-color;
 			}
 		}
@@ -107,7 +106,7 @@ $list-file-size: 120;
 				height: #{$button-size}px;
 			}
 
-			&.send {
+			&.compoz-b-send {
 				float: right;
 				margin: -6px 0px;
 
