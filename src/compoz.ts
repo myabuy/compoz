@@ -338,7 +338,7 @@ export class Compoz {
 		}
 	}
 
-	public getContent(): string {
+	public getContentHTML(): string {
 		if (this.isEmpty()) {
 			return ""
 		}
