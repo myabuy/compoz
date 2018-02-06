@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 import { Config, Compoz } from "./compoz"
+import { FileState } from "./filestate"
 
 function generateContent() {
 	var elContent = document.querySelector("div.panel div.content")
@@ -18,9 +19,20 @@ function generateContent() {
 function createCompose() {
 	let config = {
 		onSend: () => {
-			console.log("content:", c.getContent())
-			console.log("files:", c.getFiles())
-			c.reset()
+			console.log("content:", c.getContentHTML())
+
+			let files = c.getFiles();
+
+			for (var x = 0; x < files.length; x++) {
+				files[x].setState(FileState.UPLOADING)
+			}
+
+			setTimeout(function()
+			{
+				for (var x = 0; x < files.length; x++) {
+					files[x].setState(FileState.REMOTE)
+				}
+			}, 2000);
 		}
 	,	fileMaxSize: 4194304 // 4MB
 	}
