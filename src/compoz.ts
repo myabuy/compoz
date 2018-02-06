@@ -8,6 +8,7 @@ export { FileState } from "./filestate.ts"
 import "./compoz.scss"
 
 import svgAttachment from "./assets/b-attachment.svg"
+import svgExpand from "./assets/b-expand.svg"
 import svgStyle from "./assets/b-style.svg"
 import svgSend from "./assets/b-send.svg"
 import svgUl from "./assets/b-ul.svg"
@@ -15,6 +16,7 @@ import svgOl from "./assets/b-ol.svg"
 
 const inputHint = "Write something..."
 const classRoot = "compoz"
+const classExpand = "compoz-expand"
 const classInput = "compoz-input"
 const classInputLink = "compoz-input-link"
 const classInputFile = "compoz-input-file"
@@ -33,6 +35,9 @@ const inputHintTmpl = `<span class="hint">${inputHint}</span>`
 const compozTmpl = `
 	<div class="${classRoot}">
 		<div class="${classInput}">
+		</div>
+		<div class="${classExpand}">
+			<img src="${svgExpand}"/>
 		</div>
 		<div class="${classInputLink}">
 			<input></input>
@@ -77,7 +82,10 @@ const compozTmpl = `
 
 export interface Config {
 	onSend: Function
-	fileMaxSize: number
+	onExpand?: Function
+	fileMaxSize?: number
+	height?: number
+	contentHTML?: string
 }
 
 export class Compoz {
@@ -86,6 +94,7 @@ export class Compoz {
 	private cfg: Config
 	private elRoot: HTMLElement
 	private elInput: HTMLElement
+	private elExpand: HTMLElement
 	private elMenuLink: HTMLElement
 	private elInputLink: HTMLInputElement
 	private elInputFile: HTMLInputElement
@@ -114,6 +123,7 @@ export class Compoz {
 
 		let sel = "#"+ this.id
 		this.initInput(sel)
+		this.initElExpand(sel)
 		this.initFileList(sel)
 		this.initInputLink(sel)
 		this.initMenuStyles(sel)
@@ -142,6 +152,16 @@ export class Compoz {
 		this.elInput.onblur = () => {
 			if (this.isEmpty()) {
 				this.elInput.innerHTML = inputHintTmpl
+			}
+		}
+	}
+
+	private initElExpand(sel: string) {
+		sel += " div."+ classExpand
+		this.elExpand = document.querySelector(sel)
+		this.elExpand.onclick = (e) => {
+			if (this.cfg.onExpand) {
+				this.cfg.onExpand()
 			}
 		}
 	}

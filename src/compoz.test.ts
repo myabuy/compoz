@@ -39,6 +39,9 @@ function createCompose() {
 				}
 			}, 2000);
 		}
+	,	onExpand: () => {
+			console.log("onExpand")
+		}
 	,	fileMaxSize: 4194304 // 4MB
 	}
 
