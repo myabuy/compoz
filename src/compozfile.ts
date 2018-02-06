@@ -10,6 +10,10 @@ import iconPpt from "./assets/file-ppt.png"
 import iconTxt from "./assets/file-txt.png"
 import iconXls from "./assets/file-xls.png"
 
+import imgStateLocal from "./assets/state-local.svg"
+import imgStateUploading from "./assets/state-uploading.gif"
+import imgStateRemote from "./assets/state-remote.svg"
+
 import { FileState } from "./filestate.ts"
 
 const classCompozFile = "compoz-file"
@@ -20,6 +24,7 @@ export class CompozFile {
 	public file: File
 	public el: HTMLElement
 	public state: FileState
+	private elState: HTMLImageElement
 	private onDelete: Function
 
 	constructor(file: File, onDelete: Function) {
@@ -27,17 +32,19 @@ export class CompozFile {
 		this.onDelete = onDelete
 		this.el = document.createElement("div")
 		this.el.classList.add(classCompozFile)
+		this.state = FileState.LOCAL
 
 		var elDummy = document.createElement("div")
 		this.el.appendChild(elDummy)
 
 		this.createElName()
 		this.createElIcon()
+		this.createElState()
 		this.createElDelete()
 	}
 
 	private createElName() {
-		let elName = document.createElement("span")
+		let elName = document.createElement("div")
 		elName.classList.add("name")
 
 		let name = this.file.name
@@ -109,6 +116,15 @@ export class CompozFile {
 		this.el.appendChild(elIcon)
 	}
 
+	private createElState() {
+		this.elState = document.createElement("img")
+		this.elState.classList.add("state")
+
+		this.el.appendChild(this.elState)
+
+		this.setState(FileState.LOCAL)
+	}
+
 	private createElDelete() {
 		let elDelete = document.createElement("span")
 
@@ -121,6 +137,22 @@ export class CompozFile {
 		}
 
 		this.el.appendChild(elDelete)
+	}
+
+	public setState(state: FileState) {
+		this.state = state
+
+		switch (state) {
+		case FileState.LOCAL:
+			this.elState.src = imgStateLocal
+			break
+		case FileState.UPLOADING:
+			this.elState.src = imgStateUploading
+			break
+		case FileState.REMOTE:
+			this.elState.src = imgStateRemote
+			break
+		}
 	}
 }
 

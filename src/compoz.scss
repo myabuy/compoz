@@ -136,6 +136,25 @@ $list-file-size: 120;
 		width: #{$list-file-size - 50}px;
 	}
 
+	.name {
+		position: absolute;
+		z-index: 2;
+	}
+
+	.state {
+		z-index: 1;
+		position: absolute;
+		width: 20px;
+		height: 20px;
+		left: 30px;
+		bottom: 25px;
+
+		svg path {
+			fill: silver;
+			background-color: silver;
+		}
+	}
+
 	.icon {
 		position: absolute;
 		width: 30px;
@@ -151,6 +170,7 @@ $list-file-size: 120;
 		right: 0px;
 		cursor: pointer;
 		padding: 4px;
+		font-weight: 600;
 		border-top: 1px solid silver;
 		border-left: 1px solid silver;
 		border-top-left-radius: 4px;

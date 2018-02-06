@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 import { CompozFile } from "./compozfile.ts"
+export { FileState } from "./filestate.ts"
 
 import "./compoz.scss"
 
