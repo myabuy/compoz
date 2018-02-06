@@ -7,11 +7,11 @@ export { FileState } from "./filestate.ts"
 
 import "./compoz.scss"
 
-import svgAttachment from "./assets/attachment.svg"
-import svgStyle from "./assets/style.svg"
-import svgSend from "./assets/send.svg"
-import svgUl from "./assets/ul.svg"
-import svgOl from "./assets/ol.svg"
+import svgAttachment from "./assets/b-attachment.svg"
+import svgStyle from "./assets/b-style.svg"
+import svgSend from "./assets/b-send.svg"
+import svgUl from "./assets/b-ul.svg"
+import svgOl from "./assets/b-ol.svg"
 
 const inputHint = "Write something..."
 const classRoot = "compoz"

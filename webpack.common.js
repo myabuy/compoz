@@ -43,11 +43,10 @@ module.exports = {
 		},{
 			test: /\.(png|svg|jpg|gif)$/,
 			use: [{
-				loader: "url-loader",
+				loader: "file-loader",
 				options: {
-					limit: 8000,
 					name: "[name].[ext]",
-					outputPath: "assets/"
+					outputPath: "assets/compoz/"
 				}
 			}]
 		}]
