@@ -10,9 +10,8 @@ import iconPpt from "./assets/file-ppt.png"
 import iconTxt from "./assets/file-txt.png"
 import iconXls from "./assets/file-xls.png"
 
-import imgStateLocal from "./assets/state-local.svg"
+import imgStateError from "./assets/state-error.svg"
 import imgStateUploading from "./assets/state-uploading.gif"
-import imgStateRemote from "./assets/state-remote.svg"
 
 import { FileState } from "./filestate.ts"
 
@@ -23,8 +22,8 @@ export class CompozFile {
 
 	public file: File
 	public el: HTMLElement
+	public elIcon: HTMLImageElement
 	public state: FileState
-	private elState: HTMLImageElement
 	private onDelete: Function
 
 	constructor(file: File, onDelete: Function) {
@@ -32,14 +31,12 @@ export class CompozFile {
 		this.onDelete = onDelete
 		this.el = document.createElement("div")
 		this.el.classList.add(classCompozFile)
-		this.state = FileState.LOCAL
 
 		var elDummy = document.createElement("div")
 		this.el.appendChild(elDummy)
 
 		this.createElName()
 		this.createElIcon()
-		this.createElState()
 		this.createElDelete()
 	}
 
@@ -59,9 +56,14 @@ export class CompozFile {
 	}
 
 	private createElIcon() {
+		this.elIcon = document.createElement("img")
+		this.elIcon.classList.add("icon")
+		this.el.appendChild(this.elIcon)
+		this.updateIcon()
+	}
+
+	private updateIcon() {
 		let type = this.file.type
-		let elIcon = document.createElement("img")
-		elIcon.classList.add("icon")
 
 		if (type === "application/msword"
 		||  type === "application/vnd.oasis.opendocument.text"
@@ -69,8 +71,7 @@ export class CompozFile {
 		||  type === "application/vnd.oasis.opendocument.text-template"
 		||  type === "application/vnd.oasis.opendocument.text-web"
 		||  type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document") {
-			elIcon.src = iconDoc
-			this.el.appendChild(elIcon)
+			this.elIcon.src = iconDoc
 			return
 		}
 
@@ -79,8 +80,7 @@ export class CompozFile {
 		||  type === "application/vnd.oasis.opendocument.presentation-template"
 		||  type === "application/vnd.openxmlformats-officedocument.presentationml.presentation"
 		) {
-			elIcon.src = iconPpt
-			this.el.appendChild(elIcon)
+			this.elIcon.src = iconPpt
 			return
 		}
 
@@ -89,40 +89,26 @@ export class CompozFile {
 		||  type === "application/vnd.oasis.opendocument.spreadsheet-template"
 		||  type === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 		) {
-			elIcon.src = iconPpt
-			this.el.appendChild(elIcon)
+			this.elIcon.src = iconPpt
 			return
 		}
 
 		if (type === "application/pdf") {
-			elIcon.src = iconPdf
-			this.el.appendChild(elIcon)
+			this.elIcon.src = iconPdf
 			return
 		}
 
 		if (type.substring(0, 5) === "image") {
-			elIcon.src = iconImg
-			this.el.appendChild(elIcon)
+			this.elIcon.src = iconImg
 			return
 		}
 
 		if (type.substring(0, 4) === "text") {
-			elIcon.src = iconTxt
-			this.el.appendChild(elIcon)
+			this.elIcon.src = iconTxt
 			return
 		}
 
-		elIcon.src = iconOth
-		this.el.appendChild(elIcon)
-	}
-
-	private createElState() {
-		this.elState = document.createElement("img")
-		this.elState.classList.add("state")
-
-		this.el.appendChild(this.elState)
-
-		this.setState(FileState.LOCAL)
+		this.elIcon.src = iconOth
 	}
 
 	private createElDelete() {
@@ -143,15 +129,15 @@ export class CompozFile {
 		this.state = state
 
 		switch (state) {
-		case FileState.LOCAL:
-			this.elState.src = imgStateLocal
-			break
 		case FileState.UPLOADING:
-			this.elState.src = imgStateUploading
+			this.elIcon.src = imgStateUploading
 			break
-		case FileState.REMOTE:
-			this.elState.src = imgStateRemote
+		case FileState.ERROR:
+			this.elIcon.src = imgStateError
 			break
+		case FileState.SUCCESS:
+			this.updateIcon()
+			break;
 		}
 	}
 }

@@ -30,7 +30,12 @@ function createCompose() {
 			setTimeout(function()
 			{
 				for (var x = 0; x < files.length; x++) {
-					files[x].setState(FileState.REMOTE)
+					if ((x % 2) === 1) {
+						files[x].setState(FileState.SUCCESS)
+					} else {
+						files[x].setState(FileState.ERROR)
+					}
+
 				}
 			}, 2000);
 		}

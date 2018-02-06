@@ -34,8 +34,6 @@ const compozTmpl = `
 	<div class="${classRoot}">
 		<div class="${classInput}">
 		</div>
-		<div class="${classFileList}">
-		</div>
 		<div class="${classInputLink}">
 			<input></input>
 			<button>
@@ -64,6 +62,8 @@ const compozTmpl = `
 			<a href="#" class="button ${classBSend}">
 				<img src="${svgSend}" />
 			</a>
+		</div>
+		<div class="${classFileList}">
 		</div>
 
 		<input

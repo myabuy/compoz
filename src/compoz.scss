@@ -39,7 +39,6 @@ $list-file-size: 120;
 		overflow-x: auto;
 		overflow-y: hidden;
 		display: flex;
-		padding: 8px 0px;
 	}
 
 	.compoz-input-link {
@@ -120,17 +119,18 @@ $list-file-size: 120;
 }
 
 .compoz-file {
-	position: relative;
-	display: inline-block;
+	background-color: white;
+	border-radius: 6px;
+	box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 	font-size: 11px;
-	width: #{$list-file-size - 50}px;
 	height: #{$list-file-size - 50}px;
-	margin: 2px;
+	margin: 2px 4px;
 	padding: 4px;
+	position: relative;
+	text-align: center;
 	vertical-align: middle;
+	width: #{$list-file-size - 50}px;
 	word-wrap: break-word;
-	border: 1px solid silver;
-	border-radius: 8px 0px 0px 0px;
 
 	div {
 		width: #{$list-file-size - 50}px;
@@ -138,42 +138,28 @@ $list-file-size: 120;
 
 	.name {
 		position: absolute;
-		z-index: 2;
-	}
-
-	.state {
-		z-index: 1;
-		position: absolute;
-		width: 20px;
-		height: 20px;
-		left: 30px;
-		bottom: 25px;
-
-		svg path {
-			fill: silver;
-			background-color: silver;
-		}
+		bottom: 4px;
 	}
 
 	.icon {
-		position: absolute;
 		width: 30px;
 		height: 30px;
-		padding: 4px;
-		left: 0px;
-		bottom: 0px;
+		margin-top: 10px;
 	}
 
 	.delete {
-		position: absolute;
-		bottom: 0px;
-		right: 0px;
+		background-color: rgba(0, 0, 0, 0.4);
+		border-radius: 50%;
+		border: 1px solid silver;
+		color: white;
 		cursor: pointer;
-		padding: 4px;
 		font-weight: 600;
-		border-top: 1px solid silver;
-		border-left: 1px solid silver;
-		border-top-left-radius: 4px;
+		height: 14px;
+		margin: 4px;
+		position: absolute;
+		right: 0px;
+		top: 0px;
+		width: 14px;
 	}
 }
 
