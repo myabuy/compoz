@@ -18,6 +18,7 @@ const inputHint = "Write something..."
 const classRoot = "compoz"
 const classExpand = "compoz-expand"
 const classInput = "compoz-input"
+const classMenuWrapper = "compoz-menu-wrapper"
 const classInputLink = "compoz-input-link"
 const classInputFile = "compoz-input-file"
 const classFileList = "compoz-file-list"
@@ -39,44 +40,49 @@ const compozTmpl = `
 		<div class="${classExpand}">
 			<img src="${svgExpand}"/>
 		</div>
-		<div class="${classInputLink}">
-			<input></input>
-			<button>
-				Insert
-			</button>
-		</div>
-		<div class="${classStyles}">
-			<a href="#" class="button bold">B</a>
-			<a href="#" class="button italic">I</a>
-			<a href="#" class="button underline">U</a>
-			<a href="#" class="button ul">
-				<img src="${svgUl}" />
-			</a>
-			<a href="#" class="button ol">
-				<img src="${svgOl}" />
-			</a>
-		</div>
-		<div class="${classMenu}">
-			<a href="#" class="button ${classBAttachment}">
-				<img src="${svgAttachment}" />
-			</a>
-			<a href="#" class="button ${classBStyle}">
-				<img src="${svgStyle}" />
-			</a>
-			<a href="#" class="button ${classBLink}">Link</a>
-			<a href="#" class="button ${classBSend}">
-				<img src="${svgSend}" />
-			</a>
-		</div>
-		<div class="${classFileList}">
-		</div>
+		<div class="${classMenuWrapper}">
+			<div class="${classInputLink}">
+				<input></input>
+				<button>
+					Insert
+				</button>
+			</div>
 
-		<input
-			class="hidden ${classInputFile}"
-			type="file"
-			name="file"
-			multiple
-		>
+			<div class="${classStyles}">
+				<a href="#" class="button bold">B</a>
+				<a href="#" class="button italic">I</a>
+				<a href="#" class="button underline">U</a>
+				<a href="#" class="button ul">
+					<img src="${svgUl}" />
+				</a>
+				<a href="#" class="button ol">
+					<img src="${svgOl}" />
+				</a>
+			</div>
+
+			<div class="${classMenu}">
+				<a href="#" class="button ${classBAttachment}">
+					<img src="${svgAttachment}" />
+				</a>
+				<a href="#" class="button ${classBStyle}">
+					<img src="${svgStyle}" />
+				</a>
+				<a href="#" class="button ${classBLink}">Link</a>
+				<a href="#" class="button ${classBSend}">
+					<img src="${svgSend}" />
+				</a>
+			</div>
+
+			<div class="${classFileList}">
+			</div>
+
+			<input
+				class="hidden ${classInputFile}"
+				type="file"
+				name="file"
+				multiple
+			>
+		</div>
 	</div>
 `
 
@@ -95,6 +101,7 @@ export class Compoz {
 	private elRoot: HTMLElement
 	private elInput: HTMLElement
 	private elExpand: HTMLElement
+	private elMenuWrapper: HTMLElement
 	private elMenuLink: HTMLElement
 	private elInputLink: HTMLInputElement
 	private elInputFile: HTMLInputElement
@@ -124,11 +131,7 @@ export class Compoz {
 		let sel = "#"+ this.id
 		this.initInput(sel)
 		this.initElExpand(sel)
-		this.initFileList(sel)
-		this.initInputLink(sel)
-		this.initMenuStyles(sel)
-		this.initMenu(sel)
-		this.initInputFile(sel)
+		this.initMenuWrapper(sel)
 	}
 
 	public isEmpty(): boolean {
@@ -164,6 +167,19 @@ export class Compoz {
 				this.cfg.onExpand()
 			}
 		}
+	}
+
+	private initMenuWrapper(sel: string) {
+		sel += " div."+ classMenuWrapper
+		this.elMenuWrapper = document.querySelector(sel)
+
+		this.initFileList(sel)
+		this.initInputLink(sel)
+		this.initMenuStyles(sel)
+		this.initMenu(sel)
+		this.initInputFile(sel)
+
+		this.resizeInput(0, this.cfg.height)
 	}
 
 	private initFileList(sel: string) {
@@ -374,6 +390,17 @@ export class Compoz {
 		this.elInput.innerHTML = ""
 		this.elFiles.innerHTML = ""
 		this.files = new Array()
+	}
+
+	public resizeInput(w: number, h: number) {
+		if (w && w > 0) {
+			this.elInput.style.width = w +"px";
+			this.elInput.style.maxWidth = w +"px";
+		}
+		if (h && h > 0) {
+			this.elInput.style.height = h +"px";
+			this.elInput.style.maxHeight = h +"px";
+		}
 	}
 }
 

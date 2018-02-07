@@ -5,10 +5,10 @@
 <title><%= htmlWebpackPlugin.options.title %></title>
 <style>
 	.panel {
+		display: inline-block;
 		position: relative;
 		height: calc(100vh - 20px);
-		width: 100%;
-		max-width: calc(100% - 20px);
+		width: calc(50% - 20px);
 		overflow: hidden;
 	}
 
@@ -18,7 +18,8 @@
 		padding: 8px;
 	}
 
-	.panel #compose {
+	.panel #quick-compose,
+	.panel #full-compose {
 		background: white;
 		position: absolute;
 		bottom: 0;
@@ -30,7 +31,12 @@
 	<div class="panel">
 		<div class="content">
 		</div>
-		<div id="compose">
+		<div id="quick-compose">
+		</div>
+	</div>
+
+	<div class="panel">
+		<div id="full-compose">
 		</div>
 	</div>
 </body>

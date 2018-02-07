@@ -16,7 +16,7 @@ function generateContent() {
 	}
 }
 
-function createCompose() {
+function createQuickCompose() {
 	let config = {
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
@@ -45,10 +45,26 @@ function createCompose() {
 	,	fileMaxSize: 4194304 // 4MB
 	}
 
-	let c = new Compoz("compose", config)
+	let c = new Compoz("quick-compose", config)
+}
+
+function createFullCompose() {
+	let config = {
+		onSend: () => {
+			console.log("content:", c.getContentHTML())
+		}
+	,	onExpand: () => {
+			console.log("onExpand")
+		}
+	,	fileMaxSize: 4194304 // 4MB
+	,	height: 500
+	}
+
+	let c = new Compoz("full-compose", config)
 }
 
 generateContent()
-createCompose()
+createQuickCompose()
+createFullCompose()
 
 // vim: set ts=4 sw=4 noexpandtab:
