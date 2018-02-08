@@ -57,7 +57,6 @@ function createFullCompose() {
 	,	onExpand: () => {
 			console.log("onExpand")
 		}
-	,	fileMaxSize: 4194304 // 4MB
 	,	height: 500
 	}
 

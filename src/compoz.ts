@@ -124,8 +124,11 @@ export class Compoz {
 		this.id = id
 		this.cfg = opts
 
-		this.elRoot = document.getElementById(id)
+		if (! this.cfg.fileMaxSize) {
+			this.cfg.fileMaxSize = -1;
+		}
 
+		this.elRoot = document.getElementById(id)
 		this.elRoot.innerHTML = compozTmpl
 
 		let sel = "#"+ this.id
@@ -237,7 +240,8 @@ export class Compoz {
 			for (let x = 0; x < this.elInputFile.files.length; x++) {
 				let f = this.elInputFile.files[x]
 
-				if (f.size <= this.cfg.fileMaxSize) {
+				if (this.cfg.fileMaxSize < 0
+				|| (this.cfg.fileMaxSize > 0 && f.size <= this.cfg.fileMaxSize)) {
 					let cf = new CompozFile(f, () => {
 							this.onFileDeleted(f)
 						})
