@@ -89,6 +89,8 @@ const compozTmpl = `
 export interface Config {
 	onSend?: Function
 	onExpand?: Function
+	onContentChange?: Function
+	onBlur?: Function
 	fileMaxSize?: number
 	height?: number
 	contentHTML?: string
@@ -162,6 +164,16 @@ export class Compoz {
 		this.elInput.onblur = () => {
 			if (this.isEmpty()) {
 				this.elInput.innerHTML = inputHintTmpl
+			}
+
+			if (this.cfg.onBlur) {
+				this.cfg.onBlur()
+			}
+		}
+
+		if (this.cfg.onContentChange) {
+			this.elInput.onkeyup = () => {
+				this.cfg.onContentChange(this.getContentHTML())
 			}
 		}
 	}

@@ -57,6 +57,12 @@ function createFullCompose() {
 	,	onExpand: () => {
 			console.log("onExpand")
 		}
+	,	onContentChange: (contentHTML: string) => {
+			console.log("onContentChange:", contentHTML)
+		}
+	,	onBlur: () => {
+			console.log("onBlur")
+		}
 	,	height: 500
 	}
 
