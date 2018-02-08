@@ -67,6 +67,8 @@ function createFullCompose() {
 	}
 
 	let c = new Compoz("full-compose", config)
+
+	c.setContentHTML("<b>Test</b> set content")
 }
 
 generateContent()

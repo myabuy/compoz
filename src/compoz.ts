@@ -424,6 +424,10 @@ export class Compoz {
 			this.elInput.style.maxHeight = h +"px";
 		}
 	}
+
+	public setContentHTML(c: string) {
+		this.elInput.innerHTML = c;
+	}
 }
 
 // vim: set ts=4 sw=4 noexpandtab:
