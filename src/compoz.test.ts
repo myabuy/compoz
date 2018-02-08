@@ -43,6 +43,7 @@ function createQuickCompose() {
 			console.log("onExpand")
 		}
 	,	fileMaxSize: 4194304 // 4MB
+	,	contentHTML: "<b> this is </b> the content"
 	}
 
 	let c = new Compoz("quick-compose", config)

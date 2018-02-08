@@ -146,6 +146,10 @@ export class Compoz {
 		this.elInput.contentEditable = "true"
 		this.elInput.innerHTML = inputHintTmpl
 
+		if (this.cfg.contentHTML) {
+			this.elInput.innerHTML = this.cfg.contentHTML;
+		}
+
 		this.elInput.onfocus = (e) => {
 			if (this.isEmpty()) {
 				this.elInput.innerHTML = ""
