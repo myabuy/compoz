@@ -94,6 +94,7 @@ export interface Config {
 	fileMaxSize?: number
 	height?: number
 	contentHTML?: string
+	hideExpand?: boolean
 	hideSend?: boolean
 }
 
@@ -182,6 +183,12 @@ export class Compoz {
 	private initElExpand(sel: string) {
 		sel += " div."+ classExpand
 		this.elExpand = document.querySelector(sel)
+
+		if (this.cfg.hideExpand) {
+			this.elExpand.style.display = "none";
+			return;
+		}
+
 		this.elExpand.onclick = (e) => {
 			if (this.cfg.onExpand) {
 				this.cfg.onExpand()
