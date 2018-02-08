@@ -63,6 +63,7 @@ function createFullCompose() {
 	,	onBlur: () => {
 			console.log("onBlur")
 		}
+	,	hideSend: true
 	,	height: 500
 	}
 

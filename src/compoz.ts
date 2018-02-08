@@ -94,6 +94,7 @@ export interface Config {
 	fileMaxSize?: number
 	height?: number
 	contentHTML?: string
+	hideSend?: boolean
 }
 
 export class Compoz {
@@ -359,6 +360,12 @@ export class Compoz {
 	private initBSend(sel: string) {
 		sel += " a."+ classBSend
 		this.elBSend = document.querySelector(sel)
+
+		if (this.cfg.hideSend) {
+			this.elBSend.style.display = "none";
+			return;
+		}
+
 		this.elBSend.onclick = (e) => {
 			if (this.cfg.onSend) {
 				this.cfg.onSend()
