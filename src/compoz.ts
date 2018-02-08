@@ -87,7 +87,7 @@ const compozTmpl = `
 `
 
 export interface Config {
-	onSend: Function
+	onSend?: Function
 	onExpand?: Function
 	fileMaxSize?: number
 	height?: number
@@ -348,7 +348,9 @@ export class Compoz {
 		sel += " a."+ classBSend
 		this.elBSend = document.querySelector(sel)
 		this.elBSend.onclick = (e) => {
-			this.cfg.onSend()
+			if (this.cfg.onSend) {
+				this.cfg.onSend()
+			}
 		}
 	}
 
