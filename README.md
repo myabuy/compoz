@@ -7,8 +7,8 @@ Simple javascript WYSIWYG text editor.
 The main goal of this project is to provide a WYSIWYG text editor that is easy
 to use to compose a message.
 
-The second goal is to provide a source code that is easy to hack, adding new
-feature or function should be easy.
+The second goal is to provide a source code that is easy to hack, where adding
+new feature or function should be easy.
 
 ## Features
 
@@ -20,7 +20,7 @@ feature or function should be easy.
 
 ## Development
 
-This software is written and build using Nodejs, npm, TypeScript and Webpack.
+This software is written and build using Nodejs, TypeScript, and Webpack.
 
 Steps for starting development,
 

@@ -2,6 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const TypedocWebpackPlugin = require('typedoc-webpack-plugin');
 
 const extractSass = new ExtractTextPlugin({
 	filename: "[name].css",
@@ -21,7 +22,12 @@ module.exports = {
 			title: "Compoz Test",
 			template: "src/test.tmpl"
 		}),
-        extractSass
+		extractSass,
+		new TypedocWebpackPlugin({},
+		[
+			"custom.d.ts",
+			"./src"
+		])
 	],
 	module: {
 		rules: [{

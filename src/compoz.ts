@@ -2,8 +2,8 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import { CompozFile } from "./compozfile.ts"
-export { FileState } from "./filestate.ts"
+import { CompozFile } from "./compozfile"
+export { FileState } from "./filestate"
 
 import "./compoz.scss"
 
@@ -86,6 +86,9 @@ const compozTmpl = `
 	</div>
 `
 
+/**
+ * Config define an object to configure the compose component.
+ */
 export interface Config {
 	onSend?: Function
 	onExpand?: Function
@@ -98,6 +101,9 @@ export interface Config {
 	hideSend?: boolean
 }
 
+/**
+ * Compoz is a class that handle the compose component.
+ */
 export class Compoz {
 	private id: string
 	private link: string

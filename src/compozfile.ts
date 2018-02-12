@@ -13,7 +13,7 @@ import iconXls from "./assets/file-xls.png"
 import imgStateError from "./assets/state-error.svg"
 import imgStateUploading from "./assets/state-uploading.gif"
 
-import { FileState } from "./filestate.ts"
+import { FileState } from "./filestate"
 
 const classCompozFile = "compoz-file"
 const classDelete = "delete"
