@@ -1,17 +1,12 @@
 const webpack = require('webpack');
-const merge = require("webpack-merge");
-const common = require("./webpack.common.js");
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const merge = require('webpack-merge');
+const common = require('./webpack.common.js');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = merge(common, {
-	plugins: [
-		new UglifyJSPlugin({
-			sourceMap: true
-		}),
-		new webpack.DefinePlugin({
-			"process.env.NODE_ENV": JSON.stringify("production")
-		})
-	]
+  plugins: [
+    new UglifyJSPlugin({sourceMap: true}),
+    new webpack.DefinePlugin(
+        {'process.env.NODE_ENV': JSON.stringify('production')})
+  ]
 });
-
-// vim: set ts=4 sw=4 noexpandtab:
