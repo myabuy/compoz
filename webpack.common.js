@@ -14,7 +14,7 @@ module.exports = {
     new CleanWebpackPlugin(['dist']),
     new TSLintPlugin({files: ['./src/*.ts', './src/**/*.ts']}),
     new HtmlWebpackPlugin({title: 'Compoz Test', template: 'src/test.tmpl'}),
-    extractSass, new TypedocWebpackPlugin({}, ['custom.d.ts', './src'])
+    extractSass, new TypedocWebpackPlugin({}, ['./src'])
   ],
   module: {
     rules: [
