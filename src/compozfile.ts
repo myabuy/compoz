@@ -2,16 +2,16 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import iconDoc from './assets/file-doc.png';
-import iconImg from './assets/file-image.png';
-import iconOth from './assets/file-others.png';
-import iconPdf from './assets/file-pdf.png';
-import iconPpt from './assets/file-ppt.png';
-import iconTxt from './assets/file-txt.png';
-import iconXls from './assets/file-xls.png';
+const iconDoc = require('./assets/file-doc.png');
+const iconImg = require('./assets/file-image.png');
+const iconOth = require('./assets/file-others.png');
+const iconPdf = require('./assets/file-pdf.png');
+const iconPpt = require('./assets/file-ppt.png');
+const iconTxt = require('./assets/file-txt.png');
+const iconXls = require('./assets/file-xls.png');
 
-import imgStateError from './assets/state-error.svg';
-import imgStateUploading from './assets/state-uploading.gif';
+const imgStateError = require('./assets/state-error.svg');
+const imgStateUploading = require('./assets/state-uploading.gif');
 
 import {FileState} from './filestate';
 
@@ -55,7 +55,7 @@ export class CompozFile {
   }
 
   private createElIcon() {
-    this.elIcon = document.createElement('img')! as HTMLImageElement;
+    this.elIcon = new Image();
     this.elIcon.classList.add('icon');
     this.el.appendChild(this.elIcon);
     this.updateIcon();

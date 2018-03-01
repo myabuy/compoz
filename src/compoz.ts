@@ -3,16 +3,15 @@
 // in the LICENSE file.
 
 import './compoz.scss';
-
-import svgAttachment from './assets/b-attachment.svg';
-import svgExpand from './assets/b-expand.svg';
-import svgOl from './assets/b-ol.svg';
-import svgSend from './assets/b-send.svg';
-import svgStyle from './assets/b-style.svg';
-import svgUl from './assets/b-ul.svg';
 import {CompozFile} from './compozfile';
-
 export {FileState} from './filestate';
+
+const svgAttachment = require('./assets/b-attachment.svg');
+const svgExpand = require('./assets/b-expand.svg');
+const svgOl = require('./assets/b-ol.svg');
+const svgSend = require('./assets/b-send.svg');
+const svgStyle = require('./assets/b-style.svg');
+const svgUl = require('./assets/b-ul.svg');
 
 const inputHint = 'Write something...';
 const classRoot = 'compoz';
@@ -132,6 +131,8 @@ export class Compoz {
   private files: CompozFile[] = new Array();
 
   constructor(id: string, opts: Config) {
+    console.log('svgAttachment:', svgAttachment);
+
     this.id = id;
     this.cfg = opts;
 
