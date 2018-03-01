@@ -66,6 +66,7 @@ function createFullCompose() {
     },
     hideExpand: true,
     hideSend: true,
+    hideAttachment: true,
     height: 500
   };
 

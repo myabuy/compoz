@@ -131,8 +131,6 @@ export class Compoz {
   private files: CompozFile[] = new Array();
 
   constructor(id: string, opts: Config) {
-    console.log('svgAttachment:', svgAttachment);
-
     this.id = id;
     this.cfg = opts;
 
@@ -353,6 +351,12 @@ export class Compoz {
   private initBAttachment(sel: string) {
     sel += ' a.' + classBAttachment;
     this.elBAttachment = document.querySelector(sel)! as HTMLAnchorElement;
+
+    if (this.cfg.hideAttachment) {
+      this.elBAttachment.style.display = 'none';
+      return;
+    }
+
     this.elBAttachment.onclick = (e) => {
       this.elInputFile.click();
     };
