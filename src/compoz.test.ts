@@ -2,33 +2,35 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import {Compoz, Config} from './compoz'
-import {FileState} from './filestate'
+import {Compoz, Config} from './compoz';
+import {FileState} from './filestate';
 
 function generateContent() {
-  var elContent = document.querySelector('div.panel div.content');
+  const elContent = document.querySelector('div.panel div.content');
 
   for (let x = 0; x < 100; x++) {
-    let d = document.createElement('div');
+    const d = document.createElement('div');
     d.innerText = 'Test ' + x;
 
-    elContent.appendChild(d);
+    if (elContent) {
+      elContent.appendChild(d);
+    }
   }
 }
 
 function createQuickCompose() {
-  let config = {
+  const config = {
     onSend: () => {
       console.log('content:', c.getContentHTML());
 
-      let files = c.getFiles();
+      const files = c.getFiles();
 
-      for (var x = 0; x < files.length; x++) {
+      for (let x = 0; x < files.length; x++) {
         files[x].setState(FileState.UPLOADING);
       }
 
-      setTimeout(function() {
-        for (var x = 0; x < files.length; x++) {
+      setTimeout(() => {
+        for (let x = 0; x < files.length; x++) {
           if ((x % 2) === 1) {
             files[x].setState(FileState.SUCCESS);
           } else {
@@ -43,13 +45,13 @@ function createQuickCompose() {
     fileMaxSize: 4194304  // 4MB
     ,
     contentHTML: '<b> this is </b> the content'
-  }
+  };
 
-  let c = new Compoz('quick-compose', config);
+  const c = new Compoz('quick-compose', config);
 }
 
 function createFullCompose() {
-  let config = {
+  const config = {
     onSend: () => {
       console.log('content:', c.getContentHTML());
     },
@@ -65,9 +67,9 @@ function createFullCompose() {
     hideExpand: true,
     hideSend: true,
     height: 500
-  }
+  };
 
-  let c = new Compoz('full-compose', config);
+  const c = new Compoz('full-compose', config);
 
   c.setContentHTML('<b>Test</b> set content');
 }

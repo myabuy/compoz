@@ -2,36 +2,36 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import iconDoc from './assets/file-doc.png'
-import iconImg from './assets/file-image.png'
-import iconOth from './assets/file-others.png'
-import iconPdf from './assets/file-pdf.png'
-import iconPpt from './assets/file-ppt.png'
-import iconTxt from './assets/file-txt.png'
-import iconXls from './assets/file-xls.png'
+import iconDoc from './assets/file-doc.png';
+import iconImg from './assets/file-image.png';
+import iconOth from './assets/file-others.png';
+import iconPdf from './assets/file-pdf.png';
+import iconPpt from './assets/file-ppt.png';
+import iconTxt from './assets/file-txt.png';
+import iconXls from './assets/file-xls.png';
 
-import imgStateError from './assets/state-error.svg'
-import imgStateUploading from './assets/state-uploading.gif'
+import imgStateError from './assets/state-error.svg';
+import imgStateUploading from './assets/state-uploading.gif';
 
-import {FileState} from './filestate'
+import {FileState} from './filestate';
 
-const classCompozFile = 'compoz-file'
-const classDelete = 'delete'
+const classCompozFile = 'compoz-file';
+const classDelete = 'delete';
 
 export class CompozFile {
-  public file: File;
-  public el: HTMLElement;
-  public elIcon: HTMLImageElement;
-  public state: FileState;
+  file: File;
+  el!: HTMLElement;
+  elIcon!: HTMLImageElement;
+  state!: FileState;
   private onDelete: Function;
 
   constructor(file: File, onDelete: Function) {
     this.file = file;
     this.onDelete = onDelete;
-    this.el = document.createElement('div');
+    this.el = document.createElement('div')! as HTMLElement;
     this.el.classList.add(classCompozFile);
 
-    var elDummy = document.createElement('div');
+    const elDummy = document.createElement('div');
     this.el.appendChild(elDummy);
 
     this.createElName();
@@ -40,11 +40,11 @@ export class CompozFile {
   }
 
   private createElName() {
-    let elName = document.createElement('div');
+    const elName = document.createElement('div');
     elName.classList.add('name');
 
     let name = this.file.name;
-    let len = name.length;
+    const len = name.length;
     if (len > 20) {
       elName.title = this.file.name;
       name = name.substring(0, 8) + '...' + name.substring(len - 8, len);
@@ -55,14 +55,14 @@ export class CompozFile {
   }
 
   private createElIcon() {
-    this.elIcon = document.createElement('img');
+    this.elIcon = document.createElement('img')! as HTMLImageElement;
     this.elIcon.classList.add('icon');
     this.el.appendChild(this.elIcon);
     this.updateIcon();
   }
 
   private updateIcon() {
-    let type = this.file.type;
+    const type = this.file.type;
 
     if (type === 'application/msword' ||
         type === 'application/vnd.oasis.opendocument.text' ||
@@ -112,32 +112,33 @@ export class CompozFile {
   }
 
   private createElDelete() {
-    let elDelete = document.createElement('span');
+    const elDelete = document.createElement('span');
 
     elDelete.innerText = 'X';
     elDelete.classList.add(classDelete);
 
-    elDelete.onclick =
-        (e) => {
-          this.el.parentNode.removeChild(this.el);
-          this.onDelete();
-        }
+    elDelete.onclick = (e) => {
+      if (this.el.parentNode) {
+        this.el.parentNode.removeChild(this.el);
+      }
+      this.onDelete();
+    };
 
-               this.el.appendChild(elDelete);
+    this.el.appendChild(elDelete);
   }
 
-  public setState(state: FileState) {
+  setState(state: FileState) {
     this.state = state;
 
     switch (state) {
       case FileState.UPLOADING:
         this.elIcon.src = imgStateUploading;
         break;
-      case FileState.ERROR:
-        this.elIcon.src = imgStateError;
-        break;
       case FileState.SUCCESS:
         this.updateIcon();
+        break;
+      default:
+        this.elIcon.src = imgStateError;
         break;
     }
   }

@@ -106,29 +106,29 @@ export interface Config {
  * Compoz is a class that handle the compose component.
  */
 export class Compoz {
-  private id: string;
-  private link: string;
-  private cfg: Config;
-  private elRoot: HTMLElement;
-  private elInput: HTMLElement;
-  private elExpand: HTMLElement;
-  private elMenuWrapper: HTMLElement;
-  private elMenuLink: HTMLElement;
-  private elInputLink: HTMLInputElement;
-  private elInputFile: HTMLInputElement;
-  private elFiles: HTMLElement;
-  private elBInsertLink: HTMLElement;
-  private elMenu: HTMLElement;
-  private elStyles: HTMLElement;
-  private elBAttachment: HTMLAnchorElement;
-  private elBLink: HTMLAnchorElement;
-  private elBStyle: HTMLAnchorElement;
-  private elBSend: HTMLAnchorElement;
-  private elBBold: HTMLAnchorElement;
-  private elBItalic: HTMLAnchorElement;
-  private elBUnderline: HTMLAnchorElement;
-  private elBUL: HTMLAnchorElement;
-  private elBOL: HTMLAnchorElement;
+  private id!: string;
+  private link!: string;
+  private cfg: Config = {};
+  private elRoot!: HTMLElement;
+  private elInput!: HTMLElement;
+  private elExpand!: HTMLElement;
+  private elMenuWrapper!: HTMLElement;
+  private elMenuLink!: HTMLElement;
+  private elInputLink!: HTMLInputElement;
+  private elInputFile!: HTMLInputElement;
+  private elFiles!: HTMLElement;
+  private elBInsertLink!: HTMLElement;
+  private elMenu!: HTMLElement;
+  private elStyles!: HTMLElement;
+  private elBAttachment!: HTMLAnchorElement;
+  private elBLink!: HTMLAnchorElement;
+  private elBStyle!: HTMLAnchorElement;
+  private elBSend!: HTMLAnchorElement;
+  private elBBold!: HTMLAnchorElement;
+  private elBItalic!: HTMLAnchorElement;
+  private elBUnderline!: HTMLAnchorElement;
+  private elBUL!: HTMLAnchorElement;
+  private elBOL!: HTMLAnchorElement;
   private files: CompozFile[] = new Array();
 
   constructor(id: string, opts: Config) {
@@ -139,23 +139,26 @@ export class Compoz {
       this.cfg.fileMaxSize = -1;
     }
 
-    this.elRoot = document.getElementById(id);
-    this.elRoot.innerHTML = compozTmpl;
+    this.elRoot = document.getElementById(id)! as HTMLElement;
+    if (this.elRoot) {
+      this.elRoot.innerHTML = compozTmpl;
+    }
 
-    let sel = '#' + this.id;
+    const sel = '#' + this.id;
     this.initInput(sel);
     this.initElExpand(sel);
     this.initMenuWrapper(sel);
   }
 
-  public isEmpty(): boolean {
-    let v = this.elInput.textContent.trim();
+  isEmpty(): boolean {
+    let v = this.elInput.textContent || '';
+    v = v.trim();
     return (v === inputHint || v === '');
   }
 
   private initInput(sel: string) {
     sel += ' div.' + classInput;
-    this.elInput = document.querySelector(sel);
+    this.elInput = document.querySelector(sel)! as HTMLInputElement;
     this.elInput.contentEditable = 'true';
     this.elInput.innerHTML = inputHintTmpl;
 
@@ -163,34 +166,32 @@ export class Compoz {
       this.elInput.innerHTML = this.cfg.contentHTML;
     }
 
-    this.elInput.onfocus =
-        (e) => {
-          if (this.isEmpty()) {
-            this.elInput.innerHTML = '';
-          }
-        }
+    this.elInput.onfocus = (e) => {
+      if (this.isEmpty()) {
+        this.elInput.innerHTML = '';
+      }
+    };
 
-               this.elInput.onblur =
-            () => {
-              if (this.isEmpty()) {
-                this.elInput.innerHTML = inputHintTmpl;
-              }
+    this.elInput.onblur = () => {
+      if (this.isEmpty()) {
+        this.elInput.innerHTML = inputHintTmpl;
+      }
 
-              if (this.cfg.onBlur) {
-                this.cfg.onBlur();
-              }
-            }
+      if (this.cfg.onBlur) {
+        this.cfg.onBlur();
+      }
+    };
 
-    if (this.cfg.onContentChange) {
-      this.elInput.onkeyup = () => {
+    this.elInput.onkeyup = () => {
+      if (this.cfg.onContentChange) {
         this.cfg.onContentChange(this.getContentHTML());
       }
-    }
+    };
   }
 
   private initElExpand(sel: string) {
     sel += ' div.' + classExpand;
-    this.elExpand = document.querySelector(sel);
+    this.elExpand = document.querySelector(sel)! as HTMLElement;
 
     if (this.cfg.hideExpand) {
       this.elExpand.style.display = 'none';
@@ -201,12 +202,12 @@ export class Compoz {
       if (this.cfg.onExpand) {
         this.cfg.onExpand();
       }
-    }
+    };
   }
 
   private initMenuWrapper(sel: string) {
     sel += ' div.' + classMenuWrapper;
-    this.elMenuWrapper = document.querySelector(sel);
+    this.elMenuWrapper = document.querySelector(sel)! as HTMLElement;
 
     this.initFileList(sel);
     this.initInputLink(sel);
@@ -214,39 +215,44 @@ export class Compoz {
     this.initMenu(sel);
     this.initInputFile(sel);
 
-    this.resizeInput(0, this.cfg.height);
+    if (this.cfg.height) {
+      this.resizeInput(0, this.cfg.height);
+    }
   }
 
   private initFileList(sel: string) {
     sel += ' div.' + classFileList;
 
-    this.elFiles = document.querySelector(sel);
+    this.elFiles = document.querySelector(sel)! as HTMLElement;
   }
 
   private initInputLink(sel: string) {
     sel += ' div.' + classInputLink;
-    this.elMenuLink = document.querySelector(sel);
+    this.elMenuLink = document.querySelector(sel)! as HTMLElement;
+
     this.elMenuLink.style.display = 'none';
 
-    let selInput = sel + ' input';
-    this.elInputLink = document.querySelector(selInput);
+    const selInput = sel + ' input';
+    this.elInputLink = document.querySelector(selInput)! as HTMLInputElement;
 
-    let selButton = sel + ' button';
-    this.elBInsertLink = document.querySelector(selButton);
+    const selButton = sel + ' button';
+
+    this.elBInsertLink = document.querySelector(selButton)! as HTMLElement;
 
     this.elBInsertLink.onclick = (e) => {
-      let val = this.elInputLink.value;
+      const val = this.elInputLink.value;
 
       document.execCommand('createLink', false, val);
 
       this.elInput.focus();
       this.hideInputLink();
-    }
+    };
   }
 
   private initMenuStyles(sel: string) {
     sel += ' div.' + classStyles;
-    this.elStyles = document.querySelector(sel);
+    this.elStyles = document.querySelector(sel)! as HTMLElement;
+
     this.elStyles.style.display = 'none';
 
     this.initBBold(sel);
@@ -259,73 +265,83 @@ export class Compoz {
   private initInputFile(sel: string) {
     sel += ' input.' + classInputFile;
 
-    this.elInputFile = document.querySelector(sel);
+    this.elInputFile = document.querySelector(sel)! as HTMLInputElement;
+
     this.elInputFile.onchange = () => {
       if (!this.elInputFile.value) {
         return;
       }
 
-      for (let x = 0; x < this.elInputFile.files.length; x++) {
-        let f = this.elInputFile.files[x];
+      if (!this.elInputFile.files) {
+        return;
+      }
 
-        if (this.cfg.fileMaxSize < 0 ||
-            (this.cfg.fileMaxSize > 0 && f.size <= this.cfg.fileMaxSize)) {
-          let cf = new CompozFile(f, () => {this.onFileDeleted(f)});
-          this.files.push(cf);
-          this.elFiles.appendChild(cf.el);
+      for (let x = 0; x < this.elInputFile.files.length; x++) {
+        const f = this.elInputFile.files[x];
+
+        if (this.cfg.fileMaxSize) {
+          if (this.cfg.fileMaxSize < 0 ||
+              (this.cfg.fileMaxSize > 0 && f.size <= this.cfg.fileMaxSize)) {
+            const cf = new CompozFile(f, () => {
+              this.onFileDeleted(f);
+            });
+            this.files.push(cf);
+            this.elFiles.appendChild(cf.el);
+          }
         }
       }
-    }
+    };
   }
 
   private initBBold(sel: string) {
     sel += ' a.bold';
-    this.elBBold = document.querySelector(sel);
+    this.elBBold = document.querySelector(sel)! as HTMLAnchorElement;
     this.elBBold.onclick = (e) => {
       document.execCommand('bold', false, null);
       this.elInput.focus();
-    }
+    };
   }
 
   private initBItalic(sel: string) {
     sel += ' a.italic';
-    this.elBItalic = document.querySelector(sel);
+    this.elBItalic = document.querySelector(sel)! as HTMLAnchorElement;
     this.elBItalic.onclick = (e) => {
       document.execCommand('italic', false, null);
       this.elInput.focus();
-    }
+    };
   }
 
   private initBUnderline(sel: string) {
     sel += ' a.underline';
-    this.elBUnderline = document.querySelector(sel);
+    this.elBUnderline = document.querySelector(sel)! as HTMLAnchorElement;
     this.elBUnderline.onclick = (e) => {
       document.execCommand('underline', false, null);
       this.elInput.focus();
-    }
+    };
   }
 
   private initBUL(sel: string) {
     sel += ' a.ul';
-    this.elBUL = document.querySelector(sel);
+    this.elBUL = document.querySelector(sel)! as HTMLAnchorElement;
     this.elBUL.onclick = (e) => {
       document.execCommand('insertUnorderedList', false, null);
       this.elInput.focus();
-    }
+    };
   }
 
   private initBOL(sel: string) {
     sel += ' a.ol';
-    this.elBOL = document.querySelector(sel);
+    this.elBOL = document.querySelector(sel)! as HTMLAnchorElement;
     this.elBOL.onclick = (e) => {
       document.execCommand('insertOrderedList', false, null);
       this.elInput.focus();
-    }
+    };
   }
 
   private initMenu(sel: string) {
     sel += ' div.' + classMenu;
-    this.elMenu = document.querySelector(sel);
+
+    this.elMenu = document.querySelector(sel)! as HTMLElement;
 
     this.initBAttachment(sel);
     this.initBStyle(sel);
@@ -335,16 +351,17 @@ export class Compoz {
 
   private initBAttachment(sel: string) {
     sel += ' a.' + classBAttachment;
-    this.elBAttachment = document.querySelector(sel);
+    this.elBAttachment = document.querySelector(sel)! as HTMLAnchorElement;
     this.elBAttachment.onclick = (e) => {
       this.elInputFile.click();
-    }
+    };
   }
 
   private initBStyle(sel: string) {
     sel += ' a.' + classBStyle;
 
-    this.elBStyle = document.querySelector(sel);
+    this.elBStyle = document.querySelector(sel)! as HTMLAnchorElement;
+
     this.elBStyle.onclick = (e) => {
       if (this.elStyles.style.display === 'none') {
         this.hideInputLink();
@@ -352,13 +369,14 @@ export class Compoz {
       } else {
         this.hideStyles();
       }
-    }
+    };
   }
 
   private initBLink(sel: string) {
     sel += ' a.' + classBLink;
 
-    this.elBLink = document.querySelector(sel);
+    this.elBLink = document.querySelector(sel)! as HTMLAnchorElement;
+
     this.elBLink.onclick = (e) => {
       if (this.elMenuLink.style.display === 'none') {
         this.hideStyles();
@@ -366,13 +384,12 @@ export class Compoz {
       } else {
         this.hideInputLink();
       }
-
-    }
+    };
   }
 
   private initBSend(sel: string) {
     sel += ' a.' + classBSend;
-    this.elBSend = document.querySelector(sel);
+    this.elBSend = document.querySelector(sel)! as HTMLAnchorElement;
 
     if (this.cfg.hideSend) {
       this.elBSend.style.display = 'none';
@@ -383,7 +400,7 @@ export class Compoz {
       if (this.cfg.onSend) {
         this.cfg.onSend();
       }
-    }
+    };
   }
 
   private showStyles() {
