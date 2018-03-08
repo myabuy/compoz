@@ -2,7 +2,7 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import {Compoz, Config} from './compoz';
+import {Compoz} from './compoz';
 import {FileState} from './filestate';
 
 function generateContent() {
@@ -20,6 +20,13 @@ function generateContent() {
 
 function createQuickCompose() {
   const config = {
+    contentHTML: '<b> this is </b> the content',
+    fileMaxSize: 4194304,
+    height: 0,
+    hideAttachment: false,
+    hideExpand: false,
+    hideSend: false,
+
     onSend: () => {
       console.log('content:', c.getContentHTML());
 
@@ -39,12 +46,11 @@ function createQuickCompose() {
         }
       }, 2000);
     },
+    onBlur: null,
+    onContentChange: null,
     onExpand: () => {
       console.log('onExpand');
     },
-    fileMaxSize: 4194304  // 4MB
-    ,
-    contentHTML: '<b> this is </b> the content'
   };
 
   const c = new Compoz('quick-compose', config);
@@ -52,6 +58,13 @@ function createQuickCompose() {
 
 function createFullCompose() {
   const config = {
+    contentHTML: '',
+    height: 500,
+    fileMaxSize: 0,
+    hideAttachment: true,
+    hideExpand: true,
+    hideSend: true,
+
     onSend: () => {
       console.log('content:', c.getContentHTML());
     },
@@ -63,11 +76,7 @@ function createFullCompose() {
     },
     onBlur: () => {
       console.log('onBlur');
-    },
-    hideExpand: true,
-    hideSend: true,
-    hideAttachment: true,
-    height: 500
+    }
   };
 
   const c = new Compoz('full-compose', config);

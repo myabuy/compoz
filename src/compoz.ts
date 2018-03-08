@@ -3,7 +3,10 @@
 // in the LICENSE file.
 
 import './compoz.scss';
+
 import {CompozFile} from './compozfile';
+import {Config, ConfigInterface} from './config';
+
 export {FileState} from './filestate';
 
 const svgAttachment = require('./assets/b-attachment.svg');
@@ -86,28 +89,12 @@ const compozTmpl = `
 `;
 
 /**
- * Config define an object to configure the compose component.
- */
-export interface Config {
-  onSend?: Function;
-  onExpand?: Function;
-  onContentChange?: Function;
-  onBlur?: Function;
-  fileMaxSize?: number;
-  height?: number;
-  contentHTML?: string;
-  hideExpand?: boolean;
-  hideSend?: boolean;
-  hideAttachment?: boolean;
-}
-
-/**
  * Compoz is a class that handle the compose component.
  */
 export class Compoz {
   private id!: string;
   private link!: string;
-  private cfg: Config = {};
+  private cfg: Config = new Config(null);
   private elRoot!: HTMLElement;
   private elInput!: HTMLElement;
   private elExpand!: HTMLElement;
@@ -130,13 +117,9 @@ export class Compoz {
   private elBOL!: HTMLAnchorElement;
   private files: CompozFile[] = new Array();
 
-  constructor(id: string, opts: Config) {
+  constructor(id: string, opts: ConfigInterface) {
     this.id = id;
-    this.cfg = opts;
-
-    if (!this.cfg.fileMaxSize) {
-      this.cfg.fileMaxSize = -1;
-    }
+    this.cfg = new Config(opts);
 
     this.elRoot = document.getElementById(id)! as HTMLElement;
     if (this.elRoot) {
@@ -161,9 +144,7 @@ export class Compoz {
     this.elInput.contentEditable = 'true';
     this.elInput.innerHTML = inputHintTmpl;
 
-    if (this.cfg.contentHTML) {
-      this.elInput.innerHTML = this.cfg.contentHTML;
-    }
+    this.elInput.innerHTML = this.cfg.contentHTML;
 
     this.elInput.onfocus = (e) => {
       if (this.isEmpty()) {
@@ -261,6 +242,16 @@ export class Compoz {
     this.initBOL(sel);
   }
 
+  private addFile(f: File) {
+    if (f.size <= this.cfg.fileMaxSize) {
+      const cf = new CompozFile(f, () => {
+        this.onFileDeleted(f);
+      });
+      this.files.push(cf);
+      this.elFiles.appendChild(cf.el);
+    }
+  }
+
   private initInputFile(sel: string) {
     sel += ' input.' + classInputFile;
 
@@ -277,17 +268,7 @@ export class Compoz {
 
       for (let x = 0; x < this.elInputFile.files.length; x++) {
         const f = this.elInputFile.files[x];
-
-        if (this.cfg.fileMaxSize) {
-          if (this.cfg.fileMaxSize < 0 ||
-              (this.cfg.fileMaxSize > 0 && f.size <= this.cfg.fileMaxSize)) {
-            const cf = new CompozFile(f, () => {
-              this.onFileDeleted(f);
-            });
-            this.files.push(cf);
-            this.elFiles.appendChild(cf.el);
-          }
-        }
+        this.addFile(f);
       }
     };
   }
