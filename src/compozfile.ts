@@ -18,15 +18,37 @@ import {FileState} from './filestate';
 const classCompozFile = 'compoz-file';
 const classDelete = 'delete';
 
+export interface CompozFileInterface {
+  raw: File|null;
+  name: string;
+  size: number;
+  type: string;
+}
+
 export class CompozFile {
-  file: File;
+  name = '';
+  size = 0;
+  type = '';
+  raw: File|null = null;
   el!: HTMLElement;
   elIcon!: HTMLImageElement;
   state!: FileState;
   private onDelete: Function;
 
-  constructor(file: File, onDelete: Function) {
-    this.file = file;
+  constructor(cfi: CompozFileInterface, onDelete: Function) {
+    if (cfi.raw) {
+      this.raw = cfi.raw;
+      this.name = cfi.raw.name;
+      this.size = cfi.raw.size;
+      this.type = cfi.raw.type;
+      this.state = FileState.LOCAL;
+    } else {
+      this.name = cfi.name;
+      this.size = cfi.size;
+      this.type = cfi.type;
+      this.state = FileState.SUCCESS;
+    }
+
     this.onDelete = onDelete;
     this.el = document.createElement('div')! as HTMLElement;
     this.el.classList.add(classCompozFile);
@@ -43,10 +65,10 @@ export class CompozFile {
     const elName = document.createElement('div');
     elName.classList.add('name');
 
-    let name = this.file.name;
+    let name = this.name;
     const len = name.length;
     if (len > 20) {
-      elName.title = this.file.name;
+      elName.title = this.name;
       name = name.substring(0, 8) + '...' + name.substring(len - 8, len);
     }
 
@@ -62,7 +84,7 @@ export class CompozFile {
   }
 
   private updateIcon() {
-    const type = this.file.type;
+    const type = this.type;
 
     if (type === 'application/msword' ||
         type === 'application/vnd.oasis.opendocument.text' ||

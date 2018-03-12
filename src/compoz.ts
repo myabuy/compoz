@@ -4,7 +4,7 @@
 
 import './compoz.scss';
 
-import {CompozFile} from './compozfile';
+import {CompozFile, CompozFileInterface} from './compozfile';
 import {Config, ConfigInterface} from './config';
 
 export {FileState} from './filestate';
@@ -117,7 +117,7 @@ export class Compoz {
   private elBOL!: HTMLAnchorElement;
   private files: CompozFile[] = new Array();
 
-  constructor(id: string, opts: ConfigInterface) {
+  constructor(id: string, opts: ConfigInterface, files: CompozFileInterface[]) {
     this.id = id;
     this.cfg = new Config(opts);
 
@@ -130,6 +130,14 @@ export class Compoz {
     this.initInput(sel);
     this.initElExpand(sel);
     this.initMenuWrapper(sel);
+
+    if (!files) {
+      return;
+    }
+
+    for (let x = 0; x < files.length; x++) {
+      this.addCompozFile(files[x]);
+    }
   }
 
   isEmpty(): boolean {
@@ -242,14 +250,30 @@ export class Compoz {
     this.initBOL(sel);
   }
 
-  private addFile(f: File) {
-    if (f.size <= this.cfg.fileMaxSize) {
-      const cf = new CompozFile(f, () => {
-        this.onFileDeleted(f);
-      });
-      this.files.push(cf);
-      this.elFiles.appendChild(cf.el);
+  private addFile(f: File): CompozFile|null {
+    const cfi = {
+      raw: f,
+      name: f.name,
+      size: f.size,
+      type: f.type,
+    };
+
+    return this.addCompozFile(cfi);
+  }
+
+  private addCompozFile(cfi: CompozFileInterface): CompozFile|null {
+    if (cfi.size > this.cfg.fileMaxSize) {
+      return null;
     }
+
+    const cf = new CompozFile(cfi, () => {
+      this.onFileDeleted(cf);
+    });
+
+    this.files.push(cf);
+    this.elFiles.appendChild(cf.el);
+
+    return cf;
   }
 
   private initInputFile(sel: string) {

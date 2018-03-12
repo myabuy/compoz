@@ -3,6 +3,7 @@
 // in the LICENSE file.
 
 import {Compoz} from './compoz';
+import {CompozFileInterface} from './compozfile';
 import {FileState} from './filestate';
 
 function generateContent() {
@@ -22,6 +23,7 @@ function createQuickCompose() {
   const config = {
     contentHTML: '<b> this is </b> the content',
     fileMaxSize: 4194304,
+
     height: 0,
     hideAttachment: false,
     hideExpand: false,
@@ -53,20 +55,31 @@ function createQuickCompose() {
     },
   };
 
-  const c = new Compoz('quick-compose', config);
+  const c = new Compoz('quick-compose', config, []);
 }
 
 function createFullCompose() {
+  const files: CompozFileInterface[] = [];
+
+  files.push({
+    raw: null,
+    name: 'test.jpg',
+    size: 512,
+    type: 'image/png',
+  });
+
   const config = {
     contentHTML: '',
     height: 500,
     fileMaxSize: 0,
+
     hideAttachment: true,
     hideExpand: true,
-    hideSend: true,
+    hideSend: false,
 
     onSend: () => {
       console.log('content:', c.getContentHTML());
+      console.log('files:', c.getFiles());
     },
     onExpand: () => {
       console.log('onExpand');
@@ -79,7 +92,7 @@ function createFullCompose() {
     }
   };
 
-  const c = new Compoz('full-compose', config);
+  const c = new Compoz('full-compose', config, files);
 
   c.setContentHTML('<b>Test</b> set content');
 }
