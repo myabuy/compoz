@@ -20,12 +20,14 @@ const classDelete = 'delete';
 
 export interface CompozFileInterface {
   raw: File|null;
+  id: number;
   name: string;
   size: number;
   type: string;
 }
 
 export class CompozFile {
+  id = 0;
   name = '';
   size = 0;
   type = '';
@@ -33,16 +35,18 @@ export class CompozFile {
   el!: HTMLElement;
   elIcon!: HTMLImageElement;
   state!: FileState;
-  private onDelete: Function;
+  onDelete: Function;
 
   constructor(cfi: CompozFileInterface, onDelete: Function) {
     if (cfi.raw) {
       this.raw = cfi.raw;
+      this.id = 0;
       this.name = cfi.raw.name;
       this.size = cfi.raw.size;
       this.type = cfi.raw.type;
       this.state = FileState.LOCAL;
     } else {
+      this.id = cfi.id;
       this.name = cfi.name;
       this.size = cfi.size;
       this.type = cfi.type;
@@ -134,16 +138,18 @@ export class CompozFile {
   }
 
   private createElDelete() {
+    const svc = this;
     const elDelete = document.createElement('span');
 
     elDelete.innerText = 'X';
     elDelete.classList.add(classDelete);
 
     elDelete.onclick = (e) => {
-      if (this.el.parentNode) {
-        this.el.parentNode.removeChild(this.el);
-      }
-      this.onDelete();
+      svc.onDelete().then((ok: boolean) => {
+        if (ok && svc.el.parentNode) {
+          svc.el.parentNode.removeChild(this.el);
+        }
+      });
     };
 
     this.el.appendChild(elDelete);

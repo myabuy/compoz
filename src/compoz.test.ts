@@ -3,7 +3,7 @@
 // in the LICENSE file.
 
 import {Compoz} from './compoz';
-import {CompozFileInterface} from './compozfile';
+import {CompozFile, CompozFileInterface} from './compozfile';
 import {FileState} from './filestate';
 
 function generateContent() {
@@ -53,6 +53,10 @@ function createQuickCompose() {
     onExpand: () => {
       console.log('onExpand');
     },
+    onFileDeletedBefore: (f: CompozFile) => {
+      console.log('onFileDeletedBefore:', f);
+      return Promise.resolve(true);
+    }
   };
 
   const c = new Compoz('quick-compose', config, []);
@@ -63,6 +67,7 @@ function createFullCompose() {
 
   files.push({
     raw: null,
+    id: 2,
     name: 'test.jpg',
     size: 512,
     type: 'image/png',
@@ -89,6 +94,10 @@ function createFullCompose() {
     },
     onBlur: () => {
       console.log('onBlur');
+    },
+    onFileDeletedBefore: (f: CompozFile): Promise<boolean> => {
+      console.log('onFileDeletedBefore:', f);
+      return Promise.resolve(false);
     }
   };
 

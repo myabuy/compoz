@@ -253,6 +253,7 @@ export class Compoz {
   private addFile(f: File): CompozFile|null {
     const cfi = {
       raw: f,
+      id: 0,
       name: f.name,
       size: f.size,
       type: f.type,
@@ -262,12 +263,14 @@ export class Compoz {
   }
 
   private addCompozFile(cfi: CompozFileInterface): CompozFile|null {
+    const svc = this;
+
     if (cfi.size > this.cfg.fileMaxSize) {
       return null;
     }
 
     const cf = new CompozFile(cfi, () => {
-      this.onFileDeleted(cf);
+      return svc.onFileDeleted(cf);
     });
 
     this.files.push(cf);
@@ -434,13 +437,31 @@ export class Compoz {
     this.elBLink.classList.remove(classActive);
   }
 
-  private onFileDeleted(cf: CompozFile) {
-    for (let x = 0; x < this.files.length; x++) {
-      if (this.files[x].name === cf.name && this.files[x].size === cf.size) {
-        this.files.splice(x, 1);
-        return;
+  private onFileDeleted(cf: CompozFile): Promise<boolean> {
+    return new Promise((resolve) => {
+      if (!this.cfg.onFileDeletedBefore) {
+        return resolve(false);
       }
-    }
+
+      for (let x = 0; x < this.files.length; x++) {
+        if (this.files[x].name !== cf.name) {
+          continue;
+        }
+        if (this.files[x].size !== cf.size) {
+          continue;
+        }
+
+        return this.cfg.onFileDeletedBefore(this.files[x])
+            .then((ok: boolean) => {
+              if (ok) {
+                this.files.splice(x, 1);
+              }
+
+              return resolve(ok);
+            });
+      }
+      return resolve(false);
+    });
   }
 
   getContentHTML(): string {
