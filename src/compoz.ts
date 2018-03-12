@@ -434,9 +434,9 @@ export class Compoz {
     this.elBLink.classList.remove(classActive);
   }
 
-  private onFileDeleted(f: File) {
+  private onFileDeleted(cf: CompozFile) {
     for (let x = 0; x < this.files.length; x++) {
-      if (this.files[x].file.name === f.name) {
+      if (this.files[x].name === cf.name && this.files[x].size === cf.size) {
         this.files.splice(x, 1);
         return;
       }
