@@ -2,8 +2,7 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-$button-size: 18;
-$button-send-size: 32;
+$button-size: 22;
 $active-color: #ff721d;
 $list-file-size: 120;
 
@@ -113,14 +112,22 @@ $list-file-size: 120;
 				width: #{$button-size}px;
 				height: #{$button-size}px;
 			}
+		}
 
-			&.compoz-b-send {
-				float: right;
-				margin: -6px 0px;
+		.right {
+			float: right;
 
+			.compoz-b-save {
 				img {
-					width: #{$button-send-size}px;
-					height: #{$button-send-size}px;
+					width: 22px;
+					height: 22px;
+				}
+			}
+
+			.compoz-b-send {
+				img {
+					width: 32px;
+					height: 32px;
 				}
 			}
 		}

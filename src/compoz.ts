@@ -12,6 +12,7 @@ export {FileState} from './filestate';
 const svgAttachment = require('./assets/b-attachment.svg');
 const svgExpand = require('./assets/b-expand.svg');
 const svgOl = require('./assets/b-ol.svg');
+const svgSave = require('./assets/b-save.svg');
 const svgSend = require('./assets/b-send.svg');
 const svgStyle = require('./assets/b-style.svg');
 const svgUl = require('./assets/b-ul.svg');
@@ -70,9 +71,6 @@ const compozTmpl = `
           <img src="${svgStyle}" />
         </a>
         <a href="#" class="button ${classBLink}">Link</a>
-        <a href="#" class="button ${classBSend}">
-          <img src="${svgSend}" />
-        </a>
       </div>
 
       <div class="${classFileList}">
@@ -109,7 +107,6 @@ export class Compoz {
   private elBAttachment!: HTMLAnchorElement;
   private elBLink!: HTMLAnchorElement;
   private elBStyle!: HTMLAnchorElement;
-  private elBSend!: HTMLAnchorElement;
   private elBBold!: HTMLAnchorElement;
   private elBItalic!: HTMLAnchorElement;
   private elBUnderline!: HTMLAnchorElement;
@@ -353,7 +350,8 @@ export class Compoz {
     this.initBAttachment(sel);
     this.initBStyle(sel);
     this.initBLink(sel);
-    this.initBSend(sel);
+
+    this.initRightMenu(this.elMenu);
   }
 
   private initBAttachment(sel: string) {
@@ -400,16 +398,59 @@ export class Compoz {
     };
   }
 
-  private initBSend(sel: string) {
-    sel += ' a.' + classBSend;
-    this.elBSend = document.querySelector(sel)! as HTMLAnchorElement;
+  private initRightMenu(elParent: HTMLElement) {
+    const elRightMenu = document.createElement('span');
+    elRightMenu.classList.add('right');
 
-    if (this.cfg.hideSend) {
-      this.elBSend.style.display = 'none';
+    elParent.appendChild(elRightMenu);
+
+    this.initBSave(elRightMenu);
+    this.initBSend(elRightMenu);
+  }
+
+  private initBSave(elParent: HTMLElement) {
+    const elBSave = document.createElement('a');
+    elBSave.href = '#';
+    elBSave.title = 'Save';
+    elBSave.classList.add('button');
+    elBSave.classList.add('compoz-b-save');
+
+    const img = document.createElement('img');
+    img.src = svgSave;
+    elBSave.appendChild(img);
+
+    if (this.cfg.hideSave) {
       return;
     }
 
-    this.elBSend.onclick = (e) => {
+    elParent.appendChild(elBSave);
+
+    elBSave.onclick = (e) => {
+      if (this.cfg.onSave) {
+        this.cfg.onSave();
+      }
+    };
+  }
+
+  private initBSend(elParent: HTMLElement) {
+    const elBSend = document.createElement('a');
+    elBSend.href = '#';
+    elBSend.title = 'Send';
+    elBSend.classList.add('button');
+    elBSend.classList.add(classBSend);
+
+    const elBSendImg = document.createElement('img');
+    elBSendImg.src = svgSend;
+    elBSend.appendChild(elBSendImg);
+
+    elParent.appendChild(elBSend);
+
+    if (this.cfg.hideSend) {
+      elBSend.style.display = 'none';
+      return;
+    }
+
+    elBSend.onclick = (e) => {
       if (this.cfg.onSend) {
         this.cfg.onSend();
       }

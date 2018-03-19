@@ -27,8 +27,12 @@ function createQuickCompose() {
     height: 0,
     hideAttachment: false,
     hideExpand: false,
+    hideSave: false,
     hideSend: false,
 
+    onSave: () => {
+      console.log('onSave');
+    },
     onSend: () => {
       console.log('content:', c.getContentHTML());
 
@@ -80,8 +84,12 @@ function createFullCompose() {
 
     hideAttachment: true,
     hideExpand: true,
+    hideSave: true,
     hideSend: false,
 
+    onSave: () => {
+      console.log('onSave');
+    },
     onSend: () => {
       console.log('content:', c.getContentHTML());
       console.log('files:', c.getFiles());
