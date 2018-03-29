@@ -128,13 +128,7 @@ export class Compoz {
     this.initElExpand(sel);
     this.initMenuWrapper(sel);
 
-    if (!files) {
-      return;
-    }
-
-    for (let x = 0; x < files.length; x++) {
-      this.addCompozFile(files[x]);
-    }
+    this.setFiles(files);
   }
 
   isEmpty(): boolean {
@@ -505,12 +499,29 @@ export class Compoz {
     });
   }
 
+  setContentHTML(c: string) {
+    this.elInput.innerHTML = c;
+  }
+
   getContentHTML(): string {
     if (this.isEmpty()) {
       return '';
     }
 
     return this.elInput.innerHTML;
+  }
+
+  setFiles(files: CompozFileInterface[]) {
+    this.elFiles.innerHTML = '';
+    this.files = new Array();
+
+    if (!files) {
+      return;
+    }
+
+    for (let x = 0; x < files.length; x++) {
+      this.addCompozFile(files[x]);
+    }
   }
 
   getFiles(): CompozFile[] {
@@ -532,9 +543,5 @@ export class Compoz {
       this.elInput.style.height = h + 'px';
       this.elInput.style.maxHeight = h + 'px';
     }
-  }
-
-  setContentHTML(c: string) {
-    this.elInput.innerHTML = c;
   }
 }
