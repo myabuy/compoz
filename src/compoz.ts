@@ -6,6 +6,7 @@ import './compoz.scss';
 
 import {CompozFile, CompozFileInterface} from './compozfile';
 import {Config, ConfigInterface} from './config';
+import {Utils} from './utils';
 
 export {FileState} from './filestate';
 
@@ -113,6 +114,7 @@ export class Compoz {
   private elBUL!: HTMLAnchorElement;
   private elBOL!: HTMLAnchorElement;
   private files: CompozFile[] = new Array();
+  private lastSelection: Range | null = null;
 
   constructor(id: string, opts: ConfigInterface, files: CompozFileInterface[]) {
     this.id = id;
@@ -172,6 +174,14 @@ export class Compoz {
         this.cfg.onContentChange(this.getContentHTML());
       }
     };
+    // Save last selection to elInput
+    document.addEventListener("selectionchange", () => {
+      const selectLocation = window.getSelection().focusNode.parentElement;
+      // limiting the select element to the compoz inputElement
+      if(selectLocation === this.elInput) {
+        this.lastSelection = Utils.saveSelection();
+      }
+    });
   }
 
   private initElExpand(sel: string) {
@@ -226,7 +236,7 @@ export class Compoz {
 
     this.elBInsertLink.onclick = (e) => {
       const val = this.elInputLink.value;
-
+      Utils.restoreSelection(this.lastSelection);
       document.execCommand('createLink', false, val);
 
       this.elInput.focus();
