@@ -433,23 +433,18 @@ export class Compoz {
   }
 
   private createButtonSave(elParent: HTMLElement) {
-    const elBSave = document.createElement('a');
-    elBSave.href = '#';
-    elBSave.title = 'Save';
-    elBSave.classList.add('button');
-    elBSave.classList.add('compoz-b-save');
-
-    const img = document.createElement('img');
-    img.src = svgSave;
-    elBSave.appendChild(img);
+    const b = document.createElement('button');
+    b.classList.add('button');
+    b.classList.add('compoz-b-save');
+    b.innerText = 'Save';
 
     if (this.cfg.hideSave) {
       return;
     }
 
-    elParent.appendChild(elBSave);
+    elParent.appendChild(b);
 
-    elBSave.onclick = (e) => {
+    b.onclick = (e) => {
       if (this.cfg.onSave) {
         this.cfg.onSave();
       }

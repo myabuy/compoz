@@ -117,11 +117,12 @@ $list-file-size: 120;
 		.right {
 			float: right;
 
+			.compoz-b-discard {
+				margin-right: 8px;
+			}
+
 			.compoz-b-save {
-				img {
-					width: 22px;
-					height: 22px;
-				}
+				margin-right: 8px;
 			}
 
 			.compoz-b-send {
