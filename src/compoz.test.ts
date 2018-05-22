@@ -26,10 +26,14 @@ function createQuickCompose() {
 
     height: 0,
     hideAttachment: false,
+    hideDiscard: true,
     hideExpand: false,
     hideSave: false,
     hideSend: false,
 
+    onDiscard: () => {
+      console.log('onDiscard');
+    },
     onSave: () => {
       console.log('onSave');
     },
@@ -83,10 +87,14 @@ function createFullCompose() {
     fileMaxSize: 0,
 
     hideAttachment: true,
+    hideDiscard: false,
     hideExpand: true,
     hideSave: true,
     hideSend: false,
 
+    onDiscard: () => {
+      console.log('onDiscard');
+    },
     onSave: () => {
       console.log('onSave');
     },

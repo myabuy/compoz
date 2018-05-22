@@ -114,7 +114,7 @@ export class Compoz {
   private elBUL!: HTMLAnchorElement;
   private elBOL!: HTMLAnchorElement;
   private files: CompozFile[] = new Array();
-  private lastSelection: Range | null = null;
+  private lastSelection: Range|null = null;
 
   constructor(id: string, opts: ConfigInterface, files: CompozFileInterface[]) {
     this.id = id;
@@ -169,10 +169,10 @@ export class Compoz {
       }
     };
     // Save last selection to elInput
-    document.addEventListener("selectionchange", () => {
+    document.addEventListener('selectionchange', () => {
       const selectLocation = window.getSelection().focusNode.parentElement;
       // limiting the select element to the compoz inputElement
-      if(selectLocation === this.elInput) {
+      if (selectLocation === this.elInput) {
         this.lastSelection = Utils.saveSelection();
       }
     });
@@ -408,11 +408,31 @@ export class Compoz {
 
     elParent.appendChild(elRightMenu);
 
-    this.initBSave(elRightMenu);
-    this.initBSend(elRightMenu);
+    this.createButtonDiscard(elRightMenu);
+    this.createButtonSave(elRightMenu);
+    this.createButtonSend(elRightMenu);
   }
 
-  private initBSave(elParent: HTMLElement) {
+  private createButtonDiscard(elParent: HTMLElement) {
+    const b = document.createElement('button');
+    b.classList.add('button');
+    b.classList.add('compoz-b-discard');
+    b.innerText = 'Discard';
+
+    if (this.cfg.hideDiscard) {
+      return;
+    }
+
+    elParent.appendChild(b);
+
+    b.onclick = (e) => {
+      if (this.cfg.onDiscard) {
+        this.cfg.onDiscard();
+      }
+    };
+  }
+
+  private createButtonSave(elParent: HTMLElement) {
     const elBSave = document.createElement('a');
     elBSave.href = '#';
     elBSave.title = 'Save';
@@ -436,7 +456,7 @@ export class Compoz {
     };
   }
 
-  private initBSend(elParent: HTMLElement) {
+  private createButtonSend(elParent: HTMLElement) {
     const elBSend = document.createElement('a');
     elBSend.href = '#';
     elBSend.title = 'Send';
