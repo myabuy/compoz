@@ -38,9 +38,6 @@ function createQuickCompose() {
 		onDiscard: () => {
 			console.log("onDiscard");
 		},
-		onSave: () => {
-			console.log("onSave");
-		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML());
 
@@ -107,9 +104,6 @@ function createFullCompose() {
 
 		onDiscard: () => {
 			console.log("onDiscard");
-		},
-		onSave: () => {
-			console.log("onSave");
 		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML());

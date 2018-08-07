@@ -18,7 +18,6 @@ export interface ConfigInterface {
 	onFileDeletedBefore: Function | null;
 	onExpand: Function | null;
 	onDiscard: Function | null;
-	onSave: Function | null;
 	onSend: Function | null;
 }
 
@@ -39,7 +38,6 @@ export class Config {
 	onExpand: Function | null = null;
 	onFileDeletedBefore: Function | null = null;
 	onDiscard: Function | null = null;
-	onSave: Function | null = null;
 	onSend: Function | null = null;
 
 	constructor(cfg: ConfigInterface | null) {
@@ -66,7 +64,6 @@ export class Config {
 		this.onExpand = cfg.onExpand;
 		this.onFileDeletedBefore = cfg.onFileDeletedBefore;
 		this.onDiscard = cfg.onDiscard;
-		this.onSave = cfg.onSave;
 		this.onSend = cfg.onSend;
 	}
 }

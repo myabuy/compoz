@@ -13,7 +13,6 @@ export { FileState } from "./filestate";
 const svgAttachment = require("./assets/b-attachment.svg");
 const svgExpand = require("./assets/b-expand.svg");
 const svgOl = require("./assets/b-ol.svg");
-const svgSave = require("./assets/b-save.svg");
 const svgSend = require("./assets/ic-send.svg");
 const svgSendDisable = require("./assets/ic-send-disable.svg");
 const svgStyle = require("./assets/b-style.svg");
@@ -429,7 +428,6 @@ export class Compoz {
 		elParent.appendChild(elRightMenu);
 
 		this.createButtonDiscard(elRightMenu);
-		this.createButtonSave(elRightMenu);
 		this.createButtonSend(elRightMenu);
 	}
 
@@ -448,25 +446,6 @@ export class Compoz {
 		b.onclick = e => {
 			if (this.cfg.onDiscard) {
 				this.cfg.onDiscard();
-			}
-		};
-	}
-
-	private createButtonSave(elParent: HTMLElement) {
-		const b = document.createElement("button");
-		b.classList.add("button");
-		b.classList.add("compoz-b-save");
-		b.innerText = "Save";
-
-		if (this.cfg.hideSave) {
-			return;
-		}
-
-		elParent.appendChild(b);
-
-		b.onclick = e => {
-			if (this.cfg.onSave) {
-				this.cfg.onSave();
 			}
 		};
 	}
