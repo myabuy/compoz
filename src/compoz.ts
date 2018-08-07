@@ -14,7 +14,8 @@ const svgAttachment = require("./assets/b-attachment.svg");
 const svgExpand = require("./assets/b-expand.svg");
 const svgOl = require("./assets/b-ol.svg");
 const svgSave = require("./assets/b-save.svg");
-const svgSend = require("./assets/b-send.svg");
+const svgSend = require("./assets/ic-send.svg");
+const svgSendDisable = require("./assets/ic-send-disable.svg");
 const svgStyle = require("./assets/b-style.svg");
 const svgUl = require("./assets/b-ul.svg");
 
@@ -115,6 +116,7 @@ export class Compoz {
 	private elBOL!: HTMLAnchorElement;
 	private files: CompozFile[] = new Array();
 	private lastSelection: Range | null = null;
+	private elBSendImg!: HTMLImageElement;
 
 	constructor(
 		id: string,
@@ -135,6 +137,9 @@ export class Compoz {
 		this.initMenuWrapper(sel);
 
 		this.setFiles(files);
+		if (this.elInput.innerHTML !== "") {
+			this.enableButtonSend();
+		}
 	}
 
 	isEmpty(): boolean {
@@ -168,8 +173,14 @@ export class Compoz {
 		};
 
 		this.elInput.onkeyup = () => {
+			const contentHTML = this.getContentHTML();
+			if (contentHTML === "") {
+				this.disableButtonSend();
+			} else {
+				this.enableButtonSend();
+			}
 			if (this.cfg.onContentChange) {
-				this.cfg.onContentChange(this.getContentHTML());
+				this.cfg.onContentChange(contentHTML);
 			}
 		};
 		// Save last selection to elInput
@@ -185,6 +196,7 @@ export class Compoz {
 
 	private initElExpand(sel: string) {
 		sel += " div." + classExpand;
+
 		this.elExpand = document.querySelector(sel)! as HTMLElement;
 
 		if (this.cfg.hideExpand) {
@@ -297,6 +309,7 @@ export class Compoz {
 				return;
 			}
 
+			this.elBSendImg.src = svgSendDisable;
 			if (!this.elInputFile.files) {
 				return;
 			}
@@ -465,9 +478,9 @@ export class Compoz {
 		elBSend.classList.add("button");
 		elBSend.classList.add(classBSend);
 
-		const elBSendImg = document.createElement("img");
-		elBSendImg.src = svgSend;
-		elBSend.appendChild(elBSendImg);
+		this.elBSendImg = document.createElement("img");
+		this.elBSendImg.src = svgSendDisable;
+		elBSend.appendChild(this.elBSendImg);
 
 		elParent.appendChild(elBSend);
 
@@ -586,5 +599,11 @@ export class Compoz {
 	}
 	hideButtonExpand() {
 		this.elExpand.style.display = "none";
+	}
+	enableButtonSend() {
+		this.elBSendImg.src = svgSend;
+	}
+	disableButtonSend() {
+		this.elBSendImg.src = svgSendDisable;
 	}
 }
