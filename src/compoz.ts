@@ -28,7 +28,7 @@ const classInputFile = "compoz-input-file";
 const classFileList = "compoz-file-list";
 const classMenu = "compoz-menu";
 const classStyles = "compoz-styles";
-const classBAttachment = "compoz-b-attachment";
+const classBAttachment = "compoz-b-attach";
 const classBStyle = "compoz-b-style";
 const classBLink = "compoz-b-link";
 const classBSend = "compoz-b-send";
@@ -65,11 +65,12 @@ const compozTmpl = `
       </div>
 
       <div class="${classMenu}">
-        <a href="#" class="button ${classBAttachment}">
-          <img src="${svgAttachment}" />
-        </a>
         <a href="#" class="button ${classBStyle}">
           <img src="${svgStyle}" />
+        </a>
+
+        <a href="#" class="button ${classBAttachment}">
+          <img src="${svgAttachment}" />
         </a>
         <a href="#" class="button ${classBLink}">Link</a>
       </div>
