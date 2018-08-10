@@ -321,7 +321,6 @@ export class Compoz {
 		this.elStyles.appendChild(this.elBBold);
 
 		this.elBBold.onclick = e => {
-			console.log("bold");
 			document.execCommand("bold", false, null);
 			this.elInput.focus();
 		};
@@ -336,7 +335,6 @@ export class Compoz {
 		this.elStyles.appendChild(this.elBItalic);
 
 		this.elBItalic.onclick = e => {
-			console.log("italic");
 			document.execCommand("italic", false, null);
 			this.elInput.focus();
 		};
@@ -351,7 +349,6 @@ export class Compoz {
 		this.elStyles.appendChild(this.elBUnderline);
 
 		this.elBUnderline.onclick = e => {
-			console.log("underline");
 			document.execCommand("underline", false, null);
 			this.elInput.focus();
 		};
@@ -367,7 +364,6 @@ export class Compoz {
 		this.elBUL.appendChild(elBULImg);
 		this.elStyles.appendChild(this.elBUL);
 		this.elBUL.onclick = e => {
-			console.log("ul");
 			document.execCommand("insertUnorderedList", false, null);
 			this.elInput.focus();
 		};
@@ -383,7 +379,6 @@ export class Compoz {
 		this.elBOL.appendChild(elBOLImg);
 		this.elStyles.appendChild(this.elBOL);
 		this.elBOL.onclick = e => {
-			console.log("ol");
 			document.execCommand("insertOrderedList", false, null);
 			this.elInput.focus();
 		};
@@ -528,7 +523,7 @@ export class Compoz {
 		this.elInputLink.focus();
 		this.setHeight(this.cfg.height);
 	}
-	
+
 	private hideInputLink() {
 		this.isShowInputLink = false;
 		this.elBLink.classList.remove(classActive);
