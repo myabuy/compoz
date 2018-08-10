@@ -314,12 +314,14 @@ export class Compoz {
 
 	private initBBold(sel: string) {
 		this.elBBold = document.createElement("a");
+		this.elBBold.href = "#";
 		this.elBBold.classList.add("button");
 		this.elBBold.classList.add("bold");
 		this.elBBold.innerHTML = "B";
 		this.elStyles.appendChild(this.elBBold);
 
 		this.elBBold.onclick = e => {
+			console.log("bold");
 			document.execCommand("bold", false, null);
 			this.elInput.focus();
 		};
@@ -327,12 +329,14 @@ export class Compoz {
 
 	private initBItalic(sel: string) {
 		this.elBItalic = document.createElement("a");
+		this.elBItalic.href = "#";
 		this.elBItalic.classList.add("button");
 		this.elBItalic.classList.add("italic");
 		this.elBItalic.innerHTML = "I";
 		this.elStyles.appendChild(this.elBItalic);
 
 		this.elBItalic.onclick = e => {
+			console.log("italic");
 			document.execCommand("italic", false, null);
 			this.elInput.focus();
 		};
@@ -340,12 +344,14 @@ export class Compoz {
 
 	private initBUnderline(sel: string) {
 		this.elBUnderline = document.createElement("a");
+		this.elBUnderline.href = "#";
 		this.elBUnderline.classList.add("button");
 		this.elBUnderline.classList.add("underline");
 		this.elBUnderline.innerHTML = "U";
 		this.elStyles.appendChild(this.elBUnderline);
 
 		this.elBUnderline.onclick = e => {
+			console.log("underline");
 			document.execCommand("underline", false, null);
 			this.elInput.focus();
 		};
@@ -353,13 +359,15 @@ export class Compoz {
 
 	private initBUL(sel: string) {
 		this.elBUL = document.createElement("a");
+		this.elBUL.href = "#";
 		this.elBUL.classList.add("button");
 		this.elBUL.classList.add("ul");
-		this.elStyles.appendChild(this.elBUL);
 		const elBULImg = document.createElement("img");
 		elBULImg.src = svgUl;
 		this.elBUL.appendChild(elBULImg);
+		this.elStyles.appendChild(this.elBUL);
 		this.elBUL.onclick = e => {
+			console.log("ul");
 			document.execCommand("insertUnorderedList", false, null);
 			this.elInput.focus();
 		};
@@ -367,13 +375,15 @@ export class Compoz {
 
 	private initBOL(sel: string) {
 		this.elBOL = document.createElement("a");
+		this.elBOL.href = "#";
 		this.elBOL.classList.add("button");
 		this.elBOL.classList.add("ol");
-		this.elStyles.appendChild(this.elBOL);
 		const elBOLImg = document.createElement("img");
 		elBOLImg.src = svgOl;
 		this.elBOL.appendChild(elBOLImg);
+		this.elStyles.appendChild(this.elBOL);
 		this.elBOL.onclick = e => {
+			console.log("ol");
 			document.execCommand("insertOrderedList", false, null);
 			this.elInput.focus();
 		};
@@ -499,25 +509,29 @@ export class Compoz {
 
 	private showStyles() {
 		this.isShowStyle = true;
+		this.elBStyle.classList.add(classActive);
 		this.elInputWrapper.appendChild(this.elStyles);
 		this.setHeight(this.cfg.height);
 	}
 
 	private hideStyles() {
 		this.isShowStyle = false;
+		this.elBStyle.classList.remove(classActive);
 		this.elInputWrapper.removeChild(this.elStyles);
 		this.setHeight(this.cfg.height);
 	}
 
 	private showInputLink() {
 		this.isShowInputLink = true;
+		this.elBLink.classList.add(classActive);
 		this.elInputWrapper.appendChild(this.elMenuLink);
 		this.elInputLink.focus();
 		this.setHeight(this.cfg.height);
 	}
-
+	
 	private hideInputLink() {
 		this.isShowInputLink = false;
+		this.elBLink.classList.remove(classActive);
 		this.elInputWrapper.removeChild(this.elMenuLink);
 		this.setHeight(this.cfg.height);
 	}
