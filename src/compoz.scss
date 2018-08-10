@@ -49,6 +49,11 @@ $list-file-size: 120;
 		overflow-y: hidden;
 		display: flex;
 	}
+	.compoz-input-wrapper {
+		width: 100%;
+		overflow-x: auto;
+		overflow-y: hidden;
+	}
 
 	.compoz-input-link {
 		height: 2em;
