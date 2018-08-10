@@ -23,6 +23,7 @@ const classRoot = "compoz";
 const classExpand = "compoz-expand";
 const classInput = "compoz-input";
 const classMenuWrapper = "compoz-menu-wrapper";
+const classWrapper = "compoz-wrapper";
 const classInputLink = "compoz-input-link";
 const classInputFile = "compoz-input-file";
 const classFileList = "compoz-file-list";
@@ -44,25 +45,9 @@ const compozTmpl = `
     <div class="${classExpand}">
       <img src="${svgExpand}"/>
     </div>
-    <div class="${classMenuWrapper}">
-      <div class="${classInputLink}">
-        <input></input>
-        <button>
-          Insert
-        </button>
-      </div>
-
-      <div class="${classStyles}">
-        <a href="#" class="button bold">B</a>
-        <a href="#" class="button italic">I</a>
-        <a href="#" class="button underline">U</a>
-        <a href="#" class="button ul">
-          <img src="${svgUl}" />
-        </a>
-        <a href="#" class="button ol">
-          <img src="${svgOl}" />
-        </a>
-      </div>
+	<div class="${classMenuWrapper}">
+		<div class="${classWrapper}">
+		</div>
 
       <div class="${classMenu}">
         <a href="#" class="button ${classBStyle}">
@@ -99,6 +84,7 @@ export class Compoz {
 	private elInput!: HTMLElement;
 	private elExpand!: HTMLElement;
 	private elMenuWrapper!: HTMLElement;
+	private elWrapper!: HTMLElement;
 	private elMenuLink!: HTMLElement;
 	private elInputLink!: HTMLInputElement;
 	private elInputFile!: HTMLInputElement;
@@ -117,7 +103,8 @@ export class Compoz {
 	private files: CompozFile[] = new Array();
 	private lastSelection: Range | null = null;
 	private elBSendImg!: HTMLImageElement;
-
+	private isShowStyle = false;
+	private isShowInputLink = false;
 	constructor(
 		id: string,
 		opts: ConfigInterface,
@@ -215,6 +202,7 @@ export class Compoz {
 		sel += " div." + classMenuWrapper;
 		this.elMenuWrapper = document.querySelector(sel)! as HTMLElement;
 
+		this.initWrapper(sel);
 		this.initFileList(sel);
 		this.initInputLink(sel);
 		this.initMenuStyles(sel);
@@ -226,6 +214,11 @@ export class Compoz {
 		}
 	}
 
+	private initWrapper(sel: string) {
+		sel += " div." + classWrapper;
+
+		this.elWrapper = document.querySelector(sel)! as HTMLElement;
+	}
 	private initFileList(sel: string) {
 		sel += " div." + classFileList;
 
@@ -233,19 +226,13 @@ export class Compoz {
 	}
 
 	private initInputLink(sel: string) {
-		sel += " div." + classInputLink;
-		this.elMenuLink = document.querySelector(sel)! as HTMLElement;
-
-		this.elMenuLink.style.display = "none";
-
-		const selInput = sel + " input";
-		this.elInputLink = document.querySelector(
-			selInput
-		)! as HTMLInputElement;
-
-		const selButton = sel + " button";
-
-		this.elBInsertLink = document.querySelector(selButton)! as HTMLElement;
+		this.elMenuLink = document.createElement("div");
+		this.elMenuLink.classList.add(classInputLink);
+		this.elInputLink = document.createElement("input");
+		this.elMenuLink.appendChild(this.elInputLink);
+		this.elBInsertLink = document.createElement("button");
+		this.elBInsertLink.innerHTML = "Insert";
+		this.elMenuLink.appendChild(this.elBInsertLink);
 
 		this.elBInsertLink.onclick = e => {
 			const val = this.elInputLink.value;
@@ -258,10 +245,8 @@ export class Compoz {
 	}
 
 	private initMenuStyles(sel: string) {
-		sel += " div." + classStyles;
-		this.elStyles = document.querySelector(sel)! as HTMLElement;
-
-		this.elStyles.style.display = "none";
+		this.elStyles = document.createElement("div");
+		this.elStyles.classList.add(classStyles);
 
 		this.initBBold(sel);
 		this.initBItalic(sel);
@@ -289,13 +274,19 @@ export class Compoz {
 			return null;
 		}
 
-		const cf = new CompozFile(cfi, () => {
-			return svc.onFileDeleted(cf);
-		});
+		const cf = new CompozFile(
+			cfi,
+			() => {
+				return svc.onFileDeleted(cf);
+			},
+			() => {
+				this.setHeight(this.cfg.height);
+			}
+		);
 
 		this.files.push(cf);
 		this.elFiles.appendChild(cf.el);
-
+		this.setHeight(this.cfg.height);
 		return cf;
 	}
 
@@ -322,8 +313,12 @@ export class Compoz {
 	}
 
 	private initBBold(sel: string) {
-		sel += " a.bold";
-		this.elBBold = document.querySelector(sel)! as HTMLAnchorElement;
+		this.elBBold = document.createElement("a");
+		this.elBBold.classList.add("button");
+		this.elBBold.classList.add("bold");
+		this.elBBold.innerHTML = "B";
+		this.elStyles.appendChild(this.elBBold);
+
 		this.elBBold.onclick = e => {
 			document.execCommand("bold", false, null);
 			this.elInput.focus();
@@ -331,8 +326,12 @@ export class Compoz {
 	}
 
 	private initBItalic(sel: string) {
-		sel += " a.italic";
-		this.elBItalic = document.querySelector(sel)! as HTMLAnchorElement;
+		this.elBItalic = document.createElement("a");
+		this.elBItalic.classList.add("button");
+		this.elBItalic.classList.add("italic");
+		this.elBItalic.innerHTML = "I";
+		this.elStyles.appendChild(this.elBItalic);
+
 		this.elBItalic.onclick = e => {
 			document.execCommand("italic", false, null);
 			this.elInput.focus();
@@ -340,8 +339,12 @@ export class Compoz {
 	}
 
 	private initBUnderline(sel: string) {
-		sel += " a.underline";
-		this.elBUnderline = document.querySelector(sel)! as HTMLAnchorElement;
+		this.elBUnderline = document.createElement("a");
+		this.elBUnderline.classList.add("button");
+		this.elBUnderline.classList.add("underline");
+		this.elBUnderline.innerHTML = "U";
+		this.elStyles.appendChild(this.elBUnderline);
+
 		this.elBUnderline.onclick = e => {
 			document.execCommand("underline", false, null);
 			this.elInput.focus();
@@ -349,8 +352,13 @@ export class Compoz {
 	}
 
 	private initBUL(sel: string) {
-		sel += " a.ul";
-		this.elBUL = document.querySelector(sel)! as HTMLAnchorElement;
+		this.elBUL = document.createElement("a");
+		this.elBUL.classList.add("button");
+		this.elBUL.classList.add("ul");
+		this.elStyles.appendChild(this.elBUL);
+		const elBULImg = document.createElement("img");
+		elBULImg.src = svgUl;
+		this.elBUL.appendChild(elBULImg);
 		this.elBUL.onclick = e => {
 			document.execCommand("insertUnorderedList", false, null);
 			this.elInput.focus();
@@ -358,8 +366,13 @@ export class Compoz {
 	}
 
 	private initBOL(sel: string) {
-		sel += " a.ol";
-		this.elBOL = document.querySelector(sel)! as HTMLAnchorElement;
+		this.elBOL = document.createElement("a");
+		this.elBOL.classList.add("button");
+		this.elBOL.classList.add("ol");
+		this.elStyles.appendChild(this.elBOL);
+		const elBOLImg = document.createElement("img");
+		elBOLImg.src = svgOl;
+		this.elBOL.appendChild(elBOLImg);
 		this.elBOL.onclick = e => {
 			document.execCommand("insertOrderedList", false, null);
 			this.elInput.focus();
@@ -398,9 +411,13 @@ export class Compoz {
 		this.elBStyle = document.querySelector(sel)! as HTMLAnchorElement;
 
 		this.elBStyle.onclick = e => {
-			if (this.elStyles.style.display === "none") {
-				this.hideInputLink();
-				this.showStyles();
+			if (!this.isShowStyle) {
+				if (this.isShowInputLink) {
+					this.hideInputLink();
+					this.showStyles();
+				} else {
+					this.showStyles();
+				}
 			} else {
 				this.hideStyles();
 			}
@@ -413,9 +430,13 @@ export class Compoz {
 		this.elBLink = document.querySelector(sel)! as HTMLAnchorElement;
 
 		this.elBLink.onclick = e => {
-			if (this.elMenuLink.style.display === "none") {
-				this.hideStyles();
-				this.showInputLink();
+			if (!this.isShowInputLink) {
+				if (this.isShowStyle) {
+					this.hideStyles();
+					this.showInputLink();
+				} else {
+					this.showInputLink();
+				}
 			} else {
 				this.hideInputLink();
 			}
@@ -477,24 +498,28 @@ export class Compoz {
 	}
 
 	private showStyles() {
-		this.elStyles.style.display = "block";
-		this.elBStyle.classList.add(classActive);
+		this.isShowStyle = true;
+		this.elWrapper.appendChild(this.elStyles);
+		this.setHeight(this.cfg.height);
 	}
 
 	private hideStyles() {
-		this.elBStyle.classList.remove(classActive);
-		this.elStyles.style.display = "none";
+		this.isShowStyle = false;
+		this.elWrapper.removeChild(this.elStyles);
+		this.setHeight(this.cfg.height);
 	}
 
 	private showInputLink() {
-		this.elMenuLink.style.display = "block";
+		this.isShowInputLink = true;
+		this.elWrapper.appendChild(this.elMenuLink);
 		this.elInputLink.focus();
-		this.elBLink.classList.add(classActive);
+		this.setHeight(this.cfg.height);
 	}
 
 	private hideInputLink() {
-		this.elMenuLink.style.display = "none";
-		this.elBLink.classList.remove(classActive);
+		this.isShowInputLink = false;
+		this.elWrapper.removeChild(this.elMenuLink);
+		this.setHeight(this.cfg.height);
 	}
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {
@@ -517,7 +542,6 @@ export class Compoz {
 						if (ok) {
 							this.files.splice(x, 1);
 						}
-
 						return resolve(ok);
 					});
 			}
@@ -571,8 +595,10 @@ export class Compoz {
 		}
 	}
 	setHeight(h: number) {
-		this.elInput.style.height = h + "px";
-		this.elInput.style.maxHeight = h + "px";
+		this.cfg.height = h;
+		const menuWrapperHeight = this.elMenuWrapper.offsetHeight;
+		this.elInput.style.height = h - menuWrapperHeight + "px";
+		this.elInput.style.maxHeight = h - menuWrapperHeight + "px";
 	}
 	showButtonExpand() {
 		this.elExpand.style.display = "block";
