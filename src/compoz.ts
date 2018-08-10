@@ -23,7 +23,7 @@ const classRoot = "compoz";
 const classExpand = "compoz-expand";
 const classInput = "compoz-input";
 const classMenuWrapper = "compoz-menu-wrapper";
-const classWrapper = "compoz-wrapper";
+const classWrapper = "compoz-input-wrapper";
 const classInputLink = "compoz-input-link";
 const classInputFile = "compoz-input-file";
 const classFileList = "compoz-file-list";
@@ -84,7 +84,7 @@ export class Compoz {
 	private elInput!: HTMLElement;
 	private elExpand!: HTMLElement;
 	private elMenuWrapper!: HTMLElement;
-	private elWrapper!: HTMLElement;
+	private elInputWrapper!: HTMLElement;
 	private elMenuLink!: HTMLElement;
 	private elInputLink!: HTMLInputElement;
 	private elInputFile!: HTMLInputElement;
@@ -217,7 +217,7 @@ export class Compoz {
 	private initWrapper(sel: string) {
 		sel += " div." + classWrapper;
 
-		this.elWrapper = document.querySelector(sel)! as HTMLElement;
+		this.elInputWrapper = document.querySelector(sel)! as HTMLElement;
 	}
 	private initFileList(sel: string) {
 		sel += " div." + classFileList;
@@ -499,26 +499,26 @@ export class Compoz {
 
 	private showStyles() {
 		this.isShowStyle = true;
-		this.elWrapper.appendChild(this.elStyles);
+		this.elInputWrapper.appendChild(this.elStyles);
 		this.setHeight(this.cfg.height);
 	}
 
 	private hideStyles() {
 		this.isShowStyle = false;
-		this.elWrapper.removeChild(this.elStyles);
+		this.elInputWrapper.removeChild(this.elStyles);
 		this.setHeight(this.cfg.height);
 	}
 
 	private showInputLink() {
 		this.isShowInputLink = true;
-		this.elWrapper.appendChild(this.elMenuLink);
+		this.elInputWrapper.appendChild(this.elMenuLink);
 		this.elInputLink.focus();
 		this.setHeight(this.cfg.height);
 	}
 
 	private hideInputLink() {
 		this.isShowInputLink = false;
-		this.elWrapper.removeChild(this.elMenuLink);
+		this.elInputWrapper.removeChild(this.elMenuLink);
 		this.setHeight(this.cfg.height);
 	}
 
