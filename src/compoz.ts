@@ -533,16 +533,17 @@ export class Compoz {
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {
 		return new Promise(resolve => {
-			if (!this.cfg.onFileDeletedBefore) {
-				return resolve(false);
-			}
-
 			for (let x = 0; x < this.files.length; x++) {
 				if (this.files[x].name !== cf.name) {
 					continue;
 				}
 				if (this.files[x].size !== cf.size) {
 					continue;
+				}
+
+				if (!this.cfg.onFileDeletedBefore) {
+					this.files.splice(x, 1);
+					return resolve(true);
 				}
 
 				return this.cfg
