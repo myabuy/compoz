@@ -20,8 +20,9 @@ const svgUl = require("./assets/b-ul.svg");
 
 const inputHint = "Write something...";
 const classRoot = "compoz";
-const classExpand = "compoz-expand";
+const classBExpand = "compoz-button-expand";
 const classInput = "compoz-input";
+const classInputExpand = "compoz-input-expand";
 const classMenuWrapper = "compoz-menu-wrapper";
 const classWrapper = "compoz-input-wrapper";
 const classInputLink = "compoz-input-link";
@@ -42,7 +43,7 @@ const compozTmpl = `
   <div class="${classRoot}">
     <div class="${classInput}">
     </div>
-    <div class="${classExpand}">
+    <div class="${classBExpand}">
       <img src="${svgExpand}"/>
     </div>
 	<div class="${classMenuWrapper}">
@@ -81,6 +82,7 @@ export class Compoz {
 	private link!: string;
 	private cfg: Config = new Config(null);
 	private elRoot!: HTMLElement;
+	private elCompoz!: HTMLElement;
 	private elInput!: HTMLElement;
 	private elExpand!: HTMLElement;
 	private elMenuWrapper!: HTMLElement;
@@ -105,6 +107,9 @@ export class Compoz {
 	private elBSendImg!: HTMLImageElement;
 	private isShowStyle = false;
 	private isShowInputLink = false;
+	private isExpand = false;
+	private defaultInputMinHeight = "40px";
+	private defaultInputMaxHeight = "6em";
 	constructor(
 		id: string,
 		opts: ConfigInterface,
@@ -134,6 +139,19 @@ export class Compoz {
 		v = v.trim();
 		return v === inputHint || v === "";
 	}
+	// private initCompoz(sel: string, ) {
+	// 	sel += "div." + classRoot;
+	// 	this.elCompoz = document.querySelector(sel)! as HTMLElement;
+
+	// 	this.initInput(sel);
+	// 	this.initElExpand(sel);
+	// 	this.initMenuWrapper(sel);
+
+	// 	this.setFiles(files);
+	// 	if (this.elInput.innerHTML !== "") {
+	// 		this.enableButtonSend();
+	// 	}
+	// }
 
 	private initInput(sel: string) {
 		sel += " div." + classInput;
@@ -142,7 +160,7 @@ export class Compoz {
 		this.elInput.innerHTML = inputHintTmpl;
 
 		this.elInput.innerHTML = this.cfg.contentHTML;
-
+		this.resetInputHeight();
 		this.elInput.onfocus = e => {
 			if (this.isEmpty()) {
 				this.elInput.innerHTML = "";
@@ -182,7 +200,7 @@ export class Compoz {
 	}
 
 	private initElExpand(sel: string) {
-		sel += " div." + classExpand;
+		sel += " div." + classBExpand;
 
 		this.elExpand = document.querySelector(sel)! as HTMLElement;
 
@@ -192,8 +210,19 @@ export class Compoz {
 		}
 
 		this.elExpand.onclick = e => {
-			if (this.cfg.onExpand) {
-				this.cfg.onExpand();
+			if (!this.isExpand) {
+				if (this.cfg.onExpand) {
+					this.elInput.classList.add(classInputExpand);
+					this.cfg.onExpand();
+					this.isExpand = true;
+				}
+			} else {
+				if (this.cfg.onUnexpand) {
+					this.elInput.classList.remove(classInputExpand);
+					this.cfg.onUnexpand();
+					this.resetInputHeight();
+					this.isExpand = false;
+				}
 			}
 		};
 	}
@@ -609,6 +638,11 @@ export class Compoz {
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight;
 		this.elInput.style.height = h - menuWrapperHeight + "px";
 		this.elInput.style.maxHeight = h - menuWrapperHeight + "px";
+	}
+	resetInputHeight() {
+		this.elInput.style.minHeight = this.defaultInputMinHeight;
+		this.elInput.style.maxHeight = this.defaultInputMaxHeight;
+		this.elInput.style.height = "auto";
 	}
 	showButtonExpand() {
 		this.elExpand.style.display = "block";
