@@ -11,8 +11,7 @@ $list-file-size: 120;
 }
 
 .compoz {
-	padding: 8px;
-	border: 1px solid silver;
+	border: solid 1px #eeeff1;
 	background-color: #ffffff;
 	height: 100%;
 	position: relative;
@@ -22,10 +21,9 @@ $list-file-size: 120;
 	}
 
 	.compoz-input {
-		min-height: 40px;
-		max-height: 6em;
 		overflow-y: auto;
 		vertical-align: middle;
+		margin: 8px;
 		padding: 12px 30px 12px 20px;
 		border-radius: 24px;
 		background-color: #fafbff;
@@ -35,7 +33,15 @@ $list-file-size: 120;
 		}
 	}
 
-	.compoz-expand {
+	.compoz-input-expand {
+		border-radius: 0px;
+		border: none;
+		background-color: #ffffff;
+		border-bottom: solid 1px #dfdfdf;
+		margin: 0px;
+		padding-top: 20px;
+	}
+	.compoz-button-expand {
 		position: absolute;
 		top: 18px;
 		right: 18px;
@@ -97,7 +103,7 @@ $list-file-size: 120;
 	}
 
 	.compoz-menu {
-		margin-top: 4px;
+		margin: 4px 8px 0px 8px;
 
 		a {
 			text-decoration: none;

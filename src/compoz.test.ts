@@ -61,11 +61,9 @@ function createQuickCompose() {
 		onContentChange: null,
 		onExpand: () => {
 			c.setHeight(400);
-			c.hideButtonExpand();
-			setTimeout(() => {
-				c.showButtonExpand();
-				console.log("show");
-			}, 2000);
+		},
+		onUnexpand: () => {
+			c.resetInputHeight();
 		},
 		onFileDeletedBefore: (f: CompozFile) => {
 			console.log("onFileDeletedBefore:", f);
@@ -111,6 +109,9 @@ function createFullCompose() {
 		},
 		onExpand: () => {
 			console.log("onExpand");
+		},
+		onUnexpand: () => {
+			console.log("onUnexpand");
 		},
 		onContentChange: (contentHTML: string) => {
 			console.log("onContentChange:", contentHTML);

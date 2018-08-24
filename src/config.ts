@@ -17,6 +17,7 @@ export interface ConfigInterface {
 	onContentChange: Function | null;
 	onFileDeletedBefore: Function | null;
 	onExpand: Function | null;
+	onUnexpand: Function | null;
 	onDiscard: Function | null;
 	onSend: Function | null;
 }
@@ -36,6 +37,7 @@ export class Config {
 	onBlur: Function | null = null;
 	onContentChange: Function | null = null;
 	onExpand: Function | null = null;
+	onUnexpand: Function | null = null;
 	onFileDeletedBefore: Function | null = null;
 	onDiscard: Function | null = null;
 	onSend: Function | null = null;
@@ -62,6 +64,7 @@ export class Config {
 		this.onBlur = cfg.onBlur;
 		this.onContentChange = cfg.onContentChange;
 		this.onExpand = cfg.onExpand;
+		this.onUnexpand = cfg.onUnexpand;
 		this.onFileDeletedBefore = cfg.onFileDeletedBefore;
 		this.onDiscard = cfg.onDiscard;
 		this.onSend = cfg.onSend;
