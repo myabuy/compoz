@@ -139,19 +139,6 @@ export class Compoz {
 		v = v.trim();
 		return v === inputHint || v === "";
 	}
-	// private initCompoz(sel: string, ) {
-	// 	sel += "div." + classRoot;
-	// 	this.elCompoz = document.querySelector(sel)! as HTMLElement;
-
-	// 	this.initInput(sel);
-	// 	this.initElExpand(sel);
-	// 	this.initMenuWrapper(sel);
-
-	// 	this.setFiles(files);
-	// 	if (this.elInput.innerHTML !== "") {
-	// 		this.enableButtonSend();
-	// 	}
-	// }
 
 	private initInput(sel: string) {
 		sel += " div." + classInput;
