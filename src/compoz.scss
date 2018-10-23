@@ -11,7 +11,7 @@ $list-file-size: 120;
 }
 
 .compoz {
-	border: solid 1px #eeeff1;
+	border-top: solid 1px #eeeff1;
 	background-color: #ffffff;
 	height: 100%;
 	position: relative;
@@ -103,7 +103,7 @@ $list-file-size: 120;
 	}
 
 	.compoz-menu {
-		margin: 4px 8px 0px 8px;
+		margin: 8px 8px 16px 8px;
 
 		a {
 			text-decoration: none;
@@ -137,7 +137,15 @@ $list-file-size: 120;
 			float: right;
 
 			.compoz-b-discard {
-				margin-right: 8px;
+				width: 82px;
+				height: 32px;
+				border-radius: 8px;
+				background-color: #ffffff;
+				border: solid 1px #c5c5c5;
+				font-size: 14px;
+				font-weight: 500;
+				color: #5d636a;
+				outline: none;
 			}
 
 			.compoz-b-send {

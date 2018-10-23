@@ -13,6 +13,7 @@ export interface ConfigInterface {
 	hideExpand: boolean;
 	hideSave: boolean;
 	hideSend: boolean;
+	composeStyle: string;
 	onBlur: Function | null;
 	onContentChange: Function | null;
 	onFileDeletedBefore: Function | null;
@@ -34,6 +35,7 @@ export class Config {
 	hideExpand = false;
 	hideSave = false;
 	hideSend = false;
+	composeStyle = "";
 	onBlur: Function | null = null;
 	onContentChange: Function | null = null;
 	onExpand: Function | null = null;
@@ -61,6 +63,7 @@ export class Config {
 		this.hideExpand = cfg.hideExpand;
 		this.hideSave = cfg.hideSave;
 		this.hideSend = cfg.hideSend;
+		this.composeStyle = cfg.composeStyle;
 		this.onBlur = cfg.onBlur;
 		this.onContentChange = cfg.onContentChange;
 		this.onExpand = cfg.onExpand;

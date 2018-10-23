@@ -30,10 +30,11 @@ function createQuickCompose() {
 
 		height: 0,
 		hideAttachment: false,
-		hideDiscard: true,
+		hideDiscard: false,
 		hideExpand: false,
 		hideSave: false,
 		hideSend: false,
+		composeStyle: "",
 
 		onDiscard: () => {
 			console.log("onDiscard");
@@ -99,6 +100,7 @@ function createFullCompose() {
 		hideExpand: true,
 		hideSave: true,
 		hideSend: false,
+		composeStyle: "compoz-input-expand",
 
 		onDiscard: () => {
 			console.log("onDiscard");
