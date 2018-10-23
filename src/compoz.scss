@@ -3,7 +3,7 @@
 // in the LICENSE file.
 
 $button-size: 22;
-$active-color: #ff721d;
+$active-color: #efefef;
 $list-file-size: 120;
 
 [contenteditable]:focus {
@@ -104,6 +104,7 @@ $list-file-size: 120;
 
 	.compoz-menu {
 		margin: 8px 8px 16px 8px;
+		cursor: pointer;
 
 		a {
 			text-decoration: none;
@@ -112,6 +113,9 @@ $list-file-size: 120;
 			border-radius: 8px;
 
 			&.compoz-b-active {
+				background-color: $active-color;
+			}
+			&:hover {
 				background-color: $active-color;
 			}
 		}
