@@ -306,7 +306,6 @@ export class Compoz {
 		this.files.push(cf);
 		this.elFiles.appendChild(cf.el);
 		this.setHeight(this.cfg.height);
-
 		return cf;
 	}
 
@@ -627,7 +626,6 @@ export class Compoz {
 	setHeight(h: number) {
 		this.cfg.height = h;
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight;
-
 		this.elInput.style.height = h - menuWrapperHeight + "px";
 		this.elInput.style.maxHeight = h - menuWrapperHeight + "px";
 	}
