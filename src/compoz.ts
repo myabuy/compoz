@@ -6,7 +6,6 @@ import "./compoz.scss";
 
 import { CompozFile, CompozFileInterface } from "./compozfile";
 import { Config, ConfigInterface } from "./config";
-import { Utils } from "./utils";
 
 export { FileState } from "./filestate";
 
@@ -110,6 +109,7 @@ export class Compoz {
 	private isExpand = false;
 	private defaultInputMinHeight = "40px";
 	private defaultInputMaxHeight = "6em";
+
 	constructor(
 		id: string,
 		opts: ConfigInterface,
@@ -134,6 +134,39 @@ export class Compoz {
 		}
 	}
 
+	/**
+	 * Get content editable selection range.
+	 * Ref: https://stackoverflow.com/a/3316483/3034747.
+	 */
+	private getSelectionRange(): Range | null {
+		if (!window.getSelection) {
+			return null;
+		}
+
+		const sel = window.getSelection();
+		if (sel.getRangeAt && sel.rangeCount) {
+			return sel.getRangeAt(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Restore content editable selection.
+	 * Ref: https://stackoverflow.com/a/3316483/3034747
+	 */
+	private restoreSelectionRange(range: Range | null) {
+		if (!range) {
+			return;
+		}
+
+		if (window.getSelection) {
+			const sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+		}
+	}
+
 	isEmpty(): boolean {
 		let v = this.elInput.textContent || "";
 		v = v.trim();
@@ -145,12 +178,14 @@ export class Compoz {
 		this.elInput = document.querySelector(sel)! as HTMLInputElement;
 		this.elInput.contentEditable = "true";
 		this.elInput.innerHTML = inputHintTmpl;
+
 		if (this.cfg.composeStyle) {
 			this.elInput.classList.add(this.cfg.composeStyle);
 		}
 
 		this.elInput.innerHTML = this.cfg.contentHTML;
 		this.resetInputHeight();
+
 		this.elInput.onfocus = e => {
 			if (this.isEmpty()) {
 				this.elInput.innerHTML = "";
@@ -178,14 +213,35 @@ export class Compoz {
 				this.cfg.onContentChange(contentHTML);
 			}
 		};
+
 		// Save last selection to elInput
 		document.addEventListener("selectionchange", () => {
 			const selectLocation = window.getSelection().focusNode
 				.parentElement;
 			// limiting the select element to the compoz inputElement
 			if (selectLocation === this.elInput) {
-				this.lastSelection = Utils.saveSelection();
+				this.lastSelection = this.getSelectionRange();
 			}
+		});
+
+		this.elInput.addEventListener("paste", (e: ClipboardEvent) => {
+			// Stop data actually being pasted into div.
+			e.stopPropagation();
+			e.preventDefault();
+
+			// Get pasted data via clipboard API.
+			const pastedText = document.createTextNode(
+				e.clipboardData.getData("Text")
+			);
+
+			const range = this.getSelectionRange();
+			if (!range) {
+				this.elInput.appendChild(pastedText);
+				return;
+			}
+
+			range.deleteContents();
+			range.insertNode(pastedText);
 		});
 	}
 
@@ -255,7 +311,7 @@ export class Compoz {
 
 		this.elBInsertLink.onclick = e => {
 			const val = this.elInputLink.value;
-			Utils.restoreSelection(this.lastSelection);
+			this.restoreSelectionRange(this.lastSelection);
 			document.execCommand("createLink", false, val);
 
 			this.elInput.focus();
@@ -623,26 +679,32 @@ export class Compoz {
 			this.elInput.style.maxHeight = h + "px";
 		}
 	}
+
 	setHeight(h: number) {
 		this.cfg.height = h;
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight;
 		this.elInput.style.height = h - menuWrapperHeight + "px";
 		this.elInput.style.maxHeight = h - menuWrapperHeight + "px";
 	}
+
 	resetInputHeight() {
 		this.elInput.style.minHeight = this.defaultInputMinHeight;
 		this.elInput.style.maxHeight = this.defaultInputMaxHeight;
 		this.elInput.style.height = "auto";
 	}
+
 	showButtonExpand() {
 		this.elExpand.style.display = "block";
 	}
+
 	hideButtonExpand() {
 		this.elExpand.style.display = "none";
 	}
+
 	enableButtonSend() {
 		this.elBSendImg.src = svgSend;
 	}
+
 	disableButtonSend() {
 		this.elBSendImg.src = svgSendDisable;
 	}
