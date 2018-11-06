@@ -26,7 +26,8 @@ function createQuickCompose() {
 		avatarURL:
 			"https://d26i9nvlq0mz5u.cloudfront.net/avatar/default/v0/avatar192.png",
 		composeStyle: "",
-		contentHTML: "<b> this is </b> the content",
+		contentHTML: `<b> this is </b> <a href="http://test.com">the</a>
+        content`,
 		fileMaxSize: 4194304,
 		height: 0,
 

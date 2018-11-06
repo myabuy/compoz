@@ -6,7 +6,7 @@
 	"rules": {
 		"indent": [true, "tabs", 4],
 		"arrow-parens": [true, "ban-single-arg-parens"],
-		"no-console": [true, "log", "error"],
+		"no-console": [false],
 		"semicolon": [false, "never"]
 	},
 	"rulesDirectory": []

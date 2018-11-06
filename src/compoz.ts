@@ -6,9 +6,9 @@ import "./compoz.scss"
 
 import { CompozFile, ICompozFile } from "./compozfile"
 import { Config, IConfig } from "./config"
-import { FormLink } from "./formlink"
-
 export { FileState } from "./filestate"
+import { FormLink } from "./formlink"
+import { IPopupLink, PopupLink } from "./popuplink"
 
 import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
@@ -55,6 +55,7 @@ export class Compoz {
 	private elBSendImg = document.createElement("img")
 
 	private formLink = new FormLink()
+	private popupLink = new PopupLink()
 
 	private files: CompozFile[] = new Array()
 	private lastSelection: Selection = window.getSelection()
@@ -65,7 +66,6 @@ export class Compoz {
 	private defaultInputMinHeight = "40px"
 	private defaultInputMaxHeight = "6em"
 	private lastContent = ""
-	private anchorEl: HTMLAnchorElement | null = null
 
 	constructor(id: string, opts: IConfig, files: ICompozFile[]) {
 		this.id = id
@@ -81,6 +81,9 @@ export class Compoz {
 
 		this.createMenuWrapper()
 		this.elCompoz.appendChild(this.elMenuWrapper)
+
+		this.popupLink.onChange = this.onChangeLink
+		this.elCompoz.appendChild(this.popupLink.el)
 
 		this.setFiles(files)
 		if (this.elInput.innerHTML !== "") {
@@ -118,8 +121,18 @@ export class Compoz {
 			this.range = sel.getRangeAt(0)
 
 			const parentEl = sel.focusNode.parentElement
+
 			if (parentEl && parentEl.nodeName === "A") {
-				this.anchorEl = parentEl as HTMLAnchorElement
+				const anchorEl = parentEl as HTMLAnchorElement
+				const info = {
+					el: anchorEl,
+					event: e,
+					link: anchorEl.href,
+					text: anchorEl.innerText,
+				} as IPopupLink
+				this.popupLink.show(info)
+			} else {
+				this.popupLink.reset()
 			}
 
 			return false
@@ -656,6 +669,12 @@ export class Compoz {
 	private hideFormLink() {
 		this.isShowInputLink = false
 		this.elFormWrapper.removeChild(this.formLink.el)
+	}
+
+	private onChangeLink = (p: IPopupLink) => {
+		this.range.selectNode(p.el)
+		this.showFormLink()
+		this.formLink.setInput(p.text, p.link)
 	}
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {

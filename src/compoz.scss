@@ -220,3 +220,25 @@ $list-file-size: 120;
 		}
 	}
 }
+
+.compoz-popup-link {
+	background: white;
+	border: 1px solid grey;
+	border-radius: 6px;
+	position: absolute;
+	visibility: hidden;
+	padding: 6px 4px;
+
+	.action {
+		padding: 4px;
+		color: #2aa198;
+	}
+	a {
+		&:link {
+			color: #2aa198;
+		}
+		&:visited {
+			color: #2aa198;
+		}
+	}
+}
