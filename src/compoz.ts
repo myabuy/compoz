@@ -64,6 +64,7 @@ export class Compoz {
 	private isExpand = false;
 	private defaultInputMinHeight = "40px";
 	private defaultInputMaxHeight = "6em";
+	private lastContent = "";
 
 	constructor(
 		id: string,
@@ -173,6 +174,10 @@ export class Compoz {
 				this.enableButtonSend();
 			}
 			if (this.cfg.onContentChange) {
+				if (contentHTML === this.lastContent) {
+					return;
+				}
+				this.lastContent = contentHTML;
 				this.cfg.onContentChange(contentHTML);
 			}
 		};
