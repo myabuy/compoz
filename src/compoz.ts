@@ -6,6 +6,7 @@ import "./compoz.scss";
 
 import { CompozFile, CompozFileInterface } from "./compozfile";
 import { Config, ConfigInterface } from "./config";
+import { FormLink } from "./formlink";
 
 export { FileState } from "./filestate";
 
@@ -35,13 +36,10 @@ export class Compoz {
 	private elExpand = document.createElement("div");
 
 	private elMenuWrapper = document.createElement("div");
-	private elInputWrapper = document.createElement("div");
+	private elFormWrapper = document.createElement("div");
 	private elFiles = document.createElement("div");
 
 	private elInputFile = document.createElement("input");
-
-	private elMenuLink = document.createElement("div");
-	private elInputLink = document.createElement("input");
 
 	private elMenu = document.createElement("div");
 	private elStyles = document.createElement("div");
@@ -56,8 +54,11 @@ export class Compoz {
 	private elBOL = document.createElement("a");
 	private elBSendImg = document.createElement("img");
 
+	private formLink = new FormLink();
+
 	private files: CompozFile[] = new Array();
-	private lastSelection: Range | null = null;
+	private lastSelection: Selection = window.getSelection();
+	private range = new Range();
 	private isShowStyle = false;
 	private isShowInputLink = false;
 	private isExpand = false;
@@ -89,42 +90,47 @@ export class Compoz {
 		}
 
 		this.elRoot = document.getElementById(id)! as HTMLElement;
-		if (this.elRoot) {
-			this.elRoot.appendChild(this.elCompoz);
-		}
-	}
-
-	/**
-	 * Get content editable selection range.
-	 * Ref: https://stackoverflow.com/a/3316483/3034747.
-	 */
-	private getSelectionRange(): Range | null {
-		if (!window.getSelection) {
-			return null;
+		if (!this.elRoot) {
+			return;
 		}
 
-		const sel = window.getSelection();
-		if (sel.getRangeAt && sel.rangeCount) {
-			return sel.getRangeAt(0);
+		this.elRoot.appendChild(this.elCompoz);
+
+		if (this.cfg.height) {
+			this.resizeInput(0, this.cfg.height);
 		}
 
-		return null;
+		setTimeout(() => {
+			this.elInput.focus();
+		}, 0);
+
+		// Save last selection to elInput
+		document.addEventListener("selectionchange", (e: Event) => {
+			e.preventDefault();
+
+			const sel = window.getSelection();
+			const lastEl = sel.focusNode.parentElement;
+			const focusNode = sel.focusNode;
+
+			if (!this.elInput.contains(sel.focusNode)) {
+				return false;
+			}
+
+			this.lastSelection = sel;
+			this.range = sel.getRangeAt(0);
+
+			return false;
+		});
 	}
 
 	/**
 	 * Restore content editable selection.
 	 * Ref: https://stackoverflow.com/a/3316483/3034747
 	 */
-	private restoreSelectionRange(range: Range | null) {
-		if (!range) {
-			return;
-		}
-
-		if (window.getSelection) {
-			const sel = window.getSelection();
-			sel.removeAllRanges();
-			sel.addRange(range);
-		}
+	private restoreSelectionRange(range: Range) {
+		const sel = window.getSelection();
+		sel.removeAllRanges();
+		sel.addRange(range);
 	}
 
 	private createInput() {
@@ -171,16 +177,6 @@ export class Compoz {
 			}
 		};
 
-		// Save last selection to elInput
-		document.addEventListener("selectionchange", () => {
-			const selectLocation = window.getSelection().focusNode
-				.parentElement;
-			// limiting the select element to the compoz inputElement
-			if (selectLocation === this.elInput) {
-				this.lastSelection = this.getSelectionRange();
-			}
-		});
-
 		this.elInput.addEventListener("paste", (e: ClipboardEvent) => {
 			// Stop data actually being pasted into div.
 			e.stopPropagation();
@@ -191,12 +187,13 @@ export class Compoz {
 				e.clipboardData.getData("Text")
 			);
 
-			const range = this.getSelectionRange();
-			if (!range) {
+			const sel = window.getSelection();
+			if (!sel) {
 				this.elInput.appendChild(pastedText);
 				return;
 			}
 
+			const range = sel.getRangeAt(0);
 			range.deleteContents();
 			range.insertNode(pastedText);
 		});
@@ -241,43 +238,44 @@ export class Compoz {
 	private createMenuWrapper() {
 		this.elMenuWrapper.classList.add("compoz-menu-wrapper");
 
-		this.elInputWrapper.classList.add("compoz-input-wrapper");
-		this.elMenuWrapper.appendChild(this.elInputWrapper);
+		this.createFormWrapper();
+		this.elMenuWrapper.appendChild(this.elFormWrapper);
 
 		this.elFiles.classList.add("compoz-file-list");
 		this.elMenuWrapper.appendChild(this.elFiles);
-
-		this.createInputLink();
-		this.createMenuStyles();
 
 		this.createMenu();
 		this.elMenuWrapper.appendChild(this.elMenu);
 
 		this.createInputFile();
 		this.elMenuWrapper.appendChild(this.elInputFile);
+	}
 
-		if (this.cfg.height) {
-			this.resizeInput(0, this.cfg.height);
+	private createFormWrapper() {
+		this.elFormWrapper.classList.add("compoz-form-wrapper");
+
+		this.createFormLink();
+		this.createMenuStyles();
+	}
+
+	private createFormLink() {
+		this.formLink.onInsert = this.onFormLinkInsert;
+	}
+
+	private onFormLinkInsert = (text: string, link: string) => {
+		if (this.range.collapsed) {
+			console.log("collapsed");
+			const anchor = document.createElement("a");
+			anchor.href = link;
+			anchor.innerHTML = text;
+			this.range.insertNode(anchor);
+			this.lastSelection.addRange(this.range);
+		} else {
+			this.restoreSelectionRange(this.range);
+			document.execCommand("createLink", false, link);
 		}
-	}
-
-	private createInputLink() {
-		this.elMenuLink.classList.add("compoz-input-link");
-		this.elMenuLink.appendChild(this.elInputLink);
-
-		const elBInsertLink = document.createElement("button");
-		elBInsertLink.innerHTML = "Insert";
-		this.elMenuLink.appendChild(elBInsertLink);
-
-		elBInsertLink.onclick = e => {
-			const val = this.elInputLink.value;
-			this.restoreSelectionRange(this.lastSelection);
-			document.execCommand("createLink", false, val);
-
-			this.elInput.focus();
-			this.hideInputLink();
-		};
-	}
+		this.hideFormLink();
+	};
 
 	private createMenuStyles() {
 		this.elStyles.classList.add("compoz-styles");
@@ -364,7 +362,7 @@ export class Compoz {
 		this.elBBold.innerHTML = "B";
 
 		this.elBBold.onclick = e => {
-			document.execCommand("bold", false, null);
+			document.execCommand("bold", false, "");
 			this.elInput.focus();
 		};
 	}
@@ -376,7 +374,7 @@ export class Compoz {
 		this.elBItalic.innerHTML = "I";
 
 		this.elBItalic.onclick = e => {
-			document.execCommand("italic", false, null);
+			document.execCommand("italic", false, "");
 			this.elInput.focus();
 		};
 	}
@@ -388,7 +386,7 @@ export class Compoz {
 		this.elBUnderline.innerHTML = "U";
 
 		this.elBUnderline.onclick = e => {
-			document.execCommand("underline", false, null);
+			document.execCommand("underline", false, "");
 			this.elInput.focus();
 		};
 	}
@@ -403,7 +401,7 @@ export class Compoz {
 		this.elBUL.appendChild(elBULImg);
 
 		this.elBUL.onclick = e => {
-			document.execCommand("insertUnorderedList", false, null);
+			document.execCommand("insertUnorderedList", false, "");
 			this.elInput.focus();
 		};
 	}
@@ -418,7 +416,7 @@ export class Compoz {
 		this.elBOL.appendChild(elBOLImg);
 
 		this.elBOL.onclick = e => {
-			document.execCommand("insertOrderedList", false, null);
+			document.execCommand("insertOrderedList", false, "");
 			this.elInput.focus();
 		};
 	}
@@ -467,7 +465,7 @@ export class Compoz {
 		this.elBStyle.onclick = e => {
 			if (!this.isShowStyle) {
 				if (this.isShowInputLink) {
-					this.hideInputLink();
+					this.hideFormLink();
 					this.showStyles();
 				} else {
 					this.showStyles();
@@ -483,17 +481,13 @@ export class Compoz {
 		this.elBLink.classList.add("compoz-b-link");
 		this.elBLink.innerText = "Link";
 
-		this.elBLink.onclick = e => {
+		this.elBLink.onmousedown = () => {
 			if (this.isShowInputLink) {
-				this.hideInputLink();
+				this.hideFormLink();
 			} else {
-				if (this.isShowStyle) {
-					this.hideStyles();
-					this.showInputLink();
-				} else {
-					this.showInputLink();
-				}
+				this.showFormLink();
 			}
+			return false;
 		};
 	}
 
@@ -553,30 +547,27 @@ export class Compoz {
 	private showStyles() {
 		this.isShowStyle = true;
 		this.elBStyle.classList.add(classActive);
-		this.elInputWrapper.appendChild(this.elStyles);
+		this.elFormWrapper.appendChild(this.elStyles);
 		this.setHeight(this.cfg.height);
 	}
 
 	private hideStyles() {
 		this.isShowStyle = false;
 		this.elBStyle.classList.remove(classActive);
-		this.elInputWrapper.removeChild(this.elStyles);
+		this.elFormWrapper.removeChild(this.elStyles);
 		this.setHeight(this.cfg.height);
 	}
 
-	private showInputLink() {
+	private showFormLink = () => {
 		this.isShowInputLink = true;
-		this.elBLink.classList.add(classActive);
-		this.elInputWrapper.appendChild(this.elMenuLink);
-		this.elInputLink.focus();
-		this.setHeight(this.cfg.height);
-	}
+		this.elFormWrapper.appendChild(this.formLink.el);
+		var text = this.lastSelection.toString();
+		this.formLink.setInput(text, "");
+	};
 
-	private hideInputLink() {
+	private hideFormLink() {
 		this.isShowInputLink = false;
-		this.elBLink.classList.remove(classActive);
-		this.elInputWrapper.removeChild(this.elMenuLink);
-		this.setHeight(this.cfg.height);
+		this.elFormWrapper.removeChild(this.formLink.el);
 	}
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {
@@ -607,17 +598,17 @@ export class Compoz {
 		});
 	}
 
-	isEmpty(): boolean {
+	public isEmpty(): boolean {
 		let v = this.elInput.textContent || "";
 		v = v.trim();
 		return v === inputHint || v === "";
 	}
 
-	setContentHTML(c: string) {
+	public setContentHTML(c: string) {
 		this.elInput.innerHTML = c;
 	}
 
-	getContentHTML(): string {
+	public getContentHTML(): string {
 		if (this.isEmpty()) {
 			return "";
 		}
@@ -625,7 +616,7 @@ export class Compoz {
 		return this.elInput.innerHTML;
 	}
 
-	setFiles(files: CompozFileInterface[]) {
+	public setFiles(files: CompozFileInterface[]) {
 		this.elFiles.innerHTML = "";
 		this.files = new Array();
 
@@ -638,17 +629,17 @@ export class Compoz {
 		}
 	}
 
-	getFiles(): CompozFile[] {
+	public getFiles(): CompozFile[] {
 		return this.files;
 	}
 
-	reset() {
+	public reset() {
 		this.elInput.innerHTML = "";
 		this.elFiles.innerHTML = "";
 		this.files = new Array();
 	}
 
-	resizeInput(w: number, h: number) {
+	public resizeInput(w: number, h: number) {
 		if (w && w > 0) {
 			this.elInput.style.width = w + "px";
 			this.elInput.style.maxWidth = w + "px";
@@ -659,32 +650,32 @@ export class Compoz {
 		}
 	}
 
-	setHeight(h: number) {
+	public setHeight(h: number) {
 		this.cfg.height = h;
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight;
 		this.elInput.style.height = h - menuWrapperHeight + "px";
 		this.elInput.style.maxHeight = h - menuWrapperHeight + "px";
 	}
 
-	resetInputHeight() {
+	public resetInputHeight() {
 		this.elInput.style.minHeight = this.defaultInputMinHeight;
 		this.elInput.style.maxHeight = this.defaultInputMaxHeight;
 		this.elInput.style.height = "auto";
 	}
 
-	showButtonExpand() {
+	public showButtonExpand() {
 		this.elExpand.style.display = "block";
 	}
 
-	hideButtonExpand() {
+	public hideButtonExpand() {
 		this.elExpand.style.display = "none";
 	}
 
-	enableButtonSend() {
+	public enableButtonSend() {
 		this.elBSendImg.src = svgSend;
 	}
 
-	disableButtonSend() {
+	public disableButtonSend() {
 		this.elBSendImg.src = svgSendDisable;
 	}
 }

@@ -55,29 +55,10 @@ $list-file-size: 120;
 		overflow-y: hidden;
 		display: flex;
 	}
-	.compoz-input-wrapper {
+	.compoz-form-wrapper {
 		width: 100%;
 		overflow-x: auto;
 		overflow-y: hidden;
-	}
-
-	.compoz-input-link {
-		height: 2em;
-		margin: 8px 0px;
-		width: 100%;
-
-		input {
-			display: inline-block;
-			width: calc(100% - 120px);
-			vertical-align: middle;
-			border: 1px solid silver;
-			border-radius: 4px;
-			padding: 4px;
-		}
-		button {
-			display: inline-block;
-			width: 100px;
-		}
 	}
 
 	.compoz-styles {
@@ -207,4 +188,35 @@ $list-file-size: 120;
 	}
 }
 
-// vim: set ts=4 sw=4 noexpandtab:
+.compoz-form-link {
+	background: #dedede;
+	border-radius: 8px;
+	padding: 6px;
+
+	.row {
+		margin-top: 6px;
+	}
+	label {
+		display: inline-block;
+		text-align: right;
+		width: 60px;
+		padding-right: 1em;
+	}
+	input {
+		width: calc(100% - 100px);
+	}
+	.footer {
+		margin-right: 7px;
+
+		.error {
+			padding-left: 10px;
+			display: inline-block;
+			width: calc(100% - 110px);
+			color: #cb0d0d;
+		}
+		button {
+			text-align: right;
+			width: 100px;
+		}
+	}
+}
