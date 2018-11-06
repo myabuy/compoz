@@ -1,1 +1,13 @@
-node_modules/gts/tslint.json
+{
+	"defaultSeverity": "error",
+	"extends": ["tslint:recommended"],
+	"jsRules": {},
+	"linterOptions": {},
+	"rules": {
+		"indent": [true, "tabs", 4],
+		"arrow-parens": [true, "ban-single-arg-parens"],
+		"no-console": [true, "log", "error"],
+		"semicolon": [false, "never"]
+	},
+	"rulesDirectory": []
+}

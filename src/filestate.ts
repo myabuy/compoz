@@ -1,6 +1,6 @@
 export enum FileState {
-  LOCAL,
-  UPLOADING,
-  ERROR,
-  SUCCESS
+	LOCAL,
+	UPLOADING,
+	ERROR,
+	SUCCESS,
 }

@@ -1,7 +1,7 @@
 {
 	"name": "compoz",
 	"version": "0.1.0",
-	"description": "Simple javascript WYSIWYG text editor",
+	"description": "Simple JavaScript WYSIWYG text editor",
 	"main": "dist/compoz.js",
 	"module": "src/compoz.ts",
 	"scripts": {
@@ -13,7 +13,10 @@
 		"url": "github.com/myabuy/compoz"
 	},
 	"keywords": [
-		"javascript",
+		"JavaScript",
+		"WYSIWYG",
+		"text",
+		"editor",
 		"compose"
 	],
 	"author": "shuLhan <ms@kilabit.info>",
@@ -38,5 +41,12 @@
 		"webpack-cli": "^3.1.2",
 		"webpack-dev-server": "^3.1.10",
 		"webpack-merge": "^4.1.4"
+	},
+	"prettier": {
+		"singleQuote": false,
+		"tabWidth": 4,
+		"trailingComma": "all",
+		"useTabs": true,
+		"semi": false
 	}
 }
