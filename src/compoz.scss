@@ -61,28 +61,6 @@ $list-file-size: 120;
 		overflow-y: hidden;
 	}
 
-	.compoz-styles {
-		height: 2em;
-		margin: 8px 0px;
-
-		a {
-			margin: 0px;
-			padding: 8px;
-			text-decoration: none;
-			color: black;
-		}
-
-		.bold {
-			font-weight: 800;
-		}
-		.italic {
-			font-style: italic;
-		}
-		.underline {
-			text-decoration: underline;
-		}
-	}
-
 	.compoz-menu {
 		margin: 8px 8px 16px 8px;
 		cursor: pointer;
@@ -189,6 +167,33 @@ $list-file-size: 120;
 		right: 0px;
 		top: 0px;
 		width: 14px;
+	}
+}
+
+.compoz-form-styles {
+	height: 2em;
+	margin: 8px 0px;
+
+	span {
+		color: black;
+		cursor: pointer;
+		margin: 0px;
+		padding: 8px;
+		text-decoration: none;
+
+		-moz-user-select: none;
+		-ms-user-select: none;
+		-webkit-user-select: none;
+		user-select: none;
+	}
+	.bold {
+		font-weight: 800;
+	}
+	.italic {
+		font-style: italic;
+	}
+	.underline {
+		text-decoration: underline;
 	}
 }
 

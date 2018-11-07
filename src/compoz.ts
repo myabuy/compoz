@@ -8,14 +8,13 @@ import { CompozFile, ICompozFile } from "./compozfile"
 import { Config, IConfig } from "./config"
 export { FileState } from "./filestate"
 import { FormLink } from "./formlink"
+import { FormStyles } from "./formstyles"
 import { IPopupLink, PopupLink } from "./popuplink"
 
 import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
 import svgLink = require("./assets/b-link.svg")
-import svgOl = require("./assets/b-ol.svg")
 import svgStyle = require("./assets/b-style.svg")
-import svgUl = require("./assets/b-ul.svg")
 import svgSendDisable = require("./assets/ic-send-disable.svg")
 import svgSend = require("./assets/ic-send.svg")
 
@@ -43,17 +42,12 @@ export class Compoz {
 	private elInputFile = document.createElement("input")
 
 	private elMenu = document.createElement("div")
-	private elStyles = document.createElement("div")
-	private elBStyle = document.createElement("span")
 
-	private elBBold = document.createElement("a")
-	private elBItalic = document.createElement("a")
-	private elBUnderline = document.createElement("a")
-	private elBUL = document.createElement("a")
-	private elBOL = document.createElement("a")
+	private elBStyle = document.createElement("span")
 	private elBSendImg = document.createElement("img")
 
 	private formLink = new FormLink()
+	private formStyles = new FormStyles(this.elInput)
 	private popupLink = new PopupLink()
 
 	private files: CompozFile[] = new Array()
@@ -355,7 +349,6 @@ export class Compoz {
 		this.elFormWrapper.classList.add("compoz-form-wrapper")
 
 		this.createFormLink()
-		this.createMenuStyles()
 	}
 
 	private createFormLink() {
@@ -374,25 +367,6 @@ export class Compoz {
 			document.execCommand("createLink", false, link)
 		}
 		this.hideFormLink()
-	}
-
-	private createMenuStyles() {
-		this.elStyles.classList.add("compoz-styles")
-
-		this.createBBold()
-		this.elStyles.appendChild(this.elBBold)
-
-		this.createBItalic()
-		this.elStyles.appendChild(this.elBItalic)
-
-		this.createBUnderline()
-		this.elStyles.appendChild(this.elBUnderline)
-
-		this.createBUL()
-		this.elStyles.appendChild(this.elBUL)
-
-		this.createBOL()
-		this.elStyles.appendChild(this.elBOL)
 	}
 
 	private addFile(f: File): CompozFile | null {
@@ -452,72 +426,6 @@ export class Compoz {
 				const f = this.elInputFile.files[x]
 				this.addFile(f)
 			}
-		}
-	}
-
-	private createBBold() {
-		this.elBBold.href = "#"
-		this.elBBold.classList.add("button")
-		this.elBBold.classList.add("bold")
-		this.elBBold.innerHTML = "B"
-
-		this.elBBold.onclick = e => {
-			document.execCommand("bold", false, "")
-			this.elInput.focus()
-		}
-	}
-
-	private createBItalic() {
-		this.elBItalic.href = "#"
-		this.elBItalic.classList.add("button")
-		this.elBItalic.classList.add("italic")
-		this.elBItalic.innerHTML = "I"
-
-		this.elBItalic.onclick = e => {
-			document.execCommand("italic", false, "")
-			this.elInput.focus()
-		}
-	}
-
-	private createBUnderline() {
-		this.elBUnderline.href = "#"
-		this.elBUnderline.classList.add("button")
-		this.elBUnderline.classList.add("underline")
-		this.elBUnderline.innerHTML = "U"
-
-		this.elBUnderline.onclick = e => {
-			document.execCommand("underline", false, "")
-			this.elInput.focus()
-		}
-	}
-
-	private createBUL() {
-		this.elBUL.href = "#"
-		this.elBUL.classList.add("button")
-		this.elBUL.classList.add("ul")
-
-		const elBULImg = document.createElement("img")
-		elBULImg.src = svgUl
-		this.elBUL.appendChild(elBULImg)
-
-		this.elBUL.onclick = e => {
-			document.execCommand("insertUnorderedList", false, "")
-			this.elInput.focus()
-		}
-	}
-
-	private createBOL() {
-		this.elBOL.href = "#"
-		this.elBOL.classList.add("button")
-		this.elBOL.classList.add("ol")
-
-		const elBOLImg = document.createElement("img")
-		elBOLImg.src = svgOl
-		this.elBOL.appendChild(elBOLImg)
-
-		this.elBOL.onclick = e => {
-			document.execCommand("insertOrderedList", false, "")
-			this.elInput.focus()
 		}
 	}
 
@@ -652,14 +560,14 @@ export class Compoz {
 	private showStyles() {
 		this.isShowStyle = true
 		this.elBStyle.classList.add(classActive)
-		this.elFormWrapper.appendChild(this.elStyles)
+		this.elFormWrapper.appendChild(this.formStyles.el)
 		this.setHeight(this.cfg.height)
 	}
 
 	private hideStyles() {
 		this.isShowStyle = false
 		this.elBStyle.classList.remove(classActive)
-		this.elFormWrapper.removeChild(this.elStyles)
+		this.elFormWrapper.removeChild(this.formStyles.el)
 		this.setHeight(this.cfg.height)
 	}
 
