@@ -12,6 +12,7 @@ import { IPopupLink, PopupLink } from "./popuplink"
 
 import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
+import svgLink = require("./assets/b-link.svg")
 import svgOl = require("./assets/b-ol.svg")
 import svgStyle = require("./assets/b-style.svg")
 import svgUl = require("./assets/b-ul.svg")
@@ -43,9 +44,7 @@ export class Compoz {
 
 	private elMenu = document.createElement("div")
 	private elStyles = document.createElement("div")
-	private elBStyle = document.createElement("a")
-	private elBAttachment = document.createElement("a")
-	private elBLink = document.createElement("a")
+	private elBStyle = document.createElement("span")
 
 	private elBBold = document.createElement("a")
 	private elBItalic = document.createElement("a")
@@ -525,43 +524,42 @@ export class Compoz {
 	private createMenu() {
 		this.elMenu.classList.add("compoz-menu")
 
-		this.createBStyle()
-		this.elMenu.appendChild(this.elBStyle)
-
-		this.createBAttachment()
-		this.elMenu.appendChild(this.elBAttachment)
-
-		this.createBLink()
-		this.elMenu.appendChild(this.elBLink)
-
+		this.createButtonStyle(this.elMenu)
+		this.createButtonAttachment(this.elMenu)
+		this.createButtonLink(this.elMenu)
 		this.createRightMenu(this.elMenu)
 	}
 
-	private createBAttachment() {
-		this.elBAttachment.classList.add("button")
-		this.elBAttachment.classList.add("compoz-b-attachment")
+	private createButtonAttachment(parent: HTMLElement) {
+		const button = document.createElement("span")
+		button.classList.add("button")
+		button.classList.add("compoz-b-attachment")
 
-		const elImg = document.createElement("img")
-		elImg.src = svgAttachment
-		this.elBAttachment.appendChild(elImg)
+		const img = document.createElement("img")
+		img.src = svgAttachment
+		button.appendChild(img)
+
+		parent.appendChild(button)
 
 		if (this.cfg.hideAttachment) {
-			this.elBAttachment.style.display = "none"
+			button.style.display = "none"
 			return
 		}
 
-		this.elBAttachment.onclick = e => {
+		button.onclick = e => {
 			this.elInputFile.click()
 		}
 	}
 
-	private createBStyle() {
+	private createButtonStyle(parent: HTMLElement) {
 		this.elBStyle.classList.add("button")
 		this.elBStyle.classList.add("compoz-b-style")
 
 		const elImg = document.createElement("img")
 		elImg.src = svgStyle
 		this.elBStyle.appendChild(elImg)
+
+		parent.appendChild(this.elBStyle)
 
 		this.elBStyle.onclick = e => {
 			if (!this.isShowStyle) {
@@ -577,12 +575,18 @@ export class Compoz {
 		}
 	}
 
-	private createBLink() {
-		this.elBLink.classList.add("button")
-		this.elBLink.classList.add("compoz-b-link")
-		this.elBLink.innerText = "Link"
+	private createButtonLink(parent: HTMLElement) {
+		const button = document.createElement("span")
+		button.classList.add("button")
+		button.classList.add("compoz-b-link")
 
-		this.elBLink.onmousedown = () => {
+		const img = document.createElement("img")
+		img.src = svgLink
+		button.appendChild(img)
+
+		parent.appendChild(button)
+
+		button.onmousedown = () => {
 			if (this.isShowInputLink) {
 				this.hideFormLink()
 			} else {

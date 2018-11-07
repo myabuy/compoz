@@ -87,11 +87,14 @@ $list-file-size: 120;
 		margin: 8px 8px 16px 8px;
 		cursor: pointer;
 
-		a {
-			text-decoration: none;
-			color: black;
-			padding: 4px 8px;
+		.button {
 			border-radius: 8px;
+			color: black;
+			cursor: pointer;
+			display: inline-block;
+			padding: 4px 8px;
+			text-decoration: none;
+			vertical-align: middle;
 
 			&.compoz-b-active {
 				background-color: $active-color;
@@ -99,11 +102,6 @@ $list-file-size: 120;
 			&:hover {
 				background-color: $active-color;
 			}
-		}
-
-		.button {
-			display: inline-block;
-			vertical-align: middle;
 			&.compoz-b-style {
 				img {
 					width: 23px;
@@ -111,6 +109,12 @@ $list-file-size: 120;
 				}
 			}
 			&.compoz-b-attach {
+				img {
+					width: 20px;
+					height: 20px;
+				}
+			}
+			&.compoz-b-link {
 				img {
 					width: 20px;
 					height: 20px;
