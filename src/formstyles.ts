@@ -30,7 +30,6 @@ export class FormStyles {
 		this.el.appendChild(button)
 
 		button.onmousedown = e => {
-			console.log("bold")
 			document.execCommand("bold", false, "")
 			this.elInput.focus()
 			return false
