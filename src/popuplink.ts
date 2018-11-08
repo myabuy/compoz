@@ -11,11 +11,11 @@ export interface IElementPos {
 }
 
 export class PopupLink {
-	public el = document.createElement("div")
+	public el = document.createElement("div");
+	public in: IPopupLink | null = null
 	private elLink = document.createElement("a")
 	private elChange = document.createElement("span")
-	private elRemove = document.createElement("span");
-	private in: IPopupLink | null = null
+	private elRemove = document.createElement("span")
 
 	constructor() {
 		this.el.classList.add("compoz-popup-link")
@@ -49,30 +49,15 @@ export class PopupLink {
 	}
 
 	public show(p: IPopupLink) {
-		const pos = this.getPosition(p.el)
-
 		this.elLink.innerText = p.link
 		this.elLink.href = p.link
 
-		this.el.style.top = "-20px"
-		this.el.style.left = pos.left + "px"
+		this.el.style.top = p.el.offsetTop - 40 + "px"
+		this.el.style.left = "8px"
 		this.el.style.visibility = "visible"
 		this.in = p
 
 		document.addEventListener("mousedown", this.onMouseDown)
-	}
-
-	private getPosition(el: HTMLAnchorElement): IElementPos {
-		const rect = el.getBoundingClientRect()
-		const docEl = document.documentElement
-		const pos = {} as IElementPos
-
-		if (docEl) {
-			pos.top = rect.top + window.pageYOffset - docEl.clientTop
-			pos.left = rect.left + window.pageXOffset - docEl.clientLeft
-		}
-
-		return pos
 	}
 
 	private onMouseDown = (e: MouseEvent) => {

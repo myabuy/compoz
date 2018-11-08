@@ -109,7 +109,7 @@ function createFullCompose() {
 		hideSend: false,
 
 		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
-		subject: "Bootcamp LPDP",
+		subject: "Bootcamp",
 
 		onBlur: () => {
 			console.log("onBlur")
@@ -138,7 +138,11 @@ function createFullCompose() {
 
 	const c = new Compoz("full-compose", config, files)
 
-	c.setContentHTML("<b>Test</b> set content")
+	c.setContentHTML(`
+        <b>Test</b> set content
+        <br/>
+        <a href="https://alpha.proofn.com">link</a>
+    `)
 }
 
 generateContent()
