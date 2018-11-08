@@ -30,16 +30,16 @@ type DeleteBeforeCb = () => Promise<boolean>
 type DeleteAfterCb = () => void
 
 export class CompozFile {
-	public id = 0
-	public name = ""
-	public size = 0
-	public type = ""
-	public raw: File | null = null
-	public el = document.createElement("div")
-	public elIcon = document.createElement("img")
-	public state!: FileState
-	public onDeleteBefore: DeleteBeforeCb
-	public onDeleteAfter: DeleteAfterCb
+	id = 0
+	name = ""
+	size = 0
+	type = ""
+	raw: File | null = null
+	el = document.createElement("div")
+	elIcon = document.createElement("img")
+	state!: FileState
+	onDeleteBefore: DeleteBeforeCb
+	onDeleteAfter: DeleteAfterCb
 
 	constructor(
 		cfi: ICompozFile,
@@ -74,7 +74,7 @@ export class CompozFile {
 		this.createElDelete()
 	}
 
-	public setState(state: FileState) {
+	setState(state: FileState) {
 		this.state = state
 
 		switch (state) {

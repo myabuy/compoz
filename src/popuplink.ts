@@ -11,8 +11,8 @@ export interface IElementPos {
 }
 
 export class PopupLink {
-	public el = document.createElement("div");
-	public in: IPopupLink | null = null
+	el = document.createElement("div");
+	in: IPopupLink | null = null
 	private elLink = document.createElement("a")
 	private elChange = document.createElement("span")
 	private elRemove = document.createElement("span")
@@ -33,11 +33,11 @@ export class PopupLink {
 		this.createButtonRemove(this.el)
 	}
 
-	public onChange(inp: IPopupLink | null) {
+	onChange(inp: IPopupLink | null) {
 		return
 	}
 
-	public reset() {
+	reset() {
 		if (!this.in) {
 			return
 		}
@@ -48,7 +48,7 @@ export class PopupLink {
 		document.removeEventListener("mousedown", this.onMouseDown)
 	}
 
-	public show(p: IPopupLink) {
+	show(p: IPopupLink) {
 		this.elLink.innerText = p.link
 		this.elLink.href = p.link
 

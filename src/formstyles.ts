@@ -2,7 +2,7 @@ import svgOl = require("./assets/b-ol.svg")
 import svgUl = require("./assets/b-ul.svg")
 
 export class FormStyles {
-	public el = document.createElement("div")
+	el = document.createElement("div")
 	private elInput: HTMLDivElement
 
 	constructor(elInput: HTMLDivElement) {
@@ -16,7 +16,7 @@ export class FormStyles {
 		this.createButtonOL()
 	}
 
-	public onClickBold(e: MouseEvent) {
+	onClickBold(e: MouseEvent) {
 		return
 	}
 

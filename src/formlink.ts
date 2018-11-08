@@ -1,5 +1,5 @@
 export class FormLink {
-	public el = document.createElement("div")
+	el = document.createElement("div")
 	private elInputText = document.createElement("input")
 	private elInputLink = document.createElement("input")
 	private elError = document.createElement("span")
@@ -15,11 +15,11 @@ export class FormLink {
 	/**
 	 * onInsert a callback that will overwritten.
 	 */
-	public onInsert(text: string, link: string) {
+	onInsert(text: string, link: string) {
 		// noop.
 	}
 
-	public setInput(text: string, link: string) {
+	setInput(text: string, link: string) {
 		this.elInputText.value = text
 		this.elInputLink.value = link
 	}

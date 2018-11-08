@@ -132,17 +132,17 @@ export class Compoz {
 		})
 	}
 
-	public isEmpty(): boolean {
+	isEmpty(): boolean {
 		let v = this.elInput.textContent || ""
 		v = v.trim()
 		return v === inputHint || v === ""
 	}
 
-	public setContentHTML(c: string) {
+	setContentHTML(c: string) {
 		this.elInput.innerHTML = c
 	}
 
-	public getContentHTML(): string {
+	getContentHTML(): string {
 		if (this.isEmpty()) {
 			return ""
 		}
@@ -150,7 +150,7 @@ export class Compoz {
 		return this.elInput.innerHTML
 	}
 
-	public setFiles(files: ICompozFile[]) {
+	setFiles(files: ICompozFile[]) {
 		this.elFiles.innerHTML = ""
 		this.files = new Array()
 
@@ -163,17 +163,17 @@ export class Compoz {
 		}
 	}
 
-	public getFiles(): CompozFile[] {
+	getFiles(): CompozFile[] {
 		return this.files
 	}
 
-	public reset() {
+	reset() {
 		this.elInput.innerHTML = ""
 		this.elFiles.innerHTML = ""
 		this.files = new Array()
 	}
 
-	public resizeInput(w: number, h: number) {
+	resizeInput(w: number, h: number) {
 		if (w && w > 0) {
 			this.elInput.style.width = w + "px"
 			this.elInput.style.maxWidth = w + "px"
@@ -184,32 +184,32 @@ export class Compoz {
 		}
 	}
 
-	public setHeight(h: number) {
+	setHeight(h: number) {
 		this.cfg.height = h
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight
 		this.elInput.style.height = h - menuWrapperHeight + "px"
 		this.elInput.style.maxHeight = h - menuWrapperHeight + "px"
 	}
 
-	public resetInputHeight() {
+	resetInputHeight() {
 		this.elInput.style.minHeight = this.defaultInputMinHeight
 		this.elInput.style.maxHeight = this.defaultInputMaxHeight
 		this.elInput.style.height = "auto"
 	}
 
-	public showButtonExpand() {
+	showButtonExpand() {
 		this.elExpand.style.display = "block"
 	}
 
-	public hideButtonExpand() {
+	hideButtonExpand() {
 		this.elExpand.style.display = "none"
 	}
 
-	public enableButtonSend() {
+	enableButtonSend() {
 		this.elBSendImg.src = svgSend
 	}
 
-	public disableButtonSend() {
+	disableButtonSend() {
 		this.elBSendImg.src = svgSendDisable
 	}
 

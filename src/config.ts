@@ -30,18 +30,18 @@ export interface IConfig {
 }
 
 export class Config {
-	public subject = ""
-	public participants = ""
-	public avatarURL = ""
-	public contentHTML = ""
-	public fileMaxSize = 26214400
-	public height = 0
-	public hideAttachment = false
-	public hideDiscard = false
-	public hideExpand = false
-	public hideSave = false
-	public hideSend = false
-	public composeStyle = ""
+	subject = ""
+	participants = ""
+	avatarURL = ""
+	contentHTML = ""
+	fileMaxSize = 26214400
+	height = 0
+	hideAttachment = false
+	hideDiscard = false
+	hideExpand = false
+	hideSave = false
+	hideSend = false
+	composeStyle = ""
 
 	constructor(cfg: IConfig | null) {
 		if (!cfg) {
@@ -72,25 +72,25 @@ export class Config {
 		this.onSend = cfg.onSend
 	}
 
-	public onBlur(): void {
+	onBlur(): void {
 		return
 	}
-	public onContentChange(contentHTML: string): void {
+	onContentChange(contentHTML: string): void {
 		return
 	}
-	public onExpand(): void {
+	onExpand(): void {
 		return
 	}
-	public onUnexpand(): void {
+	onUnexpand(): void {
 		return
 	}
-	public onFileDeletedBefore(f: CompozFile): Promise<boolean> {
+	onFileDeletedBefore(f: CompozFile): Promise<boolean> {
 		return Promise.resolve(false)
 	}
-	public onDiscard(): void {
+	onDiscard(): void {
 		return
 	}
-	public onSend(): void {
+	onSend(): void {
 		return
 	}
 }
