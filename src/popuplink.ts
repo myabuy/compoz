@@ -51,7 +51,14 @@ export class PopupLink {
 	}
 
 	show() {
-		this.elLink.innerText = linkSvc.url
+		if (linkSvc.url.length > 20) {
+			this.elLink.innerText =
+				linkSvc.url.substring(0, 20) +
+				"..." +
+				linkSvc.url.substring(linkSvc.url.length - 5)
+		} else {
+			this.elLink.innerText = linkSvc.url
+		}
 		this.elLink.href = linkSvc.url
 
 		this.el.style.top = linkSvc.el.offsetTop - 40 + "px"

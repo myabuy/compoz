@@ -26,8 +26,15 @@ function createQuickCompose() {
 		avatarURL:
 			"https://d26i9nvlq0mz5u.cloudfront.net/avatar/default/v0/avatar192.png",
 		composeStyle: "",
-		contentHTML: `<b> this is </b> <a href="http://test.com">the</a>
-        content`,
+		// tslint:disable-next-line
+		contentHTML: `
+<b> this is </b> <a href="http://test.com">the</a> content.
+<br/>
+Test long
+<a href="https://www.reddit.com/r/Documentaries/comments/9v55kl/i_was_a_yazidi_slave_2018_documentary_the_story/">
+link.
+</a>
+`,
 		fileMaxSize: 4194304,
 		height: 0,
 
