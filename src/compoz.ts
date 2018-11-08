@@ -191,6 +191,7 @@ export class Compoz {
 		this.elInput.style.minHeight = this.defaultInputMinHeight
 		this.elInput.style.maxHeight = this.defaultInputMaxHeight
 		this.elInput.style.height = "auto"
+		this.cfg.height = 0
 	}
 
 	showButtonExpand() {
@@ -568,11 +569,15 @@ export class Compoz {
 
 		this.isShowInputLink = true
 		this.elFormWrapper.appendChild(this.formLink.el)
+
+		this.setHeight(this.cfg.height)
 	}
 
 	private hideFormLink() {
 		this.isShowInputLink = false
 		this.elFormWrapper.removeChild(this.formLink.el)
+
+		this.setHeight(this.cfg.height)
 	}
 
 	private onChangeLink = () => {

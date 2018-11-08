@@ -76,7 +76,7 @@ function createQuickCompose() {
 			}, 2000)
 		},
 		onUnexpand: () => {
-			c.resetInputHeight()
+			c.setHeight(0)
 		},
 	}
 
