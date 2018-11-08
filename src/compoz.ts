@@ -349,6 +349,9 @@ export class Compoz {
 
 	private onFormLinkUpdate = (text: string, link: string) => {
 		if (this.range.collapsed) {
+			if (this.isEmpty()) {
+				this.elInput.innerHTML = ""
+			}
 			linkSvc.insert(text, link)
 		} else {
 			this.restoreSelectionRange(this.range)
