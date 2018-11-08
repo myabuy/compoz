@@ -201,13 +201,14 @@ $list-file-size: 120;
 	background: #dedede;
 	border-radius: 8px;
 	padding: 6px;
+	overflow: hidden;
+	text-align: center;
 
 	.row {
 		margin-top: 6px;
 	}
 	label {
 		display: inline-block;
-		text-align: right;
 		width: 60px;
 		padding-right: 1em;
 	}
@@ -222,10 +223,6 @@ $list-file-size: 120;
 			display: inline-block;
 			width: calc(100% - 110px);
 			color: #cb0d0d;
-		}
-		button {
-			text-align: right;
-			width: 100px;
 		}
 	}
 }
