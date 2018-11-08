@@ -20,14 +20,18 @@ $list-file-size: 120;
 		display: none;
 	}
 
-	.compoz-input {
-		overflow-y: auto;
+	.compoz-input-wrapper {
 		vertical-align: middle;
 		margin: 8px;
 		padding: 12px 30px 12px 20px;
 		border-radius: 24px;
 		background-color: #fafbff;
 		border: solid 1px #dfdfdf;
+
+		.compoz-input {
+			background-color: #fafbff;
+			overflow: auto;
+		}
 		.hint {
 			color: #b8b8b8;
 		}
@@ -36,10 +40,7 @@ $list-file-size: 120;
 	.compoz-input-expand {
 		border-radius: 0px;
 		border: none;
-		background-color: #ffffff;
-		border-bottom: solid 1px #dfdfdf;
 		margin: 0px;
-		padding-top: 20px;
 	}
 	.compoz-button-expand {
 		position: absolute;

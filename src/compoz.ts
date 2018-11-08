@@ -68,7 +68,6 @@ export class Compoz {
 		this.elCompoz.classList.add("compoz")
 
 		this.createInput()
-		this.elCompoz.appendChild(this.elInput)
 
 		this.createElExpand()
 		this.elCompoz.appendChild(this.elExpand)
@@ -91,8 +90,8 @@ export class Compoz {
 
 		this.elRoot.appendChild(this.elCompoz)
 
-		if (this.cfg.height) {
-			this.resizeInput(0, this.cfg.height)
+		if (this.cfg.height > 0) {
+			this.setHeight(this.cfg.height)
 		}
 
 		setTimeout(() => {
@@ -221,6 +220,12 @@ export class Compoz {
 	}
 
 	private createInput() {
+		const wrapper = document.createElement("div")
+		wrapper.classList.add("compoz-input-wrapper")
+
+		wrapper.appendChild(this.elInput)
+		this.elCompoz.appendChild(wrapper)
+
 		this.elInput.contentEditable = "true"
 		this.elInput.classList.add("compoz-input")
 
