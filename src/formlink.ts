@@ -1,8 +1,11 @@
+import { LinkState } from "./linkservice"
+
 export class FormLink {
 	el = document.createElement("div")
 	private elInputText = document.createElement("input")
 	private elInputLink = document.createElement("input")
 	private elError = document.createElement("span")
+	private elBInsert = document.createElement("button")
 
 	constructor() {
 		this.el.classList.add("compoz-form-link")
@@ -19,9 +22,18 @@ export class FormLink {
 		// noop.
 	}
 
-	setInput(text: string, link: string) {
+	setInput(state: LinkState, text: string, link: string) {
 		this.elInputText.value = text
 		this.elInputLink.value = link
+
+		switch (state) {
+			case LinkState.New:
+				this.elBInsert.innerText = "Insert"
+				break
+			case LinkState.Update:
+				this.elBInsert.innerText = "Update"
+				break
+		}
 	}
 
 	private createInputText() {
@@ -64,11 +76,10 @@ export class FormLink {
 	}
 
 	private addButtonInsert(parent: HTMLElement) {
-		const b = document.createElement("button")
-		b.innerHTML = "Insert"
-		parent.appendChild(b)
+		this.elBInsert.innerHTML = "Insert"
+		parent.appendChild(this.elBInsert)
 
-		b.onclick = e => {
+		this.elBInsert.onclick = e => {
 			const text = this.elInputText.value
 			const link = this.elInputLink.value
 

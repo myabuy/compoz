@@ -1,4 +1,4 @@
-enum LinkState {
+export enum LinkState {
 	New = 0,
 	Update = 1,
 }

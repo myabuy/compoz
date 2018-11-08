@@ -561,7 +561,7 @@ export class Compoz {
 
 	private showFormLink = () => {
 		linkSvc.setFromRange(this.lastSelection, this.range)
-		this.formLink.setInput(linkSvc.text, linkSvc.url)
+		this.formLink.setInput(linkSvc.state, linkSvc.text, linkSvc.url)
 
 		this.isShowInputLink = true
 		this.elFormWrapper.appendChild(this.formLink.el)
@@ -575,7 +575,7 @@ export class Compoz {
 	private onChangeLink = () => {
 		this.range.selectNode(linkSvc.el)
 		this.showFormLink()
-		this.formLink.setInput(linkSvc.text, linkSvc.url)
+		this.formLink.setInput(linkSvc.state, linkSvc.text, linkSvc.url)
 	}
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {

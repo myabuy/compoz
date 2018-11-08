@@ -78,6 +78,7 @@ export class PopupLink {
 
 		this.elChange.onclick = e => {
 			this.onChange()
+			this.reset()
 		}
 	}
 
