@@ -1,8 +1,11 @@
-export interface IPopupLink {
+import { linkSvc } from "./linkservice"
+
+export interface IInputLink {
 	el: HTMLAnchorElement
 	event: Event
-	link: string
+	range: Range
 	text: string
+	url: string
 }
 
 export interface IElementPos {
@@ -11,8 +14,7 @@ export interface IElementPos {
 }
 
 export class PopupLink {
-	el = document.createElement("div");
-	in: IPopupLink | null = null
+	el = document.createElement("div")
 	private elLink = document.createElement("a")
 	private elChange = document.createElement("span")
 	private elRemove = document.createElement("span")
@@ -21,10 +23,14 @@ export class PopupLink {
 		this.el.classList.add("compoz-popup-link")
 		this.el.style.visibility = "hidden"
 
+		const span = document.createElement("span")
+
 		this.elLink.innerText = ""
 		this.elLink.href = "#"
 		this.elLink.target = "_blank"
-		this.el.appendChild(this.elLink)
+
+		span.appendChild(this.elLink)
+		this.el.appendChild(span)
 
 		this.el.appendChild(document.createTextNode("-"))
 
@@ -33,29 +39,24 @@ export class PopupLink {
 		this.createButtonRemove(this.el)
 	}
 
-	onChange(inp: IPopupLink | null) {
+	onChange() {
 		return
 	}
 
 	reset() {
-		if (!this.in) {
-			return
-		}
 		this.elLink.innerText = ""
 		this.elLink.href = "#"
 		this.el.style.visibility = "hidden"
-		this.in = null
 		document.removeEventListener("mousedown", this.onMouseDown)
 	}
 
-	show(p: IPopupLink) {
-		this.elLink.innerText = p.link
-		this.elLink.href = p.link
+	show() {
+		this.elLink.innerText = linkSvc.url
+		this.elLink.href = linkSvc.url
 
-		this.el.style.top = p.el.offsetTop - 40 + "px"
+		this.el.style.top = linkSvc.el.offsetTop - 40 + "px"
 		this.el.style.left = "8px"
 		this.el.style.visibility = "visible"
-		this.in = p
 
 		document.addEventListener("mousedown", this.onMouseDown)
 	}
@@ -71,35 +72,23 @@ export class PopupLink {
 	}
 
 	private createButtonChange(parent: HTMLElement) {
-		this.elChange.classList.add("action")
 		this.elChange.style.cursor = "pointer"
 		this.elChange.innerText = "Change"
 		parent.appendChild(this.elChange)
 
 		this.elChange.onclick = e => {
-			this.onChange(this.in)
+			this.onChange()
 		}
 	}
 
 	private createButtonRemove(parent: HTMLElement) {
 		const el = document.createElement("span")
-		el.classList.add("action")
 		el.style.cursor = "pointer"
 		el.innerText = "Remove"
 		parent.appendChild(el)
 
 		el.onclick = e => {
-			if (!this.in) {
-				return
-			}
-
-			const textNode = document.createTextNode(this.in.text)
-
-			const parEl = this.in.el.parentElement
-			if (parEl) {
-				parEl.insertBefore(textNode, this.in.el.nextSibling)
-				parEl.removeChild(this.in.el)
-			}
+			linkSvc.remove()
 			this.reset()
 		}
 	}

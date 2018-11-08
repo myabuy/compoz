@@ -9,7 +9,8 @@ import { Config, IConfig } from "./config"
 export { FileState } from "./filestate"
 import { FormLink } from "./formlink"
 import { FormStyles } from "./formstyles"
-import { IPopupLink, PopupLink } from "./popuplink"
+import { linkSvc } from "./linkservice"
+import { IInputLink, PopupLink } from "./popuplink"
 
 import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
@@ -116,15 +117,10 @@ export class Compoz {
 			const parentEl = sel.focusNode.parentElement
 
 			if (parentEl && parentEl.nodeName === "A") {
-				const anchorEl = parentEl as HTMLAnchorElement
-				const info = {
-					el: anchorEl,
-					event: e,
-					link: anchorEl.href,
-					text: anchorEl.innerText,
-				} as IPopupLink
-				this.popupLink.show(info)
+				linkSvc.set(parentEl as HTMLAnchorElement, e, this.range)
+				this.popupLink.show()
 			} else {
+				linkSvc.reset()
 				this.popupLink.reset()
 			}
 
@@ -348,23 +344,15 @@ export class Compoz {
 	private createFormWrapper() {
 		this.elFormWrapper.classList.add("compoz-form-wrapper")
 
-		this.createFormLink()
+		this.formLink.onInsert = this.onFormLinkUpdate
 	}
 
-	private createFormLink() {
-		this.formLink.onInsert = this.onFormLinkInsert
-	}
-
-	private onFormLinkInsert = (text: string, link: string) => {
+	private onFormLinkUpdate = (text: string, link: string) => {
 		if (this.range.collapsed) {
-			const anchor = document.createElement("a")
-			anchor.href = link
-			anchor.innerHTML = text
-			this.range.insertNode(anchor)
-			this.lastSelection.addRange(this.range)
+			linkSvc.insert(text, link)
 		} else {
 			this.restoreSelectionRange(this.range)
-			document.execCommand("createLink", false, link)
+			linkSvc.upsert(text, link)
 		}
 		this.hideFormLink()
 	}
@@ -572,10 +560,11 @@ export class Compoz {
 	}
 
 	private showFormLink = () => {
+		linkSvc.setFromRange(this.lastSelection, this.range)
+		this.formLink.setInput(linkSvc.text, linkSvc.url)
+
 		this.isShowInputLink = true
 		this.elFormWrapper.appendChild(this.formLink.el)
-		const text = this.lastSelection.toString()
-		this.formLink.setInput(text, "")
 	}
 
 	private hideFormLink() {
@@ -583,10 +572,10 @@ export class Compoz {
 		this.elFormWrapper.removeChild(this.formLink.el)
 	}
 
-	private onChangeLink = (p: IPopupLink) => {
-		this.range.selectNode(p.el)
+	private onChangeLink = () => {
+		this.range.selectNode(linkSvc.el)
 		this.showFormLink()
-		this.formLink.setInput(p.text, p.link)
+		this.formLink.setInput(linkSvc.text, linkSvc.url)
 	}
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {
