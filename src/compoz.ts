@@ -2,6 +2,7 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
+import "es6-promise"
 import "./compoz.scss"
 
 import { CompozFile, ICompozFile } from "./compozfile"

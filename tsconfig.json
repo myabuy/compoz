@@ -13,8 +13,8 @@
 		"sourceMap": true,
 		"rootDir": ".",
 		"outDir": "build",
-		"lib": ["es2015", "es6", "DOM"],
-		"target": "es5"
+		"lib": ["dom", "es6", "scripthost"],
+		"target": "es3"
 	},
 	"include": [
 		"src/*.ts",
