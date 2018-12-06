@@ -393,12 +393,14 @@ export class Compoz {
 			},
 			() => {
 				this.setHeight(this.cfg.height)
+				this.cfg.onChangeHeight()
 			},
 		)
 
 		this.files.push(cf)
 		this.elFiles.appendChild(cf.el)
 		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
 		return cf
 	}
 
@@ -560,6 +562,7 @@ export class Compoz {
 		this.elBStyle.classList.add(classActive)
 		this.elFormWrapper.appendChild(this.formStyles.el)
 		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
 	}
 
 	private hideStyles() {
@@ -567,6 +570,7 @@ export class Compoz {
 		this.elBStyle.classList.remove(classActive)
 		this.elFormWrapper.removeChild(this.formStyles.el)
 		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
 	}
 
 	private showFormLink = () => {
@@ -577,6 +581,7 @@ export class Compoz {
 		this.elFormWrapper.appendChild(this.formLink.el)
 
 		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
 	}
 
 	private hideFormLink() {
@@ -584,6 +589,7 @@ export class Compoz {
 		this.elFormWrapper.removeChild(this.formLink.el)
 
 		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
 	}
 
 	private onChangeLink = () => {

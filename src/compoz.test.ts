@@ -53,6 +53,9 @@ link.
 		onContentChange: (contentHTML: string) => {
 			return
 		},
+		onChangeHeight: () => {
+			return
+		},
 		onDiscard: () => {
 			console.log("onDiscard")
 		},
@@ -120,6 +123,9 @@ function createFullCompose() {
 
 		onBlur: () => {
 			console.log("onBlur")
+		},
+		onChangeHeight: () => {
+			console.log("change height")
 		},
 		onContentChange: (contentHTML: string) => {
 			console.log("onContentChange:", contentHTML)
