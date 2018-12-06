@@ -50,6 +50,9 @@ link.
 		onBlur: () => {
 			return
 		},
+		onChangeHeight: () => {
+			return
+		},
 		onContentChange: (contentHTML: string) => {
 			return
 		},
@@ -120,6 +123,9 @@ function createFullCompose() {
 
 		onBlur: () => {
 			console.log("onBlur")
+		},
+		onChangeHeight: () => {
+			console.log("change height")
 		},
 		onContentChange: (contentHTML: string) => {
 			console.log("onContentChange:", contentHTML)
