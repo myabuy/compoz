@@ -27,6 +27,7 @@ export interface IConfig {
 	onUnexpand: () => void | null
 	onDiscard: () => void | null
 	onSend: () => void | null
+	onChangeHeight: () => void | null
 }
 
 export class Config {
@@ -70,6 +71,7 @@ export class Config {
 		this.onFileDeletedBefore = cfg.onFileDeletedBefore
 		this.onDiscard = cfg.onDiscard
 		this.onSend = cfg.onSend
+		this.onChangeHeight = cfg.onChangeHeight
 	}
 
 	onBlur(): void {
@@ -91,6 +93,9 @@ export class Config {
 		return
 	}
 	onSend(): void {
+		return
+	}
+	onChangeHeight(): void {
 		return
 	}
 }
