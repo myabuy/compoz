@@ -2,8 +2,6 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-/* tslint:disable:no-console */
-
 import { Compoz } from "./compoz"
 import { CompozFile, ICompozFile } from "./compozfile"
 import { FileState } from "./filestate"
@@ -23,56 +21,31 @@ function generateContent() {
 
 function createQuickCompose() {
 	const config = {
+		subject: "Bootcamp LPDP",
+		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
 		avatarURL:
 			"https://d26i9nvlq0mz5u.cloudfront.net/avatar/default/v0/avatar192.png",
-		composeStyle: "",
-		// tslint:disable-next-line
-		contentHTML: `
-<b> this is </b> <a href="http://test.com">the</a> content.
-<br/>
-Test long
-<a href="https://www.reddit.com/r/Documentaries/comments/9v55kl/i_was_a_yazidi_slave_2018_documentary_the_story/">
-link.
-</a>
-`,
+		contentHTML: "",
 		fileMaxSize: 4194304,
-		height: 0,
 
+		height: 0,
 		hideAttachment: false,
 		hideDiscard: false,
 		hideExpand: false,
 		hideSave: false,
 		hideSend: false,
+		composeStyle: "",
 
-		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
-		subject: "Bootcamp LPDP",
-
-		onBlur: () => {
-			return
-		},
-		onContentChange: (contentHTML: string) => {
-			return
-		},
-		onChangeHeight: () => {
-			return
-		},
 		onDiscard: () => {
 			console.log("onDiscard")
-		},
-		onExpand: () => {
-			c.setHeight(400)
-		},
-		onFileDeletedBefore: (f: CompozFile) => {
-			console.log("onFileDeletedBefore:", f)
-			return Promise.resolve(true)
 		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
 
 			const files = c.getFiles()
 
-			for (const file of files) {
-				file.setState(FileState.UPLOADING)
+			for (let x = 0; x < files.length; x++) {
+				files[x].setState(FileState.UPLOADING)
 			}
 
 			setTimeout(() => {
@@ -85,8 +58,17 @@ link.
 				}
 			}, 2000)
 		},
+		onBlur: null,
+		onContentChange: null,
+		onExpand: () => {
+			c.setHeight(400)
+		},
 		onUnexpand: () => {
-			c.setHeight(0)
+			c.resetInputHeight()
+		},
+		onFileDeletedBefore: (f: CompozFile) => {
+			console.log("onFileDeletedBefore:", f)
+			return Promise.resolve(true)
 		},
 	}
 
@@ -97,65 +79,57 @@ function createFullCompose() {
 	const files: ICompozFile[] = []
 
 	files.push({
+		raw: null,
 		id: 2,
 		name: "test.jpg",
-		raw: null,
 		size: 512,
 		type: "image/png",
 	})
 
 	const config = {
+		subject: "Bootcamp LPDP",
+		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
 		avatarURL:
 			"https://d26i9nvlq0mz5u.cloudfront.net/avatar/default/v0/avatar192.png",
-		composeStyle: "compoz-input-expand",
 		contentHTML: "",
-		fileMaxSize: 0,
 		height: 500,
+		fileMaxSize: 0,
 
 		hideAttachment: true,
 		hideDiscard: false,
 		hideExpand: true,
 		hideSave: true,
 		hideSend: false,
+		composeStyle: "compoz-input-expand",
 
-		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
-		subject: "Bootcamp",
-
-		onBlur: () => {
-			console.log("onBlur")
-		},
-		onChangeHeight: () => {
-			console.log("change height")
-		},
-		onContentChange: (contentHTML: string) => {
-			console.log("onContentChange:", contentHTML)
-		},
 		onDiscard: () => {
 			console.log("onDiscard")
-		},
-		onExpand: () => {
-			console.log("onExpand")
-		},
-		onFileDeletedBefore: (f: CompozFile): Promise<boolean> => {
-			console.log("onFileDeletedBefore:", f)
-			return Promise.resolve(false)
 		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
 			console.log("files:", c.getFiles())
 		},
+		onExpand: () => {
+			console.log("onExpand")
+		},
 		onUnexpand: () => {
 			console.log("onUnexpand")
+		},
+		onContentChange: (contentHTML: string) => {
+			console.log("onContentChange:", contentHTML)
+		},
+		onBlur: () => {
+			console.log("onBlur")
+		},
+		onFileDeletedBefore: (f: CompozFile): Promise<boolean> => {
+			console.log("onFileDeletedBefore:", f)
+			return Promise.resolve(false)
 		},
 	}
 
 	const c = new Compoz("full-compose", config, files)
 
-	c.setContentHTML(`
-        <b>Test</b> set content
-        <br/>
-        <a href="https://alpha.proofn.com">link</a>
-    `)
+	c.setContentHTML("<b>Test</b> set content")
 }
 
 generateContent()

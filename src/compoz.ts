@@ -2,627 +2,758 @@
 // Use of this source code is governed by a MIT-style license that can be found
 // in the LICENSE file.
 
-import "es6-promise"
-import "./compoz.scss"
+import "./compoz.scss";
 
-import { CompozFile, ICompozFile } from "./compozfile"
-import { Config, IConfig } from "./config"
-export { FileState } from "./filestate"
-import { FormLink } from "./formlink"
-import { FormStyles } from "./formstyles"
-import { linkSvc } from "./linkservice"
-import { IInputLink, PopupLink } from "./popuplink"
+import { CompozFile, CompozFileInterface } from "./compozfile";
+import { Config, ConfigInterface } from "./config";
 
-import svgAttachment = require("./assets/b-attachment.svg")
-import svgExpand = require("./assets/b-expand.svg")
-import svgLink = require("./assets/b-link.svg")
-import svgStyle = require("./assets/b-style.svg")
-import svgSendDisable = require("./assets/ic-send-disable.svg")
-import svgSend = require("./assets/ic-send.svg")
+export { FileState } from "./filestate";
 
-const inputHint = "Write something..."
-const classInputExpand = "compoz-input-expand"
-const classActive = "compoz-b-active"
+const svgAttachment = require("./assets/b-attachment.svg");
+const svgExpand = require("./assets/b-expand.svg");
+const svgOl = require("./assets/b-ol.svg");
+const svgSend = require("./assets/ic-send.svg");
+const svgSendDisable = require("./assets/ic-send-disable.svg");
+const svgStyle = require("./assets/b-style.svg");
+const svgUl = require("./assets/b-ul.svg");
+
+const inputHint = "Write something...";
+const classRoot = "compoz";
+const classBExpand = "compoz-button-expand";
+const classInput = "compoz-input";
+const classInputExpand = "compoz-input-expand";
+const classMenuWrapper = "compoz-menu-wrapper";
+const classWrapper = "compoz-input-wrapper";
+const classInputLink = "compoz-input-link";
+const classInputFile = "compoz-input-file";
+const classFileList = "compoz-file-list";
+const classMenu = "compoz-menu";
+const classStyles = "compoz-styles";
+const classBAttachment = "compoz-b-attach";
+const classBStyle = "compoz-b-style";
+const classBLink = "compoz-b-link";
+const classBSend = "compoz-b-send";
+const classActive = "compoz-b-active";
+
+const keyEnter = 13;
+
+const inputHintTmpl = `<span class="hint">${inputHint}</span>`;
+const compozTmpl = `
+  <div class="${classRoot}">
+    <div class="${classInput}">
+    </div>
+    <div class="${classBExpand}">
+      <img src="${svgExpand}"/>
+    </div>
+	<div class="${classMenuWrapper}">
+		<div class="${classWrapper}">
+		</div>
+
+      <div class="${classMenu}">
+        <a href="#" class="button ${classBStyle}">
+          <img src="${svgStyle}" />
+        </a>
+
+        <a href="#" class="button ${classBAttachment}">
+          <img src="${svgAttachment}" />
+        </a>
+        <a href="#" class="button ${classBLink}">Link</a>
+      </div>
+
+      <div class="${classFileList}">
+      </div>
+
+      <input
+        class="hidden ${classInputFile}"
+        type="file"
+        name="file"
+        multiple
+      >
+    </div>
+  </div>
+`;
 
 /**
  * Compoz is a class that handle the compose component.
  */
 export class Compoz {
-	private id: string
-	private cfg: Config = new Config(null)
-	private elRoot!: HTMLElement
-	private elCompoz = document.createElement("div")
+	private id!: string;
+	private link!: string;
+	private cfg: Config = new Config(null);
+	private elRoot!: HTMLElement;
+	private elCompoz!: HTMLElement;
+	private elInput!: HTMLElement;
+	private elExpand!: HTMLElement;
+	private elMenuWrapper!: HTMLElement;
+	private elInputWrapper!: HTMLElement;
+	private elMenuLink!: HTMLElement;
+	private elInputLink!: HTMLInputElement;
+	private elInputFile!: HTMLInputElement;
+	private elFiles!: HTMLElement;
+	private elBInsertLink!: HTMLElement;
+	private elMenu!: HTMLElement;
+	private elStyles!: HTMLElement;
+	private elBAttachment!: HTMLAnchorElement;
+	private elBLink!: HTMLAnchorElement;
+	private elBStyle!: HTMLAnchorElement;
+	private elBBold!: HTMLAnchorElement;
+	private elBItalic!: HTMLAnchorElement;
+	private elBUnderline!: HTMLAnchorElement;
+	private elBUL!: HTMLAnchorElement;
+	private elBOL!: HTMLAnchorElement;
+	private files: CompozFile[] = new Array();
+	private lastSelection: Range | null = null;
+	private elBSendImg!: HTMLImageElement;
+	private isShowStyle = false;
+	private isShowInputLink = false;
+	private isBold = false;
+	private isItalic = false;
+	private isUnderline = false;
+	private isBUL = false;
+	private isBOL = false;
+	private isExpand = false;
+	private defaultInputMinHeight = "40px";
+	private defaultInputMaxHeight = "6em";
 
-	private elInput = document.createElement("div")
-	private elInputHint = document.createElement("span")
-	private elExpand = document.createElement("div")
+	constructor(
+		id: string,
+		opts: ConfigInterface,
+		files: CompozFileInterface[]
+	) {
+		this.id = id;
+		this.cfg = new Config(opts);
 
-	private elMenuWrapper = document.createElement("div")
-	private elFormWrapper = document.createElement("div")
-	private elFiles = document.createElement("div")
+		this.elRoot = document.getElementById(id)! as HTMLElement;
+		if (this.elRoot) {
+			this.elRoot.innerHTML = compozTmpl;
+		}
 
-	private elInputFile = document.createElement("input")
+		const sel = "#" + this.id;
+		this.initInput(sel);
+		this.initElExpand(sel);
+		this.initMenuWrapper(sel);
 
-	private elMenu = document.createElement("div")
-
-	private elBStyle = document.createElement("span")
-	private elBSendImg = document.createElement("img")
-
-	private formLink = new FormLink()
-	private formStyles = new FormStyles(this.elInput)
-	private popupLink = new PopupLink()
-
-	private files: CompozFile[] = new Array()
-	private lastSelection: Selection = window.getSelection()
-	private range = new Range()
-	private isShowStyle = false
-	private isShowInputLink = false
-	private isExpand = false
-	private defaultInputMinHeight = "40px"
-	private defaultInputMaxHeight = "6em"
-	private lastContent = ""
-
-	constructor(id: string, opts: IConfig, files: ICompozFile[]) {
-		this.id = id
-		this.cfg = new Config(opts)
-
-		this.elCompoz.classList.add("compoz")
-
-		this.createInput()
-
-		this.createElExpand()
-		this.elCompoz.appendChild(this.elExpand)
-
-		this.createMenuWrapper()
-		this.elCompoz.appendChild(this.elMenuWrapper)
-
-		this.popupLink.onChange = this.onChangeLink
-		this.elCompoz.appendChild(this.popupLink.el)
-
-		this.setFiles(files)
+		this.setFiles(files);
 		if (this.elInput.innerHTML !== "") {
-			this.enableButtonSend()
-		}
-
-		this.elRoot = document.getElementById(id)! as HTMLElement
-		if (!this.elRoot) {
-			return
-		}
-
-		this.elRoot.appendChild(this.elCompoz)
-
-		if (this.cfg.height > 0) {
-			this.setHeight(this.cfg.height)
-		}
-
-		setTimeout(() => {
-			this.elInput.focus()
-		}, 0)
-
-		// Save last selection to elInput
-		document.addEventListener("selectionchange", (e: Event) => {
-			e.preventDefault()
-
-			const sel = window.getSelection()
-			const lastEl = sel.focusNode.parentElement
-			const focusNode = sel.focusNode
-
-			if (!this.elInput.contains(sel.focusNode)) {
-				return false
-			}
-
-			this.lastSelection = sel
-			this.range = sel.getRangeAt(0)
-
-			const parentEl = sel.focusNode.parentElement
-
-			if (parentEl && parentEl.nodeName === "A") {
-				linkSvc.set(parentEl as HTMLAnchorElement, e, this.range)
-				this.popupLink.show()
-			} else {
-				linkSvc.reset()
-				this.popupLink.reset()
-			}
-
-			return false
-		})
-	}
-
-	isEmpty(): boolean {
-		let v = this.elInput.textContent || ""
-		v = v.trim()
-		return v === inputHint || v === ""
-	}
-
-	setContentHTML(c: string) {
-		this.elInput.innerHTML = c
-	}
-
-	getContentHTML(): string {
-		if (this.isEmpty()) {
-			return ""
-		}
-
-		return this.elInput.innerHTML
-	}
-
-	setFiles(files: ICompozFile[]) {
-		this.elFiles.innerHTML = ""
-		this.files = new Array()
-
-		if (!files) {
-			return
-		}
-
-		for (const file of files) {
-			this.addCompozFile(file)
+			this.enableButtonSend();
 		}
 	}
 
-	getFiles(): CompozFile[] {
-		return this.files
-	}
-
-	reset() {
-		this.elInput.innerHTML = ""
-		this.elFiles.innerHTML = ""
-		this.files = new Array()
-	}
-
-	resizeInput(w: number, h: number) {
-		if (w && w > 0) {
-			this.elInput.style.width = w + "px"
-			this.elInput.style.maxWidth = w + "px"
+	/**
+	 * Get content editable selection range.
+	 * Ref: https://stackoverflow.com/a/3316483/3034747.
+	 */
+	private getSelectionRange(): Range | null {
+		if (!window.getSelection) {
+			return null;
 		}
-		if (h && h > 0) {
-			this.elInput.style.height = h + "px"
-			this.elInput.style.maxHeight = h + "px"
+
+		const sel = window.getSelection();
+		if (sel.getRangeAt && sel.rangeCount) {
+			return sel.getRangeAt(0);
 		}
-	}
 
-	setHeight(h: number) {
-		this.cfg.height = h
-		const menuWrapperHeight = this.elMenuWrapper.offsetHeight
-		this.elInput.style.height = h - menuWrapperHeight + "px"
-		this.elInput.style.maxHeight = h - menuWrapperHeight + "px"
-	}
-
-	resetInputHeight() {
-		this.elInput.style.minHeight = this.defaultInputMinHeight
-		this.elInput.style.maxHeight = this.defaultInputMaxHeight
-		this.elInput.style.height = "auto"
-		this.cfg.height = 0
-	}
-
-	showButtonExpand() {
-		this.elExpand.style.display = "block"
-	}
-
-	hideButtonExpand() {
-		this.elExpand.style.display = "none"
-	}
-
-	enableButtonSend() {
-		this.elBSendImg.src = svgSend
-	}
-
-	disableButtonSend() {
-		this.elBSendImg.src = svgSendDisable
+		return null;
 	}
 
 	/**
 	 * Restore content editable selection.
 	 * Ref: https://stackoverflow.com/a/3316483/3034747
 	 */
-	private restoreSelectionRange(range: Range) {
-		const sel = window.getSelection()
-		sel.removeAllRanges()
-		sel.addRange(range)
-	}
-
-	private createInput() {
-		const wrapper = document.createElement("div")
-		wrapper.classList.add("compoz-input-wrapper")
-
-		wrapper.appendChild(this.elInput)
-		this.elCompoz.appendChild(wrapper)
-
-		this.elInput.contentEditable = "true"
-		this.elInput.classList.add("compoz-input")
-
-		this.createInputHint()
-		this.elInput.innerHTML = ""
-		this.elInput.appendChild(this.elInputHint)
-
-		if (this.cfg.composeStyle) {
-			this.elInput.classList.add(this.cfg.composeStyle)
+	private restoreSelectionRange(range: Range | null) {
+		if (!range) {
+			return;
 		}
 
-		this.elInput.innerHTML = this.cfg.contentHTML
-		this.resetInputHeight()
+		if (window.getSelection) {
+			const sel = window.getSelection();
+			sel.removeAllRanges();
+			sel.addRange(range);
+		}
+	}
+
+	isEmpty(): boolean {
+		let v = this.elInput.textContent || "";
+		v = v.trim();
+		return v === inputHint || v === "";
+	}
+
+	private initInput(sel: string) {
+		sel += " div." + classInput;
+		this.elInput = document.querySelector(sel)! as HTMLInputElement;
+		this.elInput.contentEditable = "true";
+		this.elInput.innerHTML = inputHintTmpl;
+
+		if (this.cfg.composeStyle) {
+			this.elInput.classList.add(this.cfg.composeStyle);
+		}
+
+		// this.disableButtonSend();
+		this.cfg.contentHTML = inputHintTmpl;
+		this.elInput.innerHTML = this.cfg.contentHTML;
+		this.resetInputHeight();
 
 		this.elInput.onfocus = e => {
 			if (this.isEmpty()) {
-				this.elInput.innerHTML = ""
+				this.elInput.innerHTML = "";
+				this.disableButtonSend();
 			}
-		}
+		};
 
 		this.elInput.onblur = () => {
 			if (this.isEmpty()) {
-				this.elInput.innerHTML = ""
-				this.elInput.appendChild(this.elInputHint)
+				this.elInput.innerHTML = inputHintTmpl;
+				this.disableButtonSend();
 			}
 
 			if (this.cfg.onBlur) {
-				this.cfg.onBlur()
+				this.cfg.onBlur();
 			}
-		}
+		};
 
 		this.elInput.onkeyup = () => {
-			const contentHTML = this.getContentHTML()
+			const contentHTML = this.getContentHTML();
 			if (contentHTML === "") {
-				this.disableButtonSend()
+				this.disableButtonSend();
 			} else {
-				this.enableButtonSend()
+				this.enableButtonSend();
 			}
 			if (this.cfg.onContentChange) {
-				if (contentHTML === this.lastContent) {
-					return
-				}
-				this.lastContent = contentHTML
-				this.cfg.onContentChange(contentHTML)
+				this.cfg.onContentChange(contentHTML);
 			}
-		}
+		};
+
+		// Save last selection to elInput
+		document.addEventListener("selectionchange", () => {
+			const selectLocation = window.getSelection().focusNode
+				.parentElement;
+			// limiting the select element to the compoz inputElement
+			if (selectLocation === this.elInput) {
+				this.lastSelection = this.getSelectionRange();
+			}
+		});
 
 		this.elInput.addEventListener("paste", (e: ClipboardEvent) => {
 			// Stop data actually being pasted into div.
-			e.stopPropagation()
-			e.preventDefault()
+			e.stopPropagation();
+			e.preventDefault();
 
 			// Get pasted data via clipboard API.
 			const pastedText = document.createTextNode(
-				e.clipboardData.getData("Text"),
-			)
+				e.clipboardData.getData("Text")
+			);
 
-			const sel = window.getSelection()
-			if (!sel) {
-				this.elInput.appendChild(pastedText)
-				return
+			const range = this.getSelectionRange();
+			if (!range) {
+				this.elInput.appendChild(pastedText);
+				return;
 			}
 
-			const range = sel.getRangeAt(0)
-			range.deleteContents()
-			range.insertNode(pastedText)
-		})
+			range.deleteContents();
+			range.insertNode(pastedText);
+		});
 	}
 
-	private createInputHint() {
-		this.elInputHint.innerText = "Write something..."
-		this.elInputHint.classList.add("hint")
-	}
+	private initElExpand(sel: string) {
+		sel += " div." + classBExpand;
 
-	private createElExpand() {
-		this.elExpand.classList.add("compoz-button-expand")
-
-		const button = document.createElement("img")
-		button.src = svgExpand
-
-		this.elExpand.appendChild(button)
+		this.elExpand = document.querySelector(sel)! as HTMLElement;
 
 		if (this.cfg.hideExpand) {
-			this.elExpand.style.display = "none"
-			return
+			this.elExpand.style.display = "none";
+			return;
 		}
 
 		this.elExpand.onclick = e => {
 			if (!this.isExpand) {
 				if (this.cfg.onExpand) {
-					this.elInput.classList.add(classInputExpand)
-					this.cfg.onExpand()
-					this.isExpand = true
+					this.elInput.classList.add(classInputExpand);
+					this.cfg.onExpand();
+					this.isExpand = true;
 				}
 			} else {
 				if (this.cfg.onUnexpand) {
-					this.elInput.classList.remove(classInputExpand)
-					this.cfg.onUnexpand()
-					this.resetInputHeight()
-					this.isExpand = false
+					this.elInput.classList.remove(classInputExpand);
+					this.cfg.onUnexpand();
+					this.resetInputHeight();
+					this.isExpand = false;
 				}
 			}
+		};
+	}
+
+	private initMenuWrapper(sel: string) {
+		sel += " div." + classMenuWrapper;
+		this.elMenuWrapper = document.querySelector(sel)! as HTMLElement;
+
+		this.initWrapper(sel);
+		this.initFileList(sel);
+		this.initInputLink(sel);
+		this.initMenuStyles(sel);
+		this.initMenu(sel);
+		this.initInputFile(sel);
+
+		if (this.cfg.height) {
+			this.resizeInput(0, this.cfg.height);
 		}
 	}
 
-	private createMenuWrapper() {
-		this.elMenuWrapper.classList.add("compoz-menu-wrapper")
+	private initWrapper(sel: string) {
+		sel += " div." + classWrapper;
 
-		this.createFormWrapper()
-		this.elMenuWrapper.appendChild(this.elFormWrapper)
+		this.elInputWrapper = document.querySelector(sel)! as HTMLElement;
+	}
+	private initFileList(sel: string) {
+		sel += " div." + classFileList;
 
-		this.elFiles.classList.add("compoz-file-list")
-		this.elMenuWrapper.appendChild(this.elFiles)
-
-		this.createMenu()
-		this.elMenuWrapper.appendChild(this.elMenu)
-
-		this.createInputFile()
-		this.elMenuWrapper.appendChild(this.elInputFile)
+		this.elFiles = document.querySelector(sel)! as HTMLElement;
 	}
 
-	private createFormWrapper() {
-		this.elFormWrapper.classList.add("compoz-form-wrapper")
+	private initInputLink(sel: string) {
+		this.elMenuLink = document.createElement("div");
+		this.elMenuLink.classList.add(classInputLink);
+		this.elInputLink = document.createElement("input");
+		this.elMenuLink.appendChild(this.elInputLink);
+		this.elBInsertLink = document.createElement("button");
+		this.elBInsertLink.innerHTML = "Insert";
+		this.elMenuLink.appendChild(this.elBInsertLink);
 
-		this.formLink.onInsert = this.onFormLinkUpdate
+		this.elBInsertLink.onclick = e => {
+			this.elInput.focus();
+			const val = this.elInputLink.value;
+			this.restoreSelectionRange(this.lastSelection);
+			document.execCommand("createLink", false, val);
+			this.enableButtonSend();
+			this.hideInputLink();
+			this.elInputLink.value = "";
+		};
 	}
 
-	private onFormLinkUpdate = (text: string, link: string) => {
-		if (this.range.collapsed) {
-			if (this.isEmpty()) {
-				this.elInput.innerHTML = ""
-			}
-			linkSvc.insert(text, link)
-		} else {
-			this.restoreSelectionRange(this.range)
-			linkSvc.upsert(text, link)
-		}
-		this.hideFormLink()
+	private initMenuStyles(sel: string) {
+		this.elStyles = document.createElement("div");
+		this.elStyles.classList.add(classStyles);
+
+		this.initBBold(sel);
+		this.initBItalic(sel);
+		this.initBUnderline(sel);
+		this.initBUL(sel);
+		this.initBOL(sel);
 	}
 
 	private addFile(f: File): CompozFile | null {
 		const cfi = {
+			raw: f,
 			id: 0,
 			name: f.name,
-			raw: f,
 			size: f.size,
-			type: f.type,
-		}
+			type: f.type
+		};
 
-		return this.addCompozFile(cfi)
+		return this.addCompozFile(cfi);
 	}
 
-	private addCompozFile(cfi: ICompozFile): CompozFile | null {
-		const svc = this
+	private addCompozFile(cfi: CompozFileInterface): CompozFile | null {
+		const svc = this;
 
 		if (cfi.size > this.cfg.fileMaxSize) {
-			return null
+			return null;
 		}
 
 		const cf = new CompozFile(
 			cfi,
-			(): Promise<boolean> => {
-				return svc.onFileDeleted(cf)
+			() => {
+				return svc.onFileDeleted(cf);
 			},
 			() => {
-				this.setHeight(this.cfg.height)
-				this.cfg.onChangeHeight()
-			},
-		)
+				this.setHeight(this.cfg.height);
+			}
+		);
 
-		this.files.push(cf)
-		this.elFiles.appendChild(cf.el)
-		this.setHeight(this.cfg.height)
-		this.cfg.onChangeHeight()
-		return cf
+		this.files.push(cf);
+		this.elFiles.appendChild(cf.el);
+		this.setHeight(this.cfg.height);
+		return cf;
 	}
 
-	private createInputFile() {
-		this.elInputFile.classList.add("hidden")
-		this.elInputFile.classList.add("compoz-input-file")
-		this.elInputFile.name = "file"
-		this.elInputFile.type = "file"
-		this.elInputFile.multiple = true
+	private initInputFile(sel: string) {
+		sel += " input." + classInputFile;
+
+		this.elInputFile = document.querySelector(sel)! as HTMLInputElement;
 
 		this.elInputFile.onchange = () => {
 			if (!this.elInputFile.value) {
-				return
+				return;
 			}
-
-			this.elBSendImg.src = svgSendDisable
+			if (this.elInput.innerHTML !== "") {
+				this.enableButtonSend();
+			} else {
+				this.disableButtonSend();
+			}
 			if (!this.elInputFile.files) {
-				return
+				return;
 			}
 
-			//tslint:disable
 			for (let x = 0; x < this.elInputFile.files.length; x++) {
-				const f = this.elInputFile.files[x]
-				this.addFile(f)
+				const f = this.elInputFile.files[x];
+				this.addFile(f);
 			}
-		}
+		};
 	}
 
-	private createMenu() {
-		this.elMenu.classList.add("compoz-menu")
+	private initBBold(sel: string) {
+		this.elBBold = document.createElement("a");
+		this.elBBold.href = "#";
+		this.elBBold.classList.add("button");
+		this.elBBold.classList.add("bold");
+		this.elBBold.innerHTML = "B";
+		this.elStyles.appendChild(this.elBBold);
 
-		this.createButtonStyle(this.elMenu)
-		this.createButtonAttachment(this.elMenu)
-		this.createButtonLink(this.elMenu)
-		this.createRightMenu(this.elMenu)
+		this.elBBold.onclick = e => {
+			if (!this.isBold) {
+				this.isBold = true;
+				this.elBBold.classList.add(classActive);
+			} else {
+				this.isBold = false;
+				this.elBBold.classList.remove(classActive);
+			}
+			document.execCommand("bold", false, "");
+			this.elInput.focus();
+		};
 	}
 
-	private createButtonAttachment(parent: HTMLElement) {
-		const button = document.createElement("span")
-		button.classList.add("button")
-		button.classList.add("compoz-b-attachment")
+	private initBItalic(sel: string) {
+		this.elBItalic = document.createElement("a");
+		this.elBItalic.href = "#";
+		this.elBItalic.classList.add("button");
+		this.elBItalic.classList.add("italic");
+		this.elBItalic.innerHTML = "I";
+		this.elStyles.appendChild(this.elBItalic);
 
-		const img = document.createElement("img")
-		img.src = svgAttachment
-		button.appendChild(img)
+		this.elBItalic.onclick = e => {
+			if (!this.isItalic) {
+				this.isItalic = true;
+				this.elBItalic.classList.add(classActive);
+			} else {
+				this.isItalic = false;
+				this.elBItalic.classList.remove(classActive);
+			}
+			document.execCommand("italic", false, "");
+			this.elInput.focus();
+		};
+	}
 
-		parent.appendChild(button)
+	private initBUnderline(sel: string) {
+		this.elBUnderline = document.createElement("a");
+		this.elBUnderline.href = "#";
+		this.elBUnderline.classList.add("button");
+		this.elBUnderline.classList.add("underline");
+		this.elBUnderline.innerHTML = "U";
+		this.elStyles.appendChild(this.elBUnderline);
+
+		this.elBUnderline.onclick = e => {
+			if (!this.isUnderline) {
+				this.isUnderline = true;
+				this.elBUnderline.classList.add(classActive);
+			} else {
+				this.isUnderline = false;
+				this.elBUnderline.classList.remove(classActive);
+			}
+			document.execCommand("underline", false, "");
+			this.elInput.focus();
+		};
+	}
+
+	private initBUL(sel: string) {
+		this.elBUL = document.createElement("a");
+		this.elBUL.href = "#";
+		this.elBUL.classList.add("button");
+		this.elBUL.classList.add("ul");
+		const elBULImg = document.createElement("img");
+		elBULImg.src = svgUl;
+		this.elBUL.appendChild(elBULImg);
+		this.elStyles.appendChild(this.elBUL);
+		this.elBUL.onclick = e => {
+			if (!this.isBUL) {
+				this.isBUL = true;
+				this.elBUL.classList.add(classActive);
+			} else {
+				this.isBUL = false;
+				this.elBUL.classList.remove(classActive);
+			}
+			document.execCommand("insertUnorderedList", false, "");
+			this.elInput.focus();
+		};
+	}
+
+	private initBOL(sel: string) {
+		this.elBOL = document.createElement("a");
+		this.elBOL.href = "#";
+		this.elBOL.classList.add("button");
+		this.elBOL.classList.add("ol");
+		const elBOLImg = document.createElement("img");
+		elBOLImg.src = svgOl;
+		this.elBOL.appendChild(elBOLImg);
+		this.elStyles.appendChild(this.elBOL);
+		this.elBOL.onclick = e => {
+			if (!this.isBOL) {
+				this.isBOL = true;
+				this.elBOL.classList.add(classActive);
+			} else {
+				this.isBOL = false;
+				this.elBOL.classList.remove(classActive);
+			}
+			document.execCommand("insertOrderedList", false, "");
+			this.elInput.focus();
+		};
+	}
+
+	private initMenu(sel: string) {
+		sel += " div." + classMenu;
+
+		this.elMenu = document.querySelector(sel)! as HTMLElement;
+
+		this.initBAttachment(sel);
+		this.initBStyle(sel);
+		this.initBLink(sel);
+
+		this.initRightMenu(this.elMenu);
+	}
+
+	private initBAttachment(sel: string) {
+		sel += " a." + classBAttachment;
+		this.elBAttachment = document.querySelector(sel)! as HTMLAnchorElement;
 
 		if (this.cfg.hideAttachment) {
-			button.style.display = "none"
-			return
+			this.elBAttachment.style.display = "none";
+			return;
 		}
 
-		button.onclick = e => {
-			this.elInputFile.click()
-		}
+		this.elBAttachment.onclick = e => {
+			this.elInputFile.click();
+		};
 	}
 
-	private createButtonStyle(parent: HTMLElement) {
-		this.elBStyle.classList.add("button")
-		this.elBStyle.classList.add("compoz-b-style")
+	private initBStyle(sel: string) {
+		sel += " a." + classBStyle;
 
-		const elImg = document.createElement("img")
-		elImg.src = svgStyle
-		this.elBStyle.appendChild(elImg)
-
-		parent.appendChild(this.elBStyle)
+		this.elBStyle = document.querySelector(sel)! as HTMLAnchorElement;
 
 		this.elBStyle.onclick = e => {
 			if (!this.isShowStyle) {
 				if (this.isShowInputLink) {
-					this.hideFormLink()
-					this.showStyles()
+					this.hideInputLink();
+					this.showStyles();
 				} else {
-					this.showStyles()
+					this.showStyles();
 				}
 			} else {
-				this.hideStyles()
+				this.hideStyles();
 			}
-		}
+		};
 	}
 
-	private createButtonLink(parent: HTMLElement) {
-		const button = document.createElement("span")
-		button.classList.add("button")
-		button.classList.add("compoz-b-link")
+	private initBLink(sel: string) {
+		sel += " a." + classBLink;
 
-		const img = document.createElement("img")
-		img.src = svgLink
-		button.appendChild(img)
+		this.elBLink = document.querySelector(sel)! as HTMLAnchorElement;
 
-		parent.appendChild(button)
-
-		button.onmousedown = () => {
-			if (this.isShowInputLink) {
-				this.hideFormLink()
+		this.elBLink.onclick = e => {
+			if (!this.isShowInputLink) {
+				if (this.isShowStyle) {
+					this.hideStyles();
+					this.showInputLink();
+				} else {
+					this.showInputLink();
+				}
 			} else {
-				this.showFormLink()
+				this.hideInputLink();
 			}
-			return false
-		}
+		};
 	}
 
-	private createRightMenu(elParent: HTMLElement) {
-		const elRightMenu = document.createElement("span")
-		elRightMenu.classList.add("right")
+	private initRightMenu(elParent: HTMLElement) {
+		const elRightMenu = document.createElement("span");
+		elRightMenu.classList.add("right");
 
-		elParent.appendChild(elRightMenu)
+		elParent.appendChild(elRightMenu);
 
-		this.createButtonDiscard(elRightMenu)
-		this.createButtonSend(elRightMenu)
+		this.createButtonDiscard(elRightMenu);
+		this.createButtonSend(elRightMenu);
 	}
 
 	private createButtonDiscard(elParent: HTMLElement) {
-		const b = document.createElement("button")
-		b.classList.add("button")
-		b.classList.add("compoz-b-discard")
-		b.innerText = "Discard"
+		const b = document.createElement("button");
+		b.classList.add("button");
+		b.classList.add("compoz-b-discard");
+		b.innerText = "Discard";
 
 		if (this.cfg.hideDiscard) {
-			return
+			return;
 		}
 
-		elParent.appendChild(b)
+		elParent.appendChild(b);
 
 		b.onclick = e => {
 			if (this.cfg.onDiscard) {
-				this.cfg.onDiscard()
+				this.cfg.onDiscard();
 			}
-		}
+		};
 	}
 
 	private createButtonSend(elParent: HTMLElement) {
-		const elBSend = document.createElement("a")
-		elBSend.href = "#"
-		elBSend.title = "Send"
-		elBSend.classList.add("button")
-		elBSend.classList.add("compoz-b-send")
+		const elBSend = document.createElement("a");
+		elBSend.href = "#";
+		elBSend.title = "Send";
+		elBSend.classList.add("button");
+		elBSend.classList.add(classBSend);
 
-		this.elBSendImg.src = svgSendDisable
-		elBSend.appendChild(this.elBSendImg)
+		this.elBSendImg = document.createElement("img");
+		this.disableButtonSend();
+		elBSend.appendChild(this.elBSendImg);
 
-		elParent.appendChild(elBSend)
+		elParent.appendChild(elBSend);
 
 		if (this.cfg.hideSend) {
-			elBSend.style.display = "none"
-			return
+			elBSend.style.display = "none";
+			return;
 		}
 
 		elBSend.onclick = e => {
 			if (this.cfg.onSend) {
-				this.cfg.onSend()
+				this.cfg.onSend();
+				this.disableButtonSend();
 			}
-		}
+		};
 	}
 
 	private showStyles() {
-		this.isShowStyle = true
-		this.elBStyle.classList.add(classActive)
-		this.elFormWrapper.appendChild(this.formStyles.el)
-		this.setHeight(this.cfg.height)
-		this.cfg.onChangeHeight()
+		this.isShowStyle = true;
+		this.elBStyle.classList.add(classActive);
+		this.elInputWrapper.appendChild(this.elStyles);
+		this.setHeight(this.cfg.height);
 	}
 
 	private hideStyles() {
-		this.isShowStyle = false
-		this.elBStyle.classList.remove(classActive)
-		this.elFormWrapper.removeChild(this.formStyles.el)
-		this.setHeight(this.cfg.height)
-		this.cfg.onChangeHeight()
+		this.isShowStyle = false;
+		this.elBStyle.classList.remove(classActive);
+		this.elInputWrapper.removeChild(this.elStyles);
+		this.setHeight(this.cfg.height);
 	}
 
-	private showFormLink = () => {
-		linkSvc.setFromRange(this.lastSelection, this.range)
-		this.formLink.setInput(linkSvc.state, linkSvc.text, linkSvc.url)
-
-		this.isShowInputLink = true
-		this.elFormWrapper.appendChild(this.formLink.el)
-
-		this.setHeight(this.cfg.height)
-		this.cfg.onChangeHeight()
+	private showInputLink() {
+		this.isShowInputLink = true;
+		this.elBLink.classList.add(classActive);
+		this.elInputWrapper.appendChild(this.elMenuLink);
+		this.elInputLink.focus();
+		this.setHeight(this.cfg.height);
 	}
 
-	private hideFormLink() {
-		this.isShowInputLink = false
-		this.elFormWrapper.removeChild(this.formLink.el)
-
-		this.setHeight(this.cfg.height)
-		this.cfg.onChangeHeight()
-	}
-
-	private onChangeLink = () => {
-		this.range.selectNode(linkSvc.el)
-		this.showFormLink()
-		this.formLink.setInput(linkSvc.state, linkSvc.text, linkSvc.url)
+	private hideInputLink() {
+		this.isShowInputLink = false;
+		this.elBLink.classList.remove(classActive);
+		this.elInputWrapper.removeChild(this.elMenuLink);
+		this.setHeight(this.cfg.height);
 	}
 
 	private onFileDeleted(cf: CompozFile): Promise<boolean> {
 		return new Promise(resolve => {
 			for (let x = 0; x < this.files.length; x++) {
 				if (this.files[x].name !== cf.name) {
-					continue
+					continue;
 				}
 				if (this.files[x].size !== cf.size) {
-					continue
+					continue;
 				}
 
 				if (!this.cfg.onFileDeletedBefore) {
-					this.files.splice(x, 1)
-					return resolve(true)
+					this.files.splice(x, 1);
+					return resolve(true);
 				}
 
 				return this.cfg
 					.onFileDeletedBefore(this.files[x])
 					.then((ok: boolean) => {
 						if (ok) {
-							this.files.splice(x, 1)
+							this.files.splice(x, 1);
 						}
-						return resolve(ok)
-					})
+						return resolve(ok);
+					});
 			}
-			return resolve(false)
-		})
+			return resolve(false);
+		});
+	}
+
+	setContentHTML(c: string) {
+		this.elInput.innerHTML = c;
+	}
+
+	getContentHTML(): string {
+		if (this.isEmpty()) {
+			return "";
+		}
+		return this.elInput.innerHTML;
+	}
+
+	setFiles(files: CompozFileInterface[]) {
+		this.elFiles.innerHTML = "";
+		this.files = new Array();
+
+		if (!files) {
+			return;
+		}
+
+		for (let x = 0; x < files.length; x++) {
+			this.addCompozFile(files[x]);
+		}
+	}
+
+	getFiles(): CompozFile[] {
+		return this.files;
+	}
+
+	reset() {
+		this.elInput.innerHTML = "";
+		this.elFiles.innerHTML = "";
+		this.files = new Array();
+	}
+
+	resizeInput(w: number, h: number) {
+		if (w && w > 0) {
+			this.elInput.style.width = w + "px";
+			this.elInput.style.maxWidth = w + "px";
+		}
+		if (h && h > 0) {
+			this.elInput.style.height = h + "px";
+			this.elInput.style.maxHeight = h + "px";
+		}
+	}
+
+	setHeight(h: number) {
+		this.cfg.height = h;
+		const menuWrapperHeight = this.elMenuWrapper.offsetHeight;
+		this.elInput.style.height = h - menuWrapperHeight + "px";
+		this.elInput.style.maxHeight = h - menuWrapperHeight + "px";
+	}
+
+	resetInputHeight() {
+		this.elInput.style.minHeight = this.defaultInputMinHeight;
+		this.elInput.style.maxHeight = this.defaultInputMaxHeight;
+		this.elInput.style.height = "auto";
+	}
+
+	showButtonExpand() {
+		this.elExpand.style.display = "block";
+	}
+
+	hideButtonExpand() {
+		this.elExpand.style.display = "none";
+	}
+
+	enableButtonSend() {
+		this.elBSendImg.src = svgSend;
+	}
+
+	disableButtonSend() {
+		this.elBSendImg.src = svgSendDisable;
 	}
 }
