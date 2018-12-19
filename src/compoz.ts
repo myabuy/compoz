@@ -383,6 +383,7 @@ export class Compoz {
 		const svc = this
 
 		if (cfi.size > this.cfg.fileMaxSize) {
+			this.cfg.onFileSizeRejected()
 			return null
 		}
 
@@ -393,7 +394,7 @@ export class Compoz {
 			},
 			() => {
 				this.setHeight(this.cfg.height)
-				this.cfg.onChangeHeight()
+				svc.cfg.onChangeHeight()
 			},
 		)
 
@@ -416,7 +417,6 @@ export class Compoz {
 				return
 			}
 
-			this.elBSendImg.src = svgSendDisable
 			if (!this.elInputFile.files) {
 				return
 			}

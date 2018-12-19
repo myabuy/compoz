@@ -23,6 +23,7 @@ export interface IConfig {
 	onBlur: () => void
 	onContentChange: (contentHTML: string) => void
 	onFileDeletedBefore: (f: CompozFile) => Promise<boolean>
+	onFileSizeRejected: () => void
 	onExpand: () => void | null
 	onUnexpand: () => void | null
 	onDiscard: () => void | null
@@ -35,7 +36,7 @@ export class Config {
 	participants = ""
 	avatarURL = ""
 	contentHTML = ""
-	fileMaxSize = 26214400
+	fileMaxSize = 26214400 // 1024 * 1024 * 25 = 25 MB
 	height = 0
 	hideAttachment = false
 	hideDiscard = false
@@ -69,6 +70,7 @@ export class Config {
 		this.onExpand = cfg.onExpand
 		this.onUnexpand = cfg.onUnexpand
 		this.onFileDeletedBefore = cfg.onFileDeletedBefore
+		this.onFileSizeRejected = cfg.onFileSizeRejected
 		this.onDiscard = cfg.onDiscard
 		this.onSend = cfg.onSend
 		this.onChangeHeight = cfg.onChangeHeight
@@ -84,6 +86,9 @@ export class Config {
 		return
 	}
 	onUnexpand(): void {
+		return
+	}
+	onFileSizeRejected(): void {
 		return
 	}
 	onFileDeletedBefore(f: CompozFile): Promise<boolean> {

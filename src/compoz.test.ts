@@ -66,6 +66,9 @@ link.
 			console.log("onFileDeletedBefore:", f)
 			return Promise.resolve(true)
 		},
+		onFileSizeRejected: () => {
+			console.log("File size is to large")
+		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
 
@@ -139,6 +142,9 @@ function createFullCompose() {
 		onFileDeletedBefore: (f: CompozFile): Promise<boolean> => {
 			console.log("onFileDeletedBefore:", f)
 			return Promise.resolve(false)
+		},
+		onFileSizeRejected: () => {
+			console.log("File size is to large")
 		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
