@@ -360,6 +360,7 @@ export class Compoz {
 				this.elInput.innerHTML = ""
 			}
 			linkSvc.insert(text, link)
+			this.enableButtonSend()
 		} else {
 			this.restoreSelectionRange(this.range)
 			linkSvc.upsert(text, link)
@@ -553,6 +554,7 @@ export class Compoz {
 		elBSend.onclick = e => {
 			if (this.cfg.onSend) {
 				this.cfg.onSend()
+				this.disableButtonSend()
 			}
 		}
 	}
