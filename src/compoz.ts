@@ -552,9 +552,11 @@ export class Compoz {
 		}
 
 		elBSend.onclick = e => {
-			if (this.cfg.onSend) {
-				this.cfg.onSend()
-				this.disableButtonSend()
+			if (this.getContentHTML() !== "") {
+				if (this.cfg.onSend) {
+					this.cfg.onSend()
+					this.disableButtonSend()
+				}
 			}
 		}
 	}
