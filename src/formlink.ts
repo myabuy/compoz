@@ -6,6 +6,7 @@ export class FormLink {
 	private elInputLink = document.createElement("input")
 	private elError = document.createElement("span")
 	private elBInsert = document.createElement("button")
+	private protocolDefault = "http://"
 
 	constructor() {
 		this.el.classList.add("compoz-form-link")
@@ -81,8 +82,13 @@ export class FormLink {
 
 		this.elBInsert.onclick = e => {
 			const text = this.elInputText.value
-			const link = this.elInputLink.value
-
+			const strLink = this.elInputLink.value
+			let link = ""
+			if (strLink.match(/^([a-z0-9]+):\/\//)) {
+				link = strLink
+			} else {
+				link = this.protocolDefault + strLink
+			}
 			if (!this.isValidLink(link)) {
 				this.showError()
 				return

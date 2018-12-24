@@ -15,7 +15,6 @@ class LinkService {
 	insert(text: string, url: string) {
 		this.el.href = url
 		this.el.innerText = text
-		this.el.target = "_blank"
 		this.range.insertNode(this.el)
 		this.sel.addRange(this.range)
 	}
@@ -76,7 +75,6 @@ class LinkService {
 
 		this.el.innerText = text
 		this.el.href = url
-		this.el.target = "_blank"
 	}
 
 	upsert(text: string, url: string) {
