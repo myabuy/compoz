@@ -554,6 +554,7 @@ export class Compoz {
 		elBSend.onclick = e => {
 			if (this.getContentHTML() !== "") {
 				if (this.cfg.onSend) {
+					this.resetInputHeight()
 					this.cfg.onSend()
 					this.disableButtonSend()
 				}
