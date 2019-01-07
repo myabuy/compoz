@@ -17,9 +17,7 @@ import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
 import svgLink = require("./assets/b-link.svg")
 import svgStyle = require("./assets/b-style.svg")
-import svgSendDisable = require("./assets/ic-send-disable.svg")
-import svgSend = require("./assets/ic-send.svg")
-
+import svgDiscard = require("./assets/ic-trash.svg")
 const inputHint = "Write something..."
 const classInputExpand = "compoz-input-expand"
 const classActive = "compoz-b-active"
@@ -37,6 +35,8 @@ export class Compoz {
 	private elInputHint = document.createElement("span")
 	private elExpand = document.createElement("div")
 
+	private elStyleWrapper = document.createElement("div")
+	private elFooterWrapper = document.createElement("div")
 	private elMenuWrapper = document.createElement("div")
 	private elFormWrapper = document.createElement("div")
 	private elFiles = document.createElement("div")
@@ -46,7 +46,8 @@ export class Compoz {
 	private elMenu = document.createElement("div")
 
 	private elBStyle = document.createElement("span")
-	private elBSendImg = document.createElement("img")
+	private elBLink = document.createElement("span")
+	private elBSendBtn = document.createElement("button")
 
 	private formLink = new FormLink()
 	private formStyles = new FormStyles(this.elInput)
@@ -68,13 +69,14 @@ export class Compoz {
 
 		this.elCompoz.classList.add("compoz")
 
+		this.createStyleWrapper()
+
+		this.elCompoz.appendChild(this.elStyleWrapper)
+
 		this.createInput()
 
-		this.createElExpand()
-		this.elCompoz.appendChild(this.elExpand)
-
-		this.createMenuWrapper()
-		this.elCompoz.appendChild(this.elMenuWrapper)
+		this.createFooterWrapper()
+		this.elCompoz.appendChild(this.elFooterWrapper)
 
 		this.popupLink.onChange = this.onChangeLink
 		this.elCompoz.appendChild(this.popupLink.el)
@@ -183,8 +185,11 @@ export class Compoz {
 	setHeight(h: number) {
 		this.cfg.height = h
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight
-		this.elInput.style.height = h - menuWrapperHeight + "px"
-		this.elInput.style.maxHeight = h - menuWrapperHeight + "px"
+		const styleWrapperHeight = this.elStyleWrapper.offsetHeight
+		this.elInput.style.height =
+			h - (menuWrapperHeight + styleWrapperHeight) + "px"
+		this.elInput.style.maxHeight =
+			h - (menuWrapperHeight + styleWrapperHeight) + "px"
 	}
 
 	resetInputHeight() {
@@ -203,11 +208,11 @@ export class Compoz {
 	}
 
 	enableButtonSend() {
-		this.elBSendImg.src = svgSend
+		this.elBSendBtn.style.backgroundColor = "#fd8c2e"
 	}
 
 	disableButtonSend() {
-		this.elBSendImg.src = svgSendDisable
+		this.elBSendBtn.style.backgroundColor = "#cccccc"
 	}
 
 	/**
@@ -222,7 +227,16 @@ export class Compoz {
 
 	private createInput() {
 		const wrapper = document.createElement("div")
-		wrapper.classList.add("compoz-input-wrapper")
+
+		if (this.cfg.composeStyle) {
+			wrapper.classList.add("compoz-input-compose")
+		} else {
+			wrapper.classList.add("compoz-input-wrapper")
+			this.resetInputHeight()
+		}
+
+		this.createElExpand()
+		wrapper.appendChild(this.elExpand)
 
 		wrapper.appendChild(this.elInput)
 		this.elCompoz.appendChild(wrapper)
@@ -239,7 +253,6 @@ export class Compoz {
 		}
 
 		this.elInput.innerHTML = this.cfg.contentHTML
-		this.resetInputHeight()
 
 		this.elInput.onfocus = e => {
 			if (this.isEmpty()) {
@@ -332,8 +345,30 @@ export class Compoz {
 		}
 	}
 
+	private createStyleWrapper() {
+		this.elStyleWrapper.classList.add("compoz-style-wrapper")
+		if (this.cfg.composeStyle) {
+			this.elStyleWrapper.classList.add("compoz-style-compose")
+		}
+	}
+
+	private createFooterWrapper() {
+		if (this.cfg.composeStyle) {
+			this.elFooterWrapper.classList.add("compoz-footer-compose")
+		}
+		if (!this.cfg.hideDiscard) {
+			this.createButtonDiscard(this.elFooterWrapper)
+		}
+		this.createMenuWrapper()
+		this.elFooterWrapper.appendChild(this.elMenuWrapper)
+	}
+
 	private createMenuWrapper() {
 		this.elMenuWrapper.classList.add("compoz-menu-wrapper")
+
+		if (this.cfg.composeStyle) {
+			this.elMenuWrapper.classList.add("compoz-menu-compose")
+		}
 
 		this.createFormWrapper()
 		this.elMenuWrapper.appendChild(this.elFormWrapper)
@@ -436,7 +471,7 @@ export class Compoz {
 		this.createButtonStyle(this.elMenu)
 		this.createButtonAttachment(this.elMenu)
 		this.createButtonLink(this.elMenu)
-		this.createRightMenu(this.elMenu)
+		this.createButtonSend(this.elMenu)
 	}
 
 	private createButtonAttachment(parent: HTMLElement) {
@@ -472,12 +507,7 @@ export class Compoz {
 
 		this.elBStyle.onclick = e => {
 			if (!this.isShowStyle) {
-				if (this.isShowInputLink) {
-					this.hideFormLink()
-					this.showStyles()
-				} else {
-					this.showStyles()
-				}
+				this.showStyles()
 			} else {
 				this.hideStyles()
 			}
@@ -485,17 +515,16 @@ export class Compoz {
 	}
 
 	private createButtonLink(parent: HTMLElement) {
-		const button = document.createElement("span")
-		button.classList.add("button")
-		button.classList.add("compoz-b-link")
+		this.elBLink.classList.add("button")
+		this.elBLink.classList.add("compoz-b-link")
 
 		const img = document.createElement("img")
 		img.src = svgLink
-		button.appendChild(img)
+		this.elBLink.appendChild(img)
 
-		parent.appendChild(button)
+		parent.appendChild(this.elBLink)
 
-		button.onmousedown = () => {
+		this.elBLink.onmousedown = () => {
 			if (this.isShowInputLink) {
 				this.hideFormLink()
 			} else {
@@ -505,29 +534,20 @@ export class Compoz {
 		}
 	}
 
-	private createRightMenu(elParent: HTMLElement) {
-		const elRightMenu = document.createElement("span")
-		elRightMenu.classList.add("right")
+	private createButtonDiscard(parent: HTMLElement) {
+		const button = document.createElement("div")
+		button.classList.add("compoz-button-discard")
+		const img = document.createElement("img")
+		img.src = svgDiscard
 
-		elParent.appendChild(elRightMenu)
-
-		this.createButtonDiscard(elRightMenu)
-		this.createButtonSend(elRightMenu)
-	}
-
-	private createButtonDiscard(elParent: HTMLElement) {
-		const b = document.createElement("button")
-		b.classList.add("button")
-		b.classList.add("compoz-b-discard")
-		b.innerText = "Discard"
+		button.appendChild(img)
+		parent.appendChild(button)
 
 		if (this.cfg.hideDiscard) {
 			return
 		}
 
-		elParent.appendChild(b)
-
-		b.onclick = e => {
+		button.onclick = e => {
 			if (this.cfg.onDiscard) {
 				this.cfg.onDiscard()
 			}
@@ -538,11 +558,11 @@ export class Compoz {
 		const elBSend = document.createElement("a")
 		elBSend.href = "#"
 		elBSend.title = "Send"
-		elBSend.classList.add("button")
-		elBSend.classList.add("compoz-b-send")
 
-		this.elBSendImg.src = svgSendDisable
-		elBSend.appendChild(this.elBSendImg)
+		this.elBSendBtn.innerHTML = "Send"
+		this.elBSendBtn.classList.add("button")
+		this.elBSendBtn.classList.add("compoz-b-send")
+		elBSend.appendChild(this.elBSendBtn)
 
 		elParent.appendChild(elBSend)
 
@@ -565,7 +585,8 @@ export class Compoz {
 	private showStyles() {
 		this.isShowStyle = true
 		this.elBStyle.classList.add(classActive)
-		this.elFormWrapper.appendChild(this.formStyles.el)
+		this.elStyleWrapper.style.display = "block"
+		this.elStyleWrapper.appendChild(this.formStyles.el)
 		this.setHeight(this.cfg.height)
 		this.cfg.onChangeHeight()
 	}
@@ -573,7 +594,8 @@ export class Compoz {
 	private hideStyles() {
 		this.isShowStyle = false
 		this.elBStyle.classList.remove(classActive)
-		this.elFormWrapper.removeChild(this.formStyles.el)
+		this.elStyleWrapper.style.display = "none"
+		this.elStyleWrapper.removeChild(this.formStyles.el)
 		this.setHeight(this.cfg.height)
 		this.cfg.onChangeHeight()
 	}
@@ -583,6 +605,7 @@ export class Compoz {
 		this.formLink.setInput(linkSvc.state, linkSvc.text, linkSvc.url)
 
 		this.isShowInputLink = true
+		this.elBLink.classList.add(classActive)
 		this.elFormWrapper.appendChild(this.formLink.el)
 
 		this.setHeight(this.cfg.height)
@@ -591,6 +614,7 @@ export class Compoz {
 
 	private hideFormLink() {
 		this.isShowInputLink = false
+		this.elBLink.classList.remove(classActive)
 		this.elFormWrapper.removeChild(this.formLink.el)
 
 		this.setHeight(this.cfg.height)

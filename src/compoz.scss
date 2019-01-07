@@ -24,12 +24,23 @@ $list-file-size: 120;
 		vertical-align: middle;
 		margin: 8px;
 		padding: 12px 30px 12px 20px;
+		border: solid 1px #dfdfdf;
 		border-radius: 24px;
 		background-color: #fafbff;
-		border: solid 1px #dfdfdf;
-
 		.compoz-input {
 			background-color: #fafbff;
+			overflow: auto;
+		}
+		.hint {
+			color: #b8b8b8;
+		}
+	}
+
+	.compoz-input-compose {
+		vertical-align: middle;
+		margin: 8px;
+		padding: 18px 30px 18px 24px;
+		.compoz-input {
 			overflow: auto;
 		}
 		.hint {
@@ -43,12 +54,18 @@ $list-file-size: 120;
 		margin: 0px;
 	}
 	.compoz-button-expand {
-		position: absolute;
-		top: 18px;
-		right: 18px;
+		float: right;
+		margin-top: -5px;
+		margin-right: -22px;
 		cursor: pointer;
 	}
-
+	.compoz-button-discard {
+		display: inline-block;
+		vertical-align: middle;
+		width: 50px;
+		padding: 14px;
+		cursor: pointer;
+	}
 	.compoz-file-list {
 		width: 100%;
 		max-height: #{$list-file-size}px;
@@ -62,16 +79,35 @@ $list-file-size: 120;
 		overflow-y: hidden;
 	}
 
-	.compoz-menu {
-		margin: 8px 8px 16px 8px;
-		cursor: pointer;
+	.compoz-style-wrapper {
+		padding: 11px 0px 10px 10px;
+		display: none;
+	}
 
+	.compoz-style-compose {
+		border-bottom: solid 1px #e9ecef;
+	}
+
+	.compoz-footer-compose {
+		border-top: solid 1px #e9ecef;
+	}
+
+	.compoz-menu-compose {
+		display: inline-block;
+		border-left: solid 1px #e9ecef;
+		width: calc(100% - 50px);
+	}
+	.compoz-menu-wrapper {
+		padding: 8px 8px 16px 8px;
+	}
+
+	.compoz-menu {
 		.button {
 			border-radius: 8px;
 			color: black;
 			cursor: pointer;
 			display: inline-block;
-			padding: 4px 8px;
+			padding: 8px 18px;
 			text-decoration: none;
 			vertical-align: middle;
 
@@ -101,27 +137,19 @@ $list-file-size: 120;
 			}
 		}
 
-		.right {
+		.compoz-b-send {
 			float: right;
-
-			.compoz-b-discard {
-				width: 82px;
-				height: 32px;
-				border-radius: 8px;
-				background-color: #ffffff;
-				border: solid 1px #c5c5c5;
-				font-size: 14px;
-				font-weight: 500;
-				color: #5d636a;
-				outline: none;
-			}
-
-			.compoz-b-send {
-				img {
-					width: 32px;
-					height: 32px;
-				}
-			}
+			width: 82px;
+			height: 32px;
+			border-radius: 8px;
+			background-color: #cccccc;
+			font-size: 14px;
+			font-weight: 500;
+			color: white;
+			outline: none;
+			border: none;
+			margin-top: 7px;
+			margin-right: 8px;
 		}
 	}
 }
@@ -172,9 +200,6 @@ $list-file-size: 120;
 }
 
 .compoz-form-styles {
-	height: 2em;
-	margin: 8px 0px;
-
 	span {
 		color: black;
 		cursor: pointer;
@@ -233,7 +258,7 @@ $list-file-size: 120;
 	border: 1px solid grey;
 	border-radius: 6px;
 	position: absolute;
-	visibility: hidden;
+	display: none;
 	padding: 6px 4px;
 	max-width: 400px;
 

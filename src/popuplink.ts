@@ -21,7 +21,7 @@ export class PopupLink {
 
 	constructor() {
 		this.el.classList.add("compoz-popup-link")
-		this.el.style.visibility = "hidden"
+		this.el.style.display = "none"
 
 		const span = document.createElement("span")
 
@@ -46,7 +46,7 @@ export class PopupLink {
 	reset() {
 		this.elLink.innerText = ""
 		this.elLink.href = "#"
-		this.el.style.visibility = "hidden"
+		this.el.style.display = "none"
 		document.removeEventListener("mousedown", this.onMouseDown)
 	}
 
@@ -63,7 +63,7 @@ export class PopupLink {
 
 		this.el.style.top = linkSvc.el.offsetTop - 40 + "px"
 		this.el.style.left = "8px"
-		this.el.style.visibility = "visible"
+		this.el.style.display = "block"
 
 		document.addEventListener("mousedown", this.onMouseDown)
 	}
