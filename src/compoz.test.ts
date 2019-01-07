@@ -39,7 +39,7 @@ link.
 		height: 0,
 
 		hideAttachment: false,
-		hideDiscard: false,
+		hideDiscard: true,
 		hideExpand: false,
 		hideSave: false,
 		hideSend: false,
@@ -97,15 +97,15 @@ link.
 }
 
 function createFullCompose() {
-	const files: ICompozFile[] = []
+	// const files: ICompozFile[] = []
 
-	files.push({
-		id: 2,
-		name: "test.jpg",
-		raw: null,
-		size: 512,
-		type: "image/png",
-	})
+	// files.push({
+	// 	id: 2,
+	// 	name: "test.jpg",
+	// 	raw: null,
+	// 	size: 512,
+	// 	type: "image/png",
+	// })
 
 	const config = {
 		avatarURL:
@@ -113,9 +113,9 @@ function createFullCompose() {
 		composeStyle: "compoz-input-expand",
 		contentHTML: "",
 		fileMaxSize: 0,
-		height: 500,
+		height: 400,
 
-		hideAttachment: true,
+		hideAttachment: false,
 		hideDiscard: false,
 		hideExpand: true,
 		hideSave: true,
@@ -148,14 +148,14 @@ function createFullCompose() {
 		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
-			console.log("files:", c.getFiles())
+			// console.log("files:", c.getFiles())
 		},
 		onUnexpand: () => {
 			console.log("onUnexpand")
 		},
 	}
 
-	const c = new Compoz("full-compose", config, files)
+	const c = new Compoz("full-compose", config, [])
 
 	c.setContentHTML(`
         <b>Test</b> set content
