@@ -13,10 +13,12 @@ import { FormStyles } from "./formstyles"
 import { linkSvc } from "./linkservice"
 import { IInputLink, PopupLink } from "./popuplink"
 
+import { read } from "fs"
 import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
 import svgLink = require("./assets/b-link.svg")
 import svgStyle = require("./assets/b-style.svg")
+import svgAdd = require("./assets/ic-add.svg")
 import svgDiscard = require("./assets/ic-trash.svg")
 const inputHint = "Write something..."
 const classInputExpand = "compoz-input-expand"
@@ -40,11 +42,13 @@ export class Compoz {
 	private elMenuWrapper = document.createElement("div")
 	private elFormWrapper = document.createElement("div")
 	private elFiles = document.createElement("div")
+	private elAddFiles = document.createElement("div")
 
 	private elInputFile = document.createElement("input")
 
 	private elMenu = document.createElement("div")
 
+	private elBAttachment = document.createElement("span")
 	private elBStyle = document.createElement("span")
 	private elBLink = document.createElement("span")
 	private elBSendBtn = document.createElement("button")
@@ -56,8 +60,10 @@ export class Compoz {
 	private files: CompozFile[] = new Array()
 	private lastSelection: Selection = window.getSelection()
 	private range = new Range()
+	private isShowAttachment = false
 	private isShowStyle = false
 	private isShowInputLink = false
+	private isAddButton = false
 	private isExpand = false
 	private defaultInputMinHeight = "40px"
 	private defaultInputMaxHeight = "6em"
@@ -77,6 +83,9 @@ export class Compoz {
 
 		this.createFooterWrapper()
 		this.elCompoz.appendChild(this.elFooterWrapper)
+
+		this.elFiles.classList.add("compoz-file-list")
+		this.elCompoz.appendChild(this.elFiles)
 
 		this.popupLink.onChange = this.onChangeLink
 		this.elCompoz.appendChild(this.popupLink.el)
@@ -186,10 +195,11 @@ export class Compoz {
 		this.cfg.height = h
 		const menuWrapperHeight = this.elMenuWrapper.offsetHeight
 		const styleWrapperHeight = this.elStyleWrapper.offsetHeight
-		this.elInput.style.height =
-			h - (menuWrapperHeight + styleWrapperHeight) + "px"
-		this.elInput.style.maxHeight =
-			h - (menuWrapperHeight + styleWrapperHeight) + "px"
+		const fileWrapperHeight = this.elFiles.offsetHeight
+		const heightTotal =
+			h - (menuWrapperHeight + styleWrapperHeight + fileWrapperHeight)
+		this.elInput.style.height = heightTotal + "px"
+		this.elInput.style.maxHeight = heightTotal + "px"
 	}
 
 	resetInputHeight() {
@@ -373,9 +383,6 @@ export class Compoz {
 		this.createFormWrapper()
 		this.elMenuWrapper.appendChild(this.elFormWrapper)
 
-		this.elFiles.classList.add("compoz-file-list")
-		this.elMenuWrapper.appendChild(this.elFiles)
-
 		this.createMenu()
 		this.elMenuWrapper.appendChild(this.elMenu)
 
@@ -456,12 +463,34 @@ export class Compoz {
 			if (!this.elInputFile.files) {
 				return
 			}
-
 			//tslint:disable
 			for (let x = 0; x < this.elInputFile.files.length; x++) {
 				const f = this.elInputFile.files[x]
 				this.addFile(f)
 			}
+		}
+	}
+
+	private createAddFileButton() {
+		const elDummy = document.createElement("div")
+		const img = document.createElement("img")
+		const span = document.createElement("span")
+
+		img.classList.add("img-add")
+		img.src = svgAdd
+		span.classList.add("span-add")
+		span.innerHTML = "ADD FILE"
+		this.elAddFiles.classList.add("compoz-file")
+		elDummy.appendChild(img)
+		elDummy.appendChild(span)
+		if (!this.isAddButton) {
+			this.elAddFiles.appendChild(elDummy)
+			this.isAddButton = true
+		}
+
+		this.elFiles.insertBefore(this.elAddFiles, this.elFiles.childNodes[0])
+		this.elAddFiles.onclick = e => {
+			this.elInputFile.click()
 		}
 	}
 
@@ -475,23 +504,29 @@ export class Compoz {
 	}
 
 	private createButtonAttachment(parent: HTMLElement) {
-		const button = document.createElement("span")
-		button.classList.add("button")
-		button.classList.add("compoz-b-attachment")
+		this.elBAttachment.classList.add("button")
+		this.elBAttachment.classList.add("compoz-b-attachment")
 
 		const img = document.createElement("img")
 		img.src = svgAttachment
-		button.appendChild(img)
+		this.elBAttachment.appendChild(img)
 
-		parent.appendChild(button)
+		parent.appendChild(this.elBAttachment)
 
 		if (this.cfg.hideAttachment) {
-			button.style.display = "none"
+			this.elBAttachment.style.display = "none"
 			return
 		}
 
-		button.onclick = e => {
-			this.elInputFile.click()
+		this.elBAttachment.onclick = e => {
+			if (!this.isShowAttachment) {
+				this.showAttachment()
+				this.createAddFileButton()
+			} else {
+				this.hideAttachment()
+			}
+			this.setHeight(this.cfg.height)
+			this.cfg.onChangeHeight()
 		}
 	}
 
@@ -574,12 +609,28 @@ export class Compoz {
 		elBSend.onclick = e => {
 			if (this.getContentHTML() !== "") {
 				if (this.cfg.onSend) {
-					this.resetInputHeight()
 					this.cfg.onSend()
 					this.disableButtonSend()
+					this.hideAttachment()
 				}
 			}
 		}
+	}
+
+	private showAttachment() {
+		this.isShowAttachment = true
+		this.elBAttachment.classList.add(classActive)
+		this.elFiles.style.display = "flex"
+		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
+	}
+
+	private hideAttachment() {
+		this.isShowAttachment = false
+		this.elBAttachment.classList.remove(classActive)
+		this.elFiles.style.display = "none"
+		this.setHeight(this.cfg.height)
+		this.cfg.onChangeHeight()
 	}
 
 	private showStyles() {
