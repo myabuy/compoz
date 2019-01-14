@@ -145,7 +145,6 @@ $list-file-size: 120;
 		}
 
 		.compoz-b-send {
-			float: right;
 			width: 82px;
 			height: 32px;
 			border-radius: 8px;
@@ -156,6 +155,9 @@ $list-file-size: 120;
 			outline: none;
 			border: none;
 			margin-top: 7px;
+		}
+		.right-side {
+			float: right;
 			margin-right: 8px;
 		}
 	}
@@ -194,7 +196,7 @@ $list-file-size: 120;
 
 	.img-icon {
 		width: 100%;
-		height: 62%;
+		height: 70%;
 		border-top-left-radius: 6px;
 		border-top-right-radius: 6px;
 	}

@@ -19,6 +19,8 @@ import svgExpand = require("./assets/b-expand.svg")
 import svgLink = require("./assets/b-link.svg")
 import svgStyle = require("./assets/b-style.svg")
 import svgAdd = require("./assets/ic-add.svg")
+import svgSendDisable = require("./assets/ic-send-disable.svg")
+import svgSend = require("./assets/ic-send.svg")
 import svgDiscard = require("./assets/ic-trash.svg")
 const inputHint = "Write something..."
 const classInputExpand = "compoz-input-expand"
@@ -50,6 +52,7 @@ export class Compoz {
 
 	private elBAttachment = document.createElement("span")
 	private elBStyle = document.createElement("span")
+	private elBSendImg = document.createElement("img")
 	private elBLink = document.createElement("span")
 	private elBSendBtn = document.createElement("button")
 
@@ -219,10 +222,12 @@ export class Compoz {
 
 	enableButtonSend() {
 		this.elBSendBtn.style.backgroundColor = "#fd8c2e"
+		this.elBSendImg.src = svgSend
 	}
 
 	disableButtonSend() {
 		this.elBSendBtn.style.backgroundColor = "#cccccc"
+		this.elBSendImg.src = svgSendDisable
 	}
 
 	/**
@@ -594,10 +599,19 @@ export class Compoz {
 		elBSend.href = "#"
 		elBSend.title = "Send"
 
-		this.elBSendBtn.innerHTML = "Send"
-		this.elBSendBtn.classList.add("button")
-		this.elBSendBtn.classList.add("compoz-b-send")
-		elBSend.appendChild(this.elBSendBtn)
+		if (this.cfg.composeStyle) {
+			this.elBSendBtn.innerHTML = "Send"
+			this.elBSendBtn.classList.add("button")
+			this.elBSendBtn.classList.add("right-side")
+			this.elBSendBtn.classList.add("compoz-b-send")
+			elBSend.appendChild(this.elBSendBtn)
+		} else {
+			elBSend.classList.add("button")
+			elBSend.classList.add("right-side")
+
+			this.elBSendImg.src = svgSendDisable
+			elBSend.appendChild(this.elBSendImg)
+		}
 
 		elParent.appendChild(elBSend)
 
