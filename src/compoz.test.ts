@@ -97,15 +97,15 @@ link.
 }
 
 function createFullCompose() {
-	// const files: ICompozFile[] = []
+	const files: ICompozFile[] = []
 
-	// files.push({
-	// 	id: 2,
-	// 	name: "test.jpg",
-	// 	raw: null,
-	// 	size: 512,
-	// 	type: "image/png",
-	// })
+	files.push({
+		id: 2,
+		name: "test.jpg",
+		raw: null,
+		size: 512,
+		type: "image/png",
+	})
 
 	const config = {
 		avatarURL:
@@ -148,7 +148,7 @@ function createFullCompose() {
 		},
 		onSend: () => {
 			console.log("content:", c.getContentHTML())
-			// console.log("files:", c.getFiles())
+			console.log("files:", c.getFiles())
 		},
 		onUnexpand: () => {
 			console.log("onUnexpand")
