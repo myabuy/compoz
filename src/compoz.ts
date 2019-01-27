@@ -42,6 +42,7 @@ export class Compoz {
 	private elStyleWrapper = document.createElement("div")
 	private elFooterWrapper = document.createElement("div")
 	private elMenuWrapper = document.createElement("div")
+	private elMenuRight = document.createElement("div")
 	private elFormWrapper = document.createElement("div")
 	private elFiles = document.createElement("div")
 	private elAddFiles = document.createElement("div")
@@ -55,6 +56,7 @@ export class Compoz {
 	private elBSendImg = document.createElement("img")
 	private elBLink = document.createElement("span")
 	private elBSendBtn = document.createElement("button")
+	private elBCancelBtn = document.createElement("button")
 
 	private formLink = new FormLink()
 	private formStyles = new FormStyles(this.elInput)
@@ -371,13 +373,23 @@ export class Compoz {
 		if (this.cfg.composeStyle) {
 			this.elFooterWrapper.classList.add("compoz-footer-compose")
 		}
-		if (!this.cfg.hideDiscard) {
+		if (!this.cfg.hideDiscard && !this.cfg.isMessageDetail) {
 			this.createButtonDiscard(this.elFooterWrapper)
 		}
 		this.createMenuWrapper()
 		this.elFooterWrapper.appendChild(this.elMenuWrapper)
 	}
 
+	private createMenuRight(parent: HTMLElement) {
+		this.elMenuRight.classList.add("right-side")
+
+		if (this.cfg.isMessageDetail) {
+			this.createButtonDiscard(this.elMenuRight)
+		}
+		this.createButtonSend(this.elMenuRight)
+
+		parent.appendChild(this.elMenuRight)
+	}
 	private createMenuWrapper() {
 		this.elMenuWrapper.classList.add("compoz-menu-wrapper")
 
@@ -505,7 +517,7 @@ export class Compoz {
 		this.createButtonStyle(this.elMenu)
 		this.createButtonAttachment(this.elMenu)
 		this.createButtonLink(this.elMenu)
-		this.createButtonSend(this.elMenu)
+		this.createMenuRight(this.elMenu)
 	}
 
 	private createButtonAttachment(parent: HTMLElement) {
@@ -576,11 +588,18 @@ export class Compoz {
 
 	private createButtonDiscard(parent: HTMLElement) {
 		const button = document.createElement("div")
-		button.classList.add("compoz-button-discard")
-		const img = document.createElement("img")
-		img.src = svgDiscard
+		if (this.cfg.isMessageDetail) {
+			this.elBCancelBtn.innerHTML = "Cancel"
+			this.elBCancelBtn.classList.add("button")
+			this.elBCancelBtn.classList.add("compoz-b-send")
+			button.appendChild(this.elBCancelBtn)
+		} else {
+			button.classList.add("compoz-button-discard")
+			const img = document.createElement("img")
+			img.src = svgDiscard
+			button.appendChild(img)
+		}
 
-		button.appendChild(img)
 		parent.appendChild(button)
 
 		if (this.cfg.hideDiscard) {
@@ -595,12 +614,15 @@ export class Compoz {
 	}
 
 	private createButtonSend(elParent: HTMLElement) {
-		const elBSend = document.createElement("a")
-		elBSend.href = "#"
-		elBSend.title = "Send"
+		const elBSend = document.createElement("div")
 
 		if (this.cfg.composeStyle) {
 			this.elBSendBtn.innerHTML = "Send"
+			this.elBSendBtn.classList.add("button")
+			this.elBSendBtn.classList.add("compoz-b-send")
+			elBSend.appendChild(this.elBSendBtn)
+		} else if (this.cfg.isMessageDetail) {
+			this.elBSendBtn.innerHTML = "Save"
 			this.elBSendBtn.classList.add("button")
 			this.elBSendBtn.classList.add("right-side")
 			this.elBSendBtn.classList.add("compoz-b-send")

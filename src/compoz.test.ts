@@ -43,6 +43,7 @@ link.
 		hideExpand: false,
 		hideSave: false,
 		hideSend: false,
+		isMessageDetail: false,
 
 		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
 		subject: "Bootcamp LPDP",
@@ -120,7 +121,7 @@ function createFullCompose() {
 		hideExpand: true,
 		hideSave: true,
 		hideSend: false,
-
+		isMessageDetail: false,
 		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
 		subject: "Bootcamp",
 
