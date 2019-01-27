@@ -20,6 +20,7 @@ export interface IConfig {
 	hideSave: boolean
 	hideSend: boolean
 	composeStyle: string
+	isMessageDetail: boolean
 	onBlur: () => void
 	onContentChange: (contentHTML: string) => void
 	onFileDeletedBefore: (f: CompozFile) => Promise<boolean>
@@ -44,6 +45,7 @@ export class Config {
 	hideSave = false
 	hideSend = false
 	composeStyle = ""
+	isMessageDetail = false
 
 	constructor(cfg: IConfig | null) {
 		if (!cfg) {
@@ -74,6 +76,7 @@ export class Config {
 		this.onDiscard = cfg.onDiscard
 		this.onSend = cfg.onSend
 		this.onChangeHeight = cfg.onChangeHeight
+		this.isMessageDetail = cfg.isMessageDetail
 	}
 
 	onBlur(): void {

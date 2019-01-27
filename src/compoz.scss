@@ -145,6 +145,8 @@ $list-file-size: 120;
 		}
 
 		.compoz-b-send {
+			display: flex;
+			justify-content: center;
 			width: 82px;
 			height: 32px;
 			border-radius: 8px;
@@ -155,10 +157,11 @@ $list-file-size: 120;
 			outline: none;
 			border: none;
 			margin-top: 7px;
+			margin-right: 8px;
 		}
 		.right-side {
+			display: flex;
 			float: right;
-			margin-right: 8px;
 		}
 	}
 }
