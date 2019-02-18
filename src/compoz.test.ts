@@ -48,6 +48,9 @@ link.
 		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
 		subject: "Bootcamp LPDP",
 
+		onAddFile: () => {
+			return
+		},
 		onBlur: () => {
 			return
 		},
@@ -125,6 +128,9 @@ function createFullCompose() {
 		participants: "You, Kukuh, Mirah, Matias & Mas Shulhan",
 		subject: "Bootcamp",
 
+		onAddFile: () => {
+			console.log("get files", c.getFiles())
+		},
 		onBlur: () => {
 			console.log("onBlur")
 		},

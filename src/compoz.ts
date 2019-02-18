@@ -70,7 +70,7 @@ export class Compoz {
 	private isShowInputLink = false
 	private isAddButton = false
 	private isExpand = false
-	private defaultInputMinHeight = "40px"
+	private defaultInputMinHeight = "18px"
 	private defaultInputMaxHeight = "6em"
 	private lastContent = ""
 
@@ -160,6 +160,11 @@ export class Compoz {
 		}
 
 		return this.elInput.innerHTML
+	}
+
+	showInitAttachment() {
+		this.showAttachment()
+		this.createAddFileButton()
 	}
 
 	setFiles(files: ICompozFile[]) {
@@ -461,6 +466,7 @@ export class Compoz {
 		this.files.push(cf)
 		this.elFiles.appendChild(cf.el)
 		this.setHeight(this.cfg.height)
+		this.cfg.onAddFile()
 		this.cfg.onChangeHeight()
 		return cf
 	}
@@ -537,8 +543,7 @@ export class Compoz {
 
 		this.elBAttachment.onclick = e => {
 			if (!this.isShowAttachment) {
-				this.showAttachment()
-				this.createAddFileButton()
+				this.showInitAttachment()
 			} else {
 				this.hideAttachment()
 			}
@@ -645,6 +650,9 @@ export class Compoz {
 		elBSend.onclick = e => {
 			if (this.getContentHTML() !== "") {
 				if (this.cfg.onSend) {
+					if (!this.cfg.composeStyle) {
+						this.resetInputHeight()
+					}
 					this.cfg.onSend()
 					this.disableButtonSend()
 					this.hideAttachment()

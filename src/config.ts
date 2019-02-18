@@ -21,6 +21,7 @@ export interface IConfig {
 	hideSend: boolean
 	composeStyle: string
 	isMessageDetail: boolean
+	onAddFile: () => void | null
 	onBlur: () => void
 	onContentChange: (contentHTML: string) => void
 	onFileDeletedBefore: (f: CompozFile) => Promise<boolean>
@@ -67,6 +68,7 @@ export class Config {
 		this.hideSave = cfg.hideSave
 		this.hideSend = cfg.hideSend
 		this.composeStyle = cfg.composeStyle
+		this.onAddFile = cfg.onAddFile
 		this.onBlur = cfg.onBlur
 		this.onContentChange = cfg.onContentChange
 		this.onExpand = cfg.onExpand
@@ -77,6 +79,10 @@ export class Config {
 		this.onSend = cfg.onSend
 		this.onChangeHeight = cfg.onChangeHeight
 		this.isMessageDetail = cfg.isMessageDetail
+	}
+
+	onAddFile(): void {
+		return
 	}
 
 	onBlur(): void {
