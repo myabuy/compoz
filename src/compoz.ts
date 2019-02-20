@@ -112,7 +112,13 @@ export class Compoz {
 		}
 
 		setTimeout(() => {
-			this.elInput.focus()
+			if (!this.cfg.composeStyle) {
+				this.elInput.focus()
+			} else {
+				this.elInput.blur()
+				this.elInput.appendChild(this.elInputHint)
+				this.createInputHint()
+			}
 		}, 0)
 
 		// Save last selection to elInput
@@ -142,6 +148,10 @@ export class Compoz {
 
 			return false
 		})
+	}
+
+	onFocus() {
+		this.elInput.focus()
 	}
 
 	isEmpty(): boolean {
