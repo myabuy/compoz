@@ -112,12 +112,12 @@ export class Compoz {
 		}
 
 		setTimeout(() => {
-			if (!this.cfg.composeStyle) {
-				this.elInput.focus()
-			} else {
+			if (this.cfg.composeStyle) {
 				this.elInput.blur()
 				this.elInput.appendChild(this.elInputHint)
 				this.createInputHint()
+			} else {
+				this.onFocus()
 			}
 		}, 0)
 
@@ -152,6 +152,20 @@ export class Compoz {
 
 	onFocus() {
 		this.elInput.focus()
+	}
+
+	moveCursorAtTheEnd() {
+		const el = this.elInput.lastChild
+		let range
+		let sel
+		if (document.createRange && el !== null) {
+			range = document.createRange()
+			range.selectNodeContents(el)
+			range.collapse(false)
+			sel = window.getSelection()
+			sel.removeAllRanges()
+			sel.addRange(range)
+		}
 	}
 
 	isEmpty(): boolean {
@@ -439,6 +453,7 @@ export class Compoz {
 			this.restoreSelectionRange(this.range)
 			linkSvc.upsert(text, link)
 		}
+		this.moveCursorAtTheEnd()
 		this.hideFormLink()
 	}
 
@@ -524,6 +539,7 @@ export class Compoz {
 		this.elFiles.insertBefore(this.elAddFiles, this.elFiles.childNodes[0])
 		this.elAddFiles.onclick = e => {
 			this.elInputFile.click()
+			this.onFocus()
 		}
 	}
 
