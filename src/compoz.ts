@@ -339,9 +339,8 @@ export class Compoz {
 			e.preventDefault()
 
 			// Get pasted data via clipboard API.
-			const pastedText = document.createTextNode(
-				e.clipboardData.getData("Text"),
-			)
+			const text = e.clipboardData.getData("Text")
+			const pastedText = document.createTextNode(text)
 
 			const sel = window.getSelection()
 			if (!sel) {
@@ -352,6 +351,7 @@ export class Compoz {
 			const range = sel.getRangeAt(0)
 			range.deleteContents()
 			range.insertNode(pastedText)
+			this.setContentHTML(text.replace(/\n/g, "<br>"))
 		})
 	}
 
