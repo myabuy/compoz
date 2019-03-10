@@ -332,7 +332,6 @@ export class Compoz {
 				this.cfg.onContentChange(contentHTML)
 			}
 		}
-
 		this.elInput.addEventListener("paste", (e: ClipboardEvent) => {
 			// Stop data actually being pasted into div.
 			e.stopPropagation()
@@ -348,10 +347,29 @@ export class Compoz {
 				return
 			}
 
-			const range = sel.getRangeAt(0)
-			range.deleteContents()
-			range.insertNode(pastedText)
-			this.setContentHTML(text.replace(/\n/g, "<br>"))
+			if (sel.getRangeAt && sel.rangeCount) {
+				let range = sel.getRangeAt(0)
+				range.deleteContents()
+
+				const el = document.createElement("div")
+				el.innerHTML = text.replace(/\n/g, "<br>")
+				const frag = document.createDocumentFragment()
+				let node = el.firstChild
+				let lastNode
+				while (node) {
+					lastNode = frag.appendChild(node)
+					node = el.firstChild
+				}
+				range.insertNode(frag)
+
+				if (lastNode) {
+					range = range.cloneRange()
+					range.setStartAfter(lastNode)
+					range.collapse(true)
+					sel.removeAllRanges()
+					sel.addRange(range)
+				}
+			}
 		})
 	}
 
