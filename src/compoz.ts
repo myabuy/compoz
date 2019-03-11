@@ -73,6 +73,7 @@ export class Compoz {
 	private defaultInputMinHeight = "18px"
 	private defaultInputMaxHeight = "6em"
 	private lastContent = ""
+	private keyCodeUndo = 90
 
 	constructor(id: string, opts: IConfig, files: ICompozFile[]) {
 		this.id = id
@@ -317,12 +318,15 @@ export class Compoz {
 			}
 		}
 
-		this.elInput.onkeyup = () => {
+		this.elInput.onkeyup = e => {
 			const contentHTML = this.getContentHTML()
 			if (contentHTML === "") {
 				this.disableButtonSend()
 			} else {
 				this.enableButtonSend()
+			}
+			if (e.keyCode === this.keyCodeUndo) {
+				document.execCommand("undo")
 			}
 			if (this.cfg.onContentChange) {
 				if (contentHTML === this.lastContent) {
