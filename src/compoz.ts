@@ -70,10 +70,14 @@ export class Compoz {
 	private isShowInputLink = false
 	private isAddButton = false
 	private isExpand = false
-	private defaultInputMinHeight = "18px"
-	private defaultInputMaxHeight = "6em"
+	private defaultInputMinHeight = 18
+	private defaultInputMaxHeight = 85
+	private currentHeight = 0
 	private lastContent = ""
 	private keyCodeUndo = 90
+	private keyCodeEnter = 13
+	private keyCodeDelete = 46
+	private keyCodeBackspace = 8
 
 	constructor(id: string, opts: IConfig, files: ICompozFile[]) {
 		this.id = id
@@ -238,8 +242,8 @@ export class Compoz {
 	}
 
 	resetInputHeight() {
-		this.elInput.style.minHeight = this.defaultInputMinHeight
-		this.elInput.style.maxHeight = this.defaultInputMaxHeight
+		this.elInput.style.minHeight = this.defaultInputMinHeight + "px"
+		this.elInput.style.maxHeight = this.defaultInputMaxHeight + "px"
 		this.elInput.style.height = "auto"
 		this.cfg.height = 0
 	}
@@ -316,6 +320,8 @@ export class Compoz {
 			if (this.cfg.onBlur) {
 				this.cfg.onBlur()
 			}
+			this.cfg.onChangeHeight()
+			this.currentHeight = 0
 		}
 
 		this.elInput.onkeyup = e => {
@@ -336,6 +342,23 @@ export class Compoz {
 				this.cfg.onContentChange(contentHTML)
 			}
 		}
+
+		this.elInput.onkeydown = e => {
+			if (
+				e.which === this.keyCodeEnter ||
+				e.which === this.keyCodeDelete ||
+				e.which === this.keyCodeBackspace
+			) {
+				if (this.currentHeight === this.elInput.offsetHeight) {
+					return
+				}
+				if (this.elInput.offsetHeight < this.defaultInputMaxHeight) {
+					this.cfg.onChangeHeight()
+					this.currentHeight = this.elInput.offsetHeight
+				}
+			}
+		}
+
 		this.elInput.addEventListener("paste", (e: ClipboardEvent) => {
 			// Stop data actually being pasted into div.
 			e.stopPropagation()
