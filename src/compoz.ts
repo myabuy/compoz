@@ -429,6 +429,7 @@ export class Compoz {
 				if (this.cfg.onUnexpand) {
 					this.elInput.classList.remove(classInputExpand)
 					this.cfg.onUnexpand()
+					this.cfg.onChangeHeight()
 					this.resetInputHeight()
 					this.isExpand = false
 				}
