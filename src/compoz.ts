@@ -74,7 +74,7 @@ export class Compoz {
 	private defaultInputMaxHeight = 85
 	private currentHeight = 0
 	private lastContent = ""
-	private keyCodeUndo = 90
+	private keyCodeZ = 90
 	private keyCodeEnter = 13
 	private keyCodeDelete = 46
 	private keyCodeBackspace = 8
@@ -331,9 +331,6 @@ export class Compoz {
 			} else {
 				this.enableButtonSend()
 			}
-			if (e.keyCode === this.keyCodeUndo) {
-				document.execCommand("undo")
-			}
 			if (this.cfg.onContentChange) {
 				if (contentHTML === this.lastContent) {
 					return
@@ -344,6 +341,9 @@ export class Compoz {
 		}
 
 		this.elInput.onkeydown = e => {
+			if ((e.ctrlKey || e.metaKey) && e.keyCode === this.keyCodeZ) {
+				document.execCommand("undo")
+			}
 			if (
 				e.which === this.keyCodeEnter ||
 				e.which === this.keyCodeDelete ||
