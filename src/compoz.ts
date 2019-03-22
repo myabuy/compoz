@@ -707,7 +707,7 @@ export class Compoz {
 		} else {
 			elBSend.classList.add("button")
 			elBSend.classList.add("right-side")
-
+			elBSend.classList.add("compoz-b-circle")
 			this.elBSendImg.src = svgSendDisable
 			elBSend.appendChild(this.elBSendImg)
 		}
