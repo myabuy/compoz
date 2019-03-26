@@ -16,6 +16,7 @@ import { IInputLink, PopupLink } from "./popuplink"
 import { read } from "fs"
 import svgAttachment = require("./assets/b-attachment.svg")
 import svgExpand = require("./assets/b-expand.svg")
+import svgReduce = require("./assets/b-reduce.svg")
 import svgLink = require("./assets/b-link.svg")
 import svgStyle = require("./assets/b-style.svg")
 import svgAdd = require("./assets/ic-add.svg")
@@ -422,12 +423,14 @@ export class Compoz {
 			if (!this.isExpand) {
 				if (this.cfg.onExpand) {
 					this.elInput.classList.add(classInputExpand)
+					button.src = svgReduce
 					this.cfg.onExpand()
 					this.isExpand = true
 				}
 			} else {
 				if (this.cfg.onUnexpand) {
 					this.elInput.classList.remove(classInputExpand)
+					button.src = svgExpand
 					this.cfg.onUnexpand()
 					this.cfg.onChangeHeight()
 					this.resetInputHeight()
