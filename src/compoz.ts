@@ -579,6 +579,7 @@ export class Compoz {
 		span.classList.add("span-add")
 		span.innerHTML = "ADD FILE"
 		this.elAddFiles.classList.add("compoz-file")
+		this.elAddFiles.classList.add("add-file")
 		elDummy.appendChild(img)
 		elDummy.appendChild(span)
 		if (!this.isAddButton) {

@@ -194,6 +194,10 @@ $list-file-size: 120;
 	vertical-align: top;
 	width: 110px;
 	word-wrap: break-word;
+	
+	&.add-file{
+		cursor: pointer;
+	}
 
 	div {
 		width: 110px;
