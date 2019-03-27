@@ -565,6 +565,7 @@ export class Compoz {
 				const f = this.elInputFile.files[x]
 				this.addFile(f)
 			}
+			this.showInitAttachment()
 		}
 	}
 
@@ -618,7 +619,12 @@ export class Compoz {
 
 		this.elBAttachment.onclick = e => {
 			if (!this.isShowAttachment) {
-				this.showInitAttachment()
+				if (this.files.length > 0) {
+					this.showInitAttachment()
+				}else{
+					this.elInputFile.click()
+					this.onFocus()
+				}				
 			} else {
 				this.hideAttachment()
 			}
