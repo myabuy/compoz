@@ -76,10 +76,15 @@ export class Compoz {
 	private lastContent = ""
 	private keyCodeV = 86
 	private keyCodeX = 88
+	private keyCodeY = 89
 	private keyCodeZ = 90
 	private keyCodeEnter = 13
 	private keyCodeDelete = 46
 	private keyCodeBackspace = 8
+	private historyInterval: number = 0
+	redoChanges: string[] = []
+	historyChanges: string[] = []
+	oldChange = ""
 
 	constructor(id: string, opts: IConfig, files: ICompozFile[]) {
 		this.id = id
@@ -117,7 +122,12 @@ export class Compoz {
 		if (this.cfg.height > 0) {
 			this.setHeight(this.cfg.height)
 		}
+		this.historyChanges.push(this.getContentHTML())
+		this.oldChange = this.getContentHTML()
 
+		this.historyInterval = window.setInterval(() => {
+			this.manageChanges()
+		}, 3000)
 		setTimeout(() => {
 			if (this.cfg.composeStyle) {
 				this.elInput.blur()
@@ -268,6 +278,52 @@ export class Compoz {
 		this.elBSendImg.src = svgSendDisable
 	}
 
+	getLastValue(arr: string[]) {
+		return arr[arr.length - 1]
+	}
+
+	resetHistoryChanges() {
+		this.historyChanges = []
+		this.historyChanges.push("")
+		this.redoChanges = []
+		this.oldChange = ""
+	}
+
+	manageChanges() {
+		if (this.oldChange === this.getContentHTML()) {
+			return
+		}
+		this.historyChanges.push(this.getContentHTML())
+		this.oldChange = this.getContentHTML()
+		this.redoChanges = []
+	}
+
+	undo() {
+		if (this.historyChanges.length === 1) {
+			return
+		}
+		const currentContent = this.getContentHTML()
+		this.redoChanges.push(currentContent)
+		if (currentContent === this.oldChange) {
+			this.historyChanges.pop()
+		}
+		this.oldChange = this.getLastValue(this.historyChanges)
+		this.setContentHTML(this.oldChange)
+		this.moveCursorAtTheEnd()
+	}
+
+	redo() {
+		if (this.redoChanges.length === 0) {
+			return
+		}
+		const redoLastChange = this.getLastValue(this.redoChanges)
+		this.historyChanges.push(redoLastChange)
+		this.redoChanges.pop()
+		this.oldChange = this.getLastValue(this.historyChanges)
+		this.setContentHTML(this.oldChange)
+		this.moveCursorAtTheEnd()
+	}
+
 	/**
 	 * Restore content editable selection.
 	 * Ref: https://stackoverflow.com/a/3316483/3034747
@@ -342,8 +398,22 @@ export class Compoz {
 		}
 
 		this.elInput.onkeydown = e => {
-			if ((e.ctrlKey || e.metaKey) && e.keyCode === this.keyCodeZ) {
-				document.execCommand("undo")
+			if (e.ctrlKey || e.metaKey) {
+				if (!e.shiftKey && e.keyCode === this.keyCodeZ) {
+					e.preventDefault()
+					this.undo()
+					return
+				}
+				if (e.shiftKey && e.keyCode === this.keyCodeZ) {
+					e.preventDefault()
+					this.redo()
+					return
+				}
+				if (e.keyCode === this.keyCodeY) {
+					e.preventDefault()
+					this.redo()
+					return
+				}
 			}
 			if (
 				e.which === this.keyCodeEnter ||
