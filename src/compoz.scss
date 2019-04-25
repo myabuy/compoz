@@ -29,7 +29,8 @@ $list-file-size: 120;
 		background-color: #fafbff;
 		.compoz-input {
 			background-color: #fafbff;
-			overflow: auto;
+			overflow-x: hidden;
+			overflow-y: auto;
 			white-space: pre-wrap;
 		}
 		.hint {
@@ -42,7 +43,8 @@ $list-file-size: 120;
 		margin: 8px;
 		padding: 18px 30px 18px 24px;
 		.compoz-input {
-			overflow: auto;
+			overflow-x: hidden;
+			overflow-y: auto;
 		}
 		.hint {
 			color: #b8b8b8;
@@ -194,8 +196,8 @@ $list-file-size: 120;
 	vertical-align: top;
 	width: 110px;
 	word-wrap: break-word;
-	
-	&.add-file{
+
+	&.add-file {
 		cursor: pointer;
 	}
 
