@@ -73,8 +73,9 @@ export class Compoz {
 	private isExpand = false
 	private defaultInputMinHeight = 18
 	private defaultInputMaxHeight = 85
-	private currentHeight = 0
 	private lastContent = ""
+	private keyCodeV = 86
+	private keyCodeX = 88
 	private keyCodeZ = 90
 	private keyCodeEnter = 13
 	private keyCodeDelete = 46
@@ -322,7 +323,6 @@ export class Compoz {
 				this.cfg.onBlur()
 			}
 			this.cfg.onChangeHeight()
-			this.currentHeight = 0
 		}
 
 		this.elInput.onkeyup = e => {
@@ -348,15 +348,11 @@ export class Compoz {
 			if (
 				e.which === this.keyCodeEnter ||
 				e.which === this.keyCodeDelete ||
-				e.which === this.keyCodeBackspace
+				e.which === this.keyCodeBackspace ||
+				((e.ctrlKey || e.metaKey) && e.which === this.keyCodeV) ||
+				((e.ctrlKey || e.metaKey) && e.which === this.keyCodeX)
 			) {
-				if (this.currentHeight === this.elInput.offsetHeight) {
-					return
-				}
-				if (this.elInput.offsetHeight < this.defaultInputMaxHeight) {
-					this.cfg.onChangeHeight()
-					this.currentHeight = this.elInput.offsetHeight
-				}
+				this.cfg.onChangeHeight()
 			}
 		}
 
@@ -622,10 +618,10 @@ export class Compoz {
 			if (!this.isShowAttachment) {
 				if (this.files.length > 0) {
 					this.showInitAttachment()
-				}else{
+				} else {
 					this.elInputFile.click()
 					this.onFocus()
-				}				
+				}
 			} else {
 				this.hideAttachment()
 			}
@@ -764,7 +760,7 @@ export class Compoz {
 		this.elBStyle.classList.add(classActive)
 		this.elStyleWrapper.style.display = "block"
 		this.elStyleWrapper.appendChild(this.formStyles.el)
-		this.setHeight(this.cfg.height)
+		this.resetInputHeight()
 		this.cfg.onChangeHeight()
 	}
 
