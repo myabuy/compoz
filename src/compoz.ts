@@ -74,8 +74,6 @@ export class Compoz {
 	private defaultInputMinHeight = 18
 	private defaultInputMaxHeight = 85
 	private lastContent = ""
-	private keyCodeV = 86
-	private keyCodeX = 88
 	private keyCodeY = 89
 	private keyCodeZ = 90
 	private keyCodeEnter = 13
@@ -399,6 +397,7 @@ export class Compoz {
 
 		this.elInput.onkeydown = e => {
 			if (e.ctrlKey || e.metaKey) {
+				this.cfg.onChangeHeight()
 				if (!e.shiftKey && e.keyCode === this.keyCodeZ) {
 					e.preventDefault()
 					this.undo()
@@ -418,9 +417,7 @@ export class Compoz {
 			if (
 				e.which === this.keyCodeEnter ||
 				e.which === this.keyCodeDelete ||
-				e.which === this.keyCodeBackspace ||
-				((e.ctrlKey || e.metaKey) && e.which === this.keyCodeV) ||
-				((e.ctrlKey || e.metaKey) && e.which === this.keyCodeX)
+				e.which === this.keyCodeBackspace
 			) {
 				this.cfg.onChangeHeight()
 			}
