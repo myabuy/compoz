@@ -227,6 +227,7 @@ export class Compoz {
 		this.elInput.innerHTML = ""
 		this.elFiles.innerHTML = ""
 		this.files = new Array()
+		this.hideAttachment()
 	}
 
 	resizeInput(w: number, h: number) {
@@ -800,7 +801,6 @@ export class Compoz {
 					}
 					this.cfg.onSend()
 					this.disableButtonSend()
-					this.hideAttachment()
 				}
 			}
 		}
